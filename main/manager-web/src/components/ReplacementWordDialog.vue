@@ -42,7 +42,7 @@
                     <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 4px;">
                       <path d="M7 1V13M1 7H13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
                     </svg>
-                    <div>
+                    <div class="file-upload-content">
                       <p>{{ $t('replacementDialog.clickUploadTip') }}</p>
                       <p>{{ $t('replacementDialog.uploadCoverTip') }}</p>
                     </div>
@@ -53,7 +53,7 @@
                 {{ wordCountText }}{{ $t('replacementDialog.wordCountUnit') }}
               </span>
             </div>
-          </div>
+          </div >
         </el-form-item>
       </el-form>
 
@@ -64,7 +64,7 @@
         <el-button @click="cancel" class="cancel-btn">
           {{ $t('replacementDialog.cancel') }}
         </el-button>
-      </div>
+      </div >
     </div>
   </el-dialog>
 </template>
@@ -74,7 +74,7 @@ export default {
   props: {
     title: {
       type: String,
-      default: '新增替换词'
+      default: 'Add new replacement words'
     },
     visible: {
       type: Boolean,
@@ -107,12 +107,13 @@ export default {
       }
 
       for (let i = 0; i < lines.length; i++) {
-        const pipeCount = (lines[i].match(/\|/g) || []).length;
+        const line = lines[i];
+        const pipeCount = (line.match(/\|/g) || []).length;
         if (pipeCount !== 1) {
           callback(new Error(this.$t('replacementDialog.invalidPipeCount', { line: i + 1 })));
           return;
         }
-        const parts = lines[i].split('|');
+        const parts = line.split('|');
         if (!parts[0] || !parts[0].trim()) {
           callback(new Error(this.$t('replacementDialog.emptyOriginal', { line: i + 1 })));
           return;
@@ -177,8 +178,8 @@ export default {
   methods: {
     getValidLines() {
       if (!this.localForm.content) return [];
-      const contentStr = Array.isArray(this.localForm.content) 
-        ? this.localForm.content.join('\n') 
+      const contentStr = Array.isArray(this.localForm.content)
+        ? this.localForm.content.join('\n')
         : this.localForm.content;
       return contentStr.split(/\r?\n/).filter(line => line.trim());
     },
@@ -200,7 +201,9 @@ export default {
         const content = e.target.result;
         this.localForm.content = content;
 
-        const lines = this.getValidLines(content);
+        // Note: Passing content directly to getValidLines here is slightly redundant if it just reads localForm.content, 
+        // but following the original logic structure:
+        const lines = this.getValidLines(); 
         if (lines.length > this.maxWordCount) {
           this.$message.warning(
             this.$t('replacementDialog.maxWordCountExceeded', { max: this.maxWordCount })
@@ -533,4 +536,3 @@ export default {
     }
   }
 }
-</style>

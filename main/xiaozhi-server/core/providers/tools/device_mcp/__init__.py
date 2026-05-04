@@ -1,5 +1,3 @@
-"""设备端MCP工具模块"""
-
 from .mcp_client import MCPClient
 from .mcp_handler import (
     send_mcp_message,

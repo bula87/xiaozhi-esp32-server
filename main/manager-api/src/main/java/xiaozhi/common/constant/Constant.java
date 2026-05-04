@@ -3,17 +3,17 @@ package xiaozhi.common.constant;
 import lombok.Getter;
 
 /**
- * 常量
- * Copyright (c) 人人开源 All rights reserved.
+ * Constants
+ * Copyright (c) RuoYi Open Source All rights reserved.
  * Website: https://www.renren.io
  */
 public interface Constant {
     /**
-     * 成功
+     * Success
      */
     int SUCCESS = 1;
     /**
-     * 失败
+     * Fail
      */
     int FAIL = 0;
     /**
@@ -21,172 +21,172 @@ public interface Constant {
      */
     String OK = "OK";
     /**
-     * 用户标识
+     * User Identifier
      */
     String USER_KEY = "userId";
     /**
-     * 菜单根节点标识
+     * Menu Root Node Identifier
      */
     Long MENU_ROOT = 0L;
     /**
-     * 部门根节点标识
+     * Department Root Node Identifier
      */
     Long DEPT_ROOT = 0L;
     /**
-     * 数据字典根节点标识
+     * Data Dictionary Root Node Identifier
      */
     Long DICT_ROOT = 0L;
     /**
-     * 升序
+     * Ascending order
      */
     String ASC = "asc";
     /**
-     * 降序
+     * Descending order
      */
     String DESC = "desc";
     /**
-     * 创建时间字段名
+     * Create date field name
      */
     String CREATE_DATE = "create_date";
 
     /**
-     * 创建时间字段名
+     * ID field name
      */
     String ID = "id";
 
     /**
-     * 数据权限过滤
+     * Data permission filter
      */
     String SQL_FILTER = "sqlFilter";
 
     /**
-     * 当前页码
+     * Current page number
      */
     String PAGE = "page";
     /**
-     * 每页显示记录数
+     * Number of records displayed per page
      */
     String LIMIT = "limit";
     /**
-     * 排序字段
+     * Sort field
      */
     String ORDER_FIELD = "orderField";
     /**
-     * 排序方式
+     * Sorting method
      */
     String ORDER = "order";
 
     /**
-     * 请求头授权标识
+     * Authorization header identifier
      */
     String AUTHORIZATION = "Authorization";
 
     /**
-     * 服务器密钥
+     * Server secret key
      */
     String SERVER_SECRET = "server.secret";
 
     /**
-     * SM2公钥
+     * SM2 public key
      */
     String SM2_PUBLIC_KEY = "server.public_key";
 
     /**
-     * SM2私钥
+     * SM2 private key
      */
     String SM2_PRIVATE_KEY = "server.private_key";
 
     /**
-     * websocket地址
+     * WebSocket address
      */
     String SERVER_WEBSOCKET = "server.websocket";
 
     /**
-     * mqtt gateway 配置
+     * MQTT gateway configuration
      */
     String SERVER_MQTT_GATEWAY = "server.mqtt_gateway";
 
     /**
-     * ota地址
+     * OTA address
      */
     String SERVER_OTA = "server.ota";
 
     /**
-     * 是否允许用户注册
+     * Allow user registration
      */
     String SERVER_ALLOW_USER_REGISTER = "server.allow_user_register";
 
     /**
-     * 下发六位验证码时显示的控制面板地址
+     * Control panel address displayed when sending a six-digit verification code
      */
     String SERVER_FRONTED_URL = "server.fronted_url";
 
     /**
-     * 路径分割符
+     * Path separator
      */
     String FILE_EXTENSION_SEG = ".";
 
     /**
-     * mcp接入点路径
+     * MCP endpoint path
      */
     String SERVER_MCP_ENDPOINT = "server.mcp_endpoint";
 
     /**
-     * mcp接入点路径
+     * Server voice print
      */
     String SERVER_VOICE_PRINT = "server.voice_print";
 
     /**
-     * mqtt密钥
+     * MQTT secret key
      */
     String SERVER_MQTT_SECRET = "server.mqtt_signature_key";
 
     /**
-     * WebSocket认证开关
+     * WebSocket authentication switch
      */
     String SERVER_AUTH_ENABLED = "server.auth.enabled";
 
     /**
-     * 无记忆
+     * No memory
      */
     String MEMORY_NO_MEM = "Memory_nomem";
 
     /**
-     * 仅上报聊天记录（不总结记忆）
+     * Report only chat records (do not summarize memory)
      */
     String MEMORY_MEM_REPORT_ONLY = "Memory_mem_report_only";
 
     /**
-     * Mem0AI记忆
+     * Mem0AI memory
      */
     String MEMORY_MEM0AI = "Memory_mem0ai";
 
     /**
-     * PowerMem记忆
+     * PowerMem memory
      */
     String MEMORY_POWERMEM = "Memory_powermem";
 
     /**
-     * 火山引擎双声道语音克隆
+     * Volcano engine dual-channel voice cloning
      */
     String VOICE_CLONE_HUOSHAN_DOUBLE_STREAM = "huoshan_double_stream";
 
     /**
-     * RAG配置类型
+     * RAG configuration type
      */
     String RAG_CONFIG_TYPE = "RAG";
 
     enum SysBaseParam {
         /**
-         * ICP备案号
+         * ICP record number
          */
         BEIAN_ICP_NUM("server.beian_icp_num"),
         /**
-         * GA备案号
+         * GA record number
          */
         BEIAN_GA_NUM("server.beian_ga_num"),
         /**
-         * 系统名称
+         * System name
          */
         SERVER_NAME("server.name");
 
@@ -202,23 +202,23 @@ public interface Constant {
     }
 
     /**
-     * 训练状态
+     * Training status
      */
     enum TrainStatus {
         /**
-         * 未训练
+         * Not trained
          */
         NOT_TRAINED(0),
         /**
-         * 训练中
+         * Training in progress
          */
         TRAINING(1),
         /**
-         * 已训练
+         * Trained
          */
         TRAINED(2),
         /**
-         * 训练失败
+         * Training failed
          */
         TRAIN_FAILED(3);
 
@@ -234,31 +234,31 @@ public interface Constant {
     }
 
     /**
-     * 系统短信
+     * System SMS
      */
     enum SysMSMParam {
         /**
-         * 阿里云授权keyID
+         * Aliyun authorization keyID
          */
         ALIYUN_SMS_ACCESS_KEY_ID("aliyun.sms.access_key_id"),
         /**
-         * 阿里云授权密钥
+         * Aliyun authorization secret key
          */
         ALIYUN_SMS_ACCESS_KEY_SECRET("aliyun.sms.access_key_secret"),
         /**
-         * 阿里云短信签名
+         * Aliyun SMS signature
          */
         ALIYUN_SMS_SIGN_NAME("aliyun.sms.sign_name"),
         /**
-         * 阿里云短信模板
+         * Aliyun SMS template
          */
         ALIYUN_SMS_SMS_CODE_TEMPLATE_CODE("aliyun.sms.sms_code_template_code"),
         /**
-         * 单号码最大短信发送条数
+         * Maximum number of SMS sends per phone number
          */
         SERVER_SMS_MAX_SEND_COUNT("server.sms_max_send_count"),
         /**
-         * 是否开启手机注册
+         * Enable mobile registration
          */
         SERVER_ENABLE_MOBILE_REGISTER("server.enable_mobile_register");
 
@@ -274,19 +274,19 @@ public interface Constant {
     }
 
     /**
-     * 数据状态
+     * Data status
      */
     enum DataOperation {
         /**
-         * 插入
+         * Insert
          */
         INSERT("I"),
         /**
-         * 已修改
+         * Updated
          */
         UPDATE("U"),
         /**
-         * 已删除
+         * Deleted
          */
         DELETE("D");
 
@@ -303,9 +303,9 @@ public interface Constant {
 
     @Getter
     enum ChatHistoryConfEnum {
-        IGNORE(0, "不记录"),
-        RECORD_TEXT(1, "记录文本"),
-        RECORD_TEXT_AUDIO(2, "文本音频都记录");
+        IGNORE(0, "Do not record"),
+        RECORD_TEXT(1, "Record text"),
+        RECORD_TEXT_AUDIO(2, "Record text and audio");
 
         private final int code;
         private final String name;
@@ -317,21 +317,21 @@ public interface Constant {
     }
 
     /**
-     * 版本号
+     * Version number
      */
     public static final String VERSION = "0.9.3";
 
     /**
-     * 无效固件URL
+     * Invalid firmware URL
      */
     String INVALID_FIRMWARE_URL = "http://xiaozhi.server.com:8002/xiaozhi/otaMag/download/NOT_ACTIVATED_FIRMWARE_THIS_IS_A_INVALID_URL";
 
     /**
-     * 字典类型
+     * Dictionary type
      */
     enum DictType {
         /**
-         * 手机区号
+         * Mobile area code
          */
         MOBILE_AREA("MOBILE_AREA");
 
@@ -346,3 +346,4 @@ public interface Constant {
         }
     }
 }
+ 

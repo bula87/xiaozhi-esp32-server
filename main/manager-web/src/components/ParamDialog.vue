@@ -1,23 +1,61 @@
 <template>
-  <el-dialog :title="title" :visible.sync="visible" width="520px" class="param-dialog-wrapper" :append-to-body="true"
-    :close-on-click-modal="false" :key="dialogKey" custom-class="custom-param-dialog" :show-close="false">
+  <el-dialog
+    :title="title"
+    :visible.sync="visible"
+    width="520px"
+    class="param-dialog-wrapper"
+    :append-to-body="true"
+    :close-on-click-modal="false"
+    :key="dialogKey"
+    custom-class="custom-param-dialog"
+    :show-close="false"
+  >
     <div class="dialog-container">
       <div class="dialog-header">
         <h2 class="dialog-title">{{ title }}</h2>
         <button class="custom-close-btn" @click="cancel">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M13 1L1 13M1 1L13 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 14 14"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M13 1L1 13M1 1L13 13"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
           </svg>
         </button>
       </div>
 
-      <el-form :model="form" :rules="rules" ref="form" label-width="auto" label-position="left" class="param-form">
-        <el-form-item :label="$t('paramDialog.paramCode')" prop="paramCode" class="form-item">
-          <el-input v-model="form.paramCode" :placeholder="$t('paramDialog.paramCodePlaceholder')"
-            class="custom-input"></el-input>
+      <el-form
+        :model="form"
+        :rules="rules"
+        ref="form"
+        label-width="auto"
+        label-position="left"
+        class="param-form"
+      >
+        <el-form-item
+          :label="$t('paramDialog.paramCode')"
+          prop="paramCode"
+          class="form-item"
+        >
+          <el-input
+            v-model="form.paramCode"
+            :placeholder="$t('paramDialog.paramCodePlaceholder')"
+            class="custom-input"
+          ></el-input>
         </el-form-item>
 
-        <el-form-item :label="$t('paramDialog.valueType')" prop="valueType" class="form-item">
+        <el-form-item
+          :label="$t('paramDialog.valueType')"
+          prop="valueType"
+          class="form-item"
+        >
           <el-select
             v-model="form.valueType"
             :placeholder="$t('paramDialog.valueTypePlaceholder')"
@@ -32,7 +70,11 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item :label="$t('paramDialog.paramValue')" prop="paramValue" class="form-item">
+        <el-form-item
+          :label="$t('paramDialog.paramValue')"
+          prop="paramValue"
+          class="form-item"
+        >
           <el-input
             v-if="form.valueType !== 'json' && form.valueType !== 'array'"
             v-model="form.paramValue"
@@ -49,18 +91,33 @@
           ></el-input>
         </el-form-item>
 
-        <el-form-item :label="$t('paramDialog.remark')" prop="remark" class="form-item remark-item">
-          <el-input type="textarea" v-model="form.remark" :placeholder="$t('paramDialog.remarkPlaceholder')" :rows="3"
-            class="custom-textarea"></el-input>
+        <el-form-item
+          :label="$t('paramDialog.remark')"
+          prop="remark"
+          class="form-item remark-item"
+        >
+          <el-input
+            type="textarea"
+            v-model="form.remark"
+            :placeholder="$t('paramDialog.remarkPlaceholder')"
+            :rows="3"
+            class="custom-textarea"
+          ></el-input>
         </el-form-item>
       </el-form>
 
       <div class="dialog-footer">
-        <el-button type="primary" @click="submit" class="save-btn" :loading="saving" :disabled="saving">
-          {{ $t('paramDialog.save') }}
+        <el-button
+          type="primary"
+          @click="submit"
+          class="save-btn"
+          :loading="saving"
+          :disabled="saving"
+        >
+          {{ $t("paramDialog.save") }}
         </el-button>
         <el-button @click="cancel" class="cancel-btn">
-          {{ $t('paramDialog.cancel') }}
+          {{ $t("paramDialog.cancel") }}
         </el-button>
       </div>
     </div>
@@ -72,45 +129,57 @@ export default {
   props: {
     title: {
       type: String,
-      default: '新增参数'
+      default: "Add Parameter",
     },
     visible: {
       type: Boolean,
-      default: false
+      default: false,
     },
     form: {
       type: Object,
       default: () => ({
         id: null,
-        paramCode: '',
-        paramValue: '',
-        valueType: 'string',
-        remark: ''
-      })
-    }
+        paramCode: "",
+        paramValue: "",
+        valueType: "string",
+        remark: "",
+      }),
+    },
   },
   data() {
     return {
       dialogKey: Date.now(),
       saving: false,
       valueTypeOptions: [
-        { value: 'string' },
-        { value: 'number' },
-        { value: 'boolean' },
-        { value: 'array' },
-        { value: 'json' }
+        { value: "string" },
+        { value: "number" },
+        { value: "boolean" },
+        { value: "array" },
+        { value: "json" },
       ],
       rules: {
         paramCode: [
-          { required: true, message: this.$t('paramDialog.requiredParamCode'), trigger: "blur" }
+          {
+            required: true,
+            message: this.$t("paramDialog.requiredParamCode"),
+            trigger: "blur",
+          },
         ],
         paramValue: [
-          { required: true, message: this.$t('paramDialog.requiredParamValue'), trigger: "blur" }
+          {
+            required: true,
+            message: this.$t("paramDialog.requiredParamValue"),
+            trigger: "blur",
+          },
         ],
         valueType: [
-          { required: true, message: this.$t('paramDialog.requiredValueType'), trigger: "change" }
-        ]
-      }
+          {
+            required: true,
+            message: this.$t("paramDialog.requiredValueType"),
+            trigger: "change",
+          },
+        ],
+      },
     };
   },
   methods: {
@@ -119,74 +188,80 @@ export default {
         if (valid) {
           const submitData = { ...this.form };
 
-          // 如果是 array 类型，校验格式并转换
-          if (submitData.valueType === 'array' && submitData.paramValue) {
-            const lines = submitData.paramValue.split('\n').filter(line => line.trim());
+          // If type is array, validate format and convert
+          if (submitData.valueType === "array" && submitData.paramValue) {
+            const lines = submitData.paramValue
+              .split("\n")
+              .filter((line) => line.trim());
 
-            // 检查除最后一行外的每行是否以分号结尾
+            // Check if each line except the last ends with a semicolon
             for (let i = 0; i < lines.length - 1; i++) {
-              if (!lines[i].trim().endsWith(';')) {
-                this.$message.error('数组格式错误，需要使用英文分号结尾');
+              if (!lines[i].trim().endsWith(";")) {
+                this.$message.error(
+                  "Array format error, needs to use English semicolon ending",
+                );
                 return;
               }
             }
 
             const items = lines
-              .map(item => item.trim().replace(/;$/, ''))
-              .filter(item => item);
-            submitData.paramValue = items.join(';');
+              .map((item) => item.trim().replace(/;$/, ""))
+              .filter((item) => item);
+            submitData.paramValue = items.join(";");
           }
-          // 如果是 json 类型，压缩 JSON 格式后再提交
-          else if (submitData.valueType === 'json' && submitData.paramValue) {
+          // If type is json, compress JSON format before submitting
+          else if (submitData.valueType === "json" && submitData.paramValue) {
             try {
               const parsed = JSON.parse(submitData.paramValue);
               submitData.paramValue = JSON.stringify(parsed);
             } catch (e) {
-              // 如果解析失败，保持原值
+              // If parsing fails, keep the original value
             }
           }
 
-          this.saving = true; // 开始加载
-          this.$emit('submit', submitData);
+          this.saving = true; // Start loading
+          this.$emit("submit", submitData);
         }
       });
     },
     cancel() {
-      this.saving = false; // 取消时重置状态
+      this.saving = false; // Reset state on cancel
       this.dialogKey = Date.now();
-      this.$emit('cancel');
+      this.$emit("cancel");
     },
 
-    // 提供给父组件调用以重置saving状态
+    // Provided for parent component to reset saving state
     resetSaving() {
       this.saving = false;
-    }
+    },
   },
   watch: {
     visible(newVal) {
       if (newVal) {
         if (this.form.paramValue) {
-          // 如果是 json 类型，格式化显示
-          if (this.form.valueType === 'json') {
+          // If type is json, format for display
+          if (this.form.valueType === "json") {
             try {
               const parsed = JSON.parse(this.form.paramValue);
               this.form.paramValue = JSON.stringify(parsed, null, 2);
             } catch (e) {
-              // 如果解析失败，保持原值
+              // If parsing fails, keep the original value
             }
           }
-          // 如果是 array 类型，将分号分隔的字符串转换为每行一个项目
-          else if (this.form.valueType === 'array') {
-            const items = this.form.paramValue.split(';').filter(item => item.trim());
-            this.form.paramValue = items.join(';\n');
+          // If type is array, convert semicolon-separated string to one item per line
+          else if (this.form.valueType === "array") {
+            const items = this.form.paramValue
+              .split(";")
+              .filter((item) => item.trim());
+            this.form.paramValue = items.join(";\n");
           }
         }
       } else {
-        // 当对话框关闭时，重置saving状态
+        // Reset saving state when dialog closes
         this.saving = false;
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

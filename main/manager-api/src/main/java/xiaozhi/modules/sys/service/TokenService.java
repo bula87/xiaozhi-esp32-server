@@ -2,10 +2,11 @@ package xiaozhi.modules.sys.service;
 
 public interface TokenService {
     /**
-     * 生成token
+     * Generate token
      *
      * @param userId
      * @return
      */
     String createToken(long userId);
 }
+ 

@@ -8,61 +8,62 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
- * 文档 DTO
+ * Document DTO
  */
 @Data
-@Schema(description = "知识库文档")
+@Schema(description = "Knowledge Base Document")
 public class DocumentDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    @Schema(description = "本地ID")
+    @Schema(description = "Local ID")
     private String id;
 
-    @Schema(description = "知识库ID")
+    @Schema(description = "Knowledge Base ID")
     private String datasetId;
 
-    @Schema(description = "RAGFlow文档ID")
+    @Schema(description = "RAGFlow Document ID")
     private String documentId;
 
-    @Schema(description = "文档名称")
+    @Schema(description = "Document Name")
     private String name;
 
-    @Schema(description = "文件大小")
+    @Schema(description = "File Size")
     private Long size;
 
-    @Schema(description = "文件类型")
+    @Schema(description = "File Type")
     private String type;
 
-    @Schema(description = "分块方法")
+    @Schema(description = "Chunk Method")
     private String chunkMethod;
 
-    @Schema(description = "解析配置")
+    @Schema(description = "Parser Configuration")
     private Map<String, Object> parserConfig;
 
-    @Schema(description = "处理状态 (1:解析中 3:成功 4:失败)")
+    @Schema(description = "Processing Status (1: Parsing 3: Success 4: Failure)")
     private Integer status;
 
-    @Schema(description = "错误信息")
+    @Schema(description = "Error Message")
     private String error;
 
-    @Schema(description = "分块数量")
+    @Schema(description = "Chunk Count")
     private Integer chunkCount;
 
-    @Schema(description = "Token数量")
+    @Schema(description = "Token Count")
     private Long tokenCount;
 
-    @Schema(description = "是否启用")
+    @Schema(description = "Enabled (1: Yes 0: No)")
     private Integer enabled;
 
-    @Schema(description = "创建时间")
+    @Schema(description = "Creation Time")
     private Date createdAt;
 
-    @Schema(description = "更新时间")
+    @Schema(description = "Update Time")
     private Date updatedAt;
 
-    @Schema(description = "上传进度 (虚拟字段)")
+    @Schema(description = "Upload Progress (Virtual Field)")
     private Double progress;
 
-    @Schema(description = "缩略图/预览图 (虚拟字段)")
+    @Schema(description = "Thumbnail/Preview Image (Virtual Field)")
     private String thumbnail;
 }
+ 

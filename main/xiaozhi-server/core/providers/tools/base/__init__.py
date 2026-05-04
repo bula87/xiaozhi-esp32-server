@@ -1,4 +1,4 @@
-"""基础工具定义模块"""
+"""Basic Tool Definition Module"""
 
 from .tool_types import ToolType, ToolDefinition
 from .tool_executor import ToolExecutor

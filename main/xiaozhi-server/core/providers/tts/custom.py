@@ -9,6 +9,7 @@ from core.providers.tts.base import TTSProviderBase
 TAG = __name__
 logger = setup_logging()
 
+
 class TTSProvider(TTSProviderBase):
     def __init__(self, config, delete_audio_file):
         super().__init__(config, delete_audio_file)
@@ -23,12 +24,19 @@ class TTSProvider(TTSProviderBase):
             try:
                 self.params = json.loads(self.params)
             except json.JSONDecodeError:
-                raise ValueError("Custom TTS配置参数出错,无法将字符串解析为对象")
+                raise ValueError(
+                    "Error in Custom TTS configuration parameters, unable to parse string into object"
+                )
         elif not isinstance(self.params, dict):
-            raise TypeError("Custom TTS配置参数出错, 请参考配置说明")
+            raise TypeError(
+                "Error in Custom TTS configuration parameters, please refer to configuration instructions"
+            )
 
     def generate_filename(self):
-        return os.path.join(self.output_file, f"tts-{datetime.now().date()}@{uuid.uuid4().hex}.{self.audio_file_type}")
+        return os.path.join(
+            self.output_file,
+            f"tts-{datetime.now().date()}@{uuid.uuid4().hex}.{self.audio_file_type}",
+        )
 
     async def text_to_speak(self, text, output_file):
         request_params = {}
@@ -48,6 +56,6 @@ class TTSProvider(TTSProviderBase):
             else:
                 return resp.content
         else:
-            error_msg = f"Custom TTS请求失败: {resp.status_code} - {resp.text}"
+            error_msg = f"Custom TTS request failed: {resp.status_code} - {resp.text}"
             logger.bind(tag=TAG).error(error_msg)
-            raise Exception(error_msg)  # 抛出异常，让调用方捕获
+            raise Exception(error_msg)  # raise exception, let the caller catch it

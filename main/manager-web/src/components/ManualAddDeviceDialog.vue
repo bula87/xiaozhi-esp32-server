@@ -1,28 +1,65 @@
 <template>
-  <el-dialog :title="$t('manualAddDeviceDialog.title')" :visible="visible" @close="handleClose" width="30%" center>
+  <el-dialog
+    :title="$t('manualAddDeviceDialog.title')"
+    :visible="visible"
+    @close="handleClose"
+    width="30%"
+    center
+  >
     <div class="dialog-content">
-      <el-form :model="deviceForm" :rules="rules" ref="deviceForm" label-width="auto">
-        <el-form-item :label="$t('manualAddDeviceDialog.deviceType')" prop="board">
-          <el-select v-model="deviceForm.board" :placeholder="$t('manualAddDeviceDialog.deviceTypePlaceholder')" style="width: 100%">
+      <el-form
+        :model="deviceForm"
+        :rules="rules"
+        ref="deviceForm"
+        label-width="auto"
+      >
+        <el-form-item
+          :label="$t('manualAddDeviceDialog.deviceType')"
+          prop="board"
+        >
+          <el-select
+            v-model="deviceForm.board"
+            :placeholder="$t('manualAddDeviceDialog.deviceTypePlaceholder')"
+            style="width: 100%"
+          >
             <el-option
               v-for="item in firmwareTypes"
               :key="item.key"
               :label="item.name"
-              :value="item.key">
+              :value="item.key"
+            >
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item :label="$t('manualAddDeviceDialog.firmwareVersion')" prop="appVersion">
-          <el-input v-model="deviceForm.appVersion" :placeholder="$t('manualAddDeviceDialog.firmwareVersionPlaceholder')"></el-input>
+        <el-form-item
+          :label="$t('manualAddDeviceDialog.firmwareVersion')"
+          prop="appVersion"
+        >
+          <el-input
+            v-model="deviceForm.appVersion"
+            :placeholder="
+              $t('manualAddDeviceDialog.firmwareVersionPlaceholder')
+            "
+          ></el-input>
         </el-form-item>
-        <el-form-item :label="$t('manualAddDeviceDialog.macAddress')" prop="macAddress">
-          <el-input v-model="deviceForm.macAddress" :placeholder="$t('manualAddDeviceDialog.macAddressPlaceholder')"></el-input>
+        <el-form-item
+          :label="$t('manualAddDeviceDialog.macAddress')"
+          prop="macAddress"
+        >
+          <el-input
+            v-model="deviceForm.macAddress"
+            :placeholder="$t('manualAddDeviceDialog.macAddressPlaceholder')"
+          ></el-input>
         </el-form-item>
       </el-form>
     </div>
-    <div style="display: flex;margin: 15px 15px;gap: 7px;">
-      <div class="dialog-btn" @click="submitForm">{{ $t('manualAddDeviceDialog.confirm') }}</div>
-      <div class="dialog-btn cancel-btn" @click="cancel">{{ $t('manualAddDeviceDialog.cancel') }}</div>
+    <div style="display: flex; margin: 15px 15px; gap: 7px">
+      <div class="dialog-btn" @click="submitForm">
+        {{ $t("manualAddDeviceDialog.confirm") }}
+      </div>
+      <div class="dialog-btn cancel-btn" @click="cancel">
+        {{ $t("manualAddDeviceDialog.cancel") }}
+      </div>
     </div>
   </el-dialog>
 </template>
@@ -37,7 +74,7 @@ export default {
     agentId: { type: String, required: true }
   },
   data() {
-    // MAC地址验证规则
+    // MAC address validation rules
     const validateMac = (rule, value, callback) => {
       const macRegex = /^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/;
       if (!value) {
@@ -78,7 +115,7 @@ export default {
         const res = await Api.dict.getDictDataByType('FIRMWARE_TYPE');
         this.firmwareTypes = res.data;
       } catch (error) {
-        console.error('获取固件类型失败:', error);
+        console.error('Failed to get firmware type:', error);
         this.$message.error(error.message || this.$t('manualAddDeviceDialog.getFirmwareTypeFailed'));
       }
     },
@@ -94,7 +131,7 @@ export default {
         agentId: this.agentId,
         ...this.deviceForm
       };
-      
+
       Api.device.manualAddDevice(params, ({ data }) => {
         if (data.code === 0) {
           this.$message.success(this.$t('manualAddDeviceDialog.addSuccess'));
@@ -115,7 +152,7 @@ export default {
     handleClose() {
       this.closeDialog();
     }
-  }
+    }
 }
 </script>
 
@@ -128,7 +165,7 @@ export default {
   cursor: pointer;
   flex: 1;
   border-radius: 23px;
-  background: #5778ff;
+  /* Input box width */
   height: 40px;
   font-weight: 500;
   font-size: 12px;

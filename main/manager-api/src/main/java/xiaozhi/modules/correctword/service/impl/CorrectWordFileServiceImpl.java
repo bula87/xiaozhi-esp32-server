@@ -43,12 +43,12 @@ public class CorrectWordFileServiceImpl extends BaseServiceImpl<CorrectWordFileD
     @Override
     @Transactional(rollbackFor = Exception.class)
     public CorrectWordFileVO createFile(CorrectWordFileCreateDTO dto) {
-        // 校验文件大小不能超过1MB
+        // Validate file size cannot exceed 1MB
         if (dto.getFileSize() != null && dto.getFileSize() > 1024 * 1024) {
             throw new RenException(ErrorCode.FILE_SIZE_OVER_LIMIT);
         }
 
-        // 校验文件名是否重复
+        // Validate if the file name is duplicated
         Long userId = SecurityUser.getUserId();
         LambdaQueryWrapper<CorrectWordFileEntity> nameWrapper = new LambdaQueryWrapper<>();
         nameWrapper.eq(CorrectWordFileEntity::getCreator, userId)
@@ -59,7 +59,7 @@ public class CorrectWordFileServiceImpl extends BaseServiceImpl<CorrectWordFileD
 
         List<CorrectWordItemEntity> items = parseContent(dto.getContent());
 
-        // 保存文件记录
+        // Save file record
         CorrectWordFileEntity fileEntity = new CorrectWordFileEntity();
         fileEntity.setFileName(dto.getFileName());
         fileEntity.setWordCount(items.size());
@@ -68,7 +68,7 @@ public class CorrectWordFileServiceImpl extends BaseServiceImpl<CorrectWordFileD
         fileEntity.setCreatedAt(new Date());
         correctWordFileDao.insert(fileEntity);
 
-        // 设置fileId并批量保存词条
+        // Set fileId and batch save entries
         String fileId = fileEntity.getId();
         for (CorrectWordItemEntity item : items) {
             item.setFileId(fileId);
@@ -88,7 +88,7 @@ public class CorrectWordFileServiceImpl extends BaseServiceImpl<CorrectWordFileD
             return;
         }
 
-        // 校验文件名是否重复（排除自身）
+        // Validate if the file name is duplicated (excluding itself)
         Long userId = SecurityUser.getUserId();
         LambdaQueryWrapper<CorrectWordFileEntity> nameWrapper = new LambdaQueryWrapper<>();
         nameWrapper.eq(CorrectWordFileEntity::getCreator, userId)
@@ -98,12 +98,12 @@ public class CorrectWordFileServiceImpl extends BaseServiceImpl<CorrectWordFileD
             throw new RenException("文件名已存在：" + dto.getFileName());
         }
 
-        // 先删除旧词条
+        // First delete old entries
         LambdaQueryWrapper<CorrectWordItemEntity> deleteWrapper = new LambdaQueryWrapper<>();
         deleteWrapper.eq(CorrectWordItemEntity::getFileId, fileId);
         correctWordItemDao.delete(deleteWrapper);
 
-        // 解析新词条并批量保存
+        // Parse new entries and batch save
         List<CorrectWordItemEntity> items = parseContent(dto.getContent());
         if (!items.isEmpty()) {
             for (CorrectWordItemEntity item : items) {
@@ -112,7 +112,7 @@ public class CorrectWordFileServiceImpl extends BaseServiceImpl<CorrectWordFileD
             correctWordItemDao.batchInsert(items);
         }
 
-        // 更新文件记录
+        // Update file record
         fileEntity.setFileName(dto.getFileName());
         fileEntity.setWordCount(items.size());
         fileEntity.setContent(String.join("\n", dto.getContent()));
@@ -155,13 +155,13 @@ public class CorrectWordFileServiceImpl extends BaseServiceImpl<CorrectWordFileD
         if (fileId == null || fileId.trim().isEmpty()) {
             return;
         }
-        // 先删除关联表记录
+        // First delete related table records
         agentCorrectWordMappingDao.deleteByFileId(fileId);
-        // 删除词条
+        // Delete entries
         LambdaQueryWrapper<CorrectWordItemEntity> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(CorrectWordItemEntity::getFileId, fileId);
         correctWordItemDao.delete(wrapper);
-        // 删除文件
+        // Delete file
         correctWordFileDao.deleteById(fileId);
     }
 
@@ -173,7 +173,7 @@ public class CorrectWordFileServiceImpl extends BaseServiceImpl<CorrectWordFileD
 
     @Override
     public List<CorrectWordSimpleVO> getAllItemsByAgentId(String agentId) {
-        // 通过关联表获取文件ID列表
+        // Get file ID list through the association table
         List<AgentCorrectWordMappingEntity> mappings = agentCorrectWordMappingDao.selectByAgentId(agentId);
         if (mappings == null || mappings.isEmpty()) {
             return new ArrayList<>();
@@ -182,7 +182,7 @@ public class CorrectWordFileServiceImpl extends BaseServiceImpl<CorrectWordFileD
                 .map(AgentCorrectWordMappingEntity::getFileId)
                 .collect(Collectors.toList());
 
-        // 根据文件ID列表查询词条
+        // Query entries based on file ID list
         LambdaQueryWrapper<CorrectWordItemEntity> wrapper = new LambdaQueryWrapper<>();
         wrapper.in(CorrectWordItemEntity::getFileId, fileIds);
         List<CorrectWordItemEntity> entities = correctWordItemDao.selectList(wrapper);
@@ -203,14 +203,14 @@ public class CorrectWordFileServiceImpl extends BaseServiceImpl<CorrectWordFileD
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void saveAgentCorrectWords(String agentId, List<String> fileIds) {
-        // 先删除旧的关联记录
+        // First delete old association records
         agentCorrectWordMappingDao.deleteByAgentId(agentId);
 
         if (fileIds == null || fileIds.isEmpty()) {
             return;
         }
 
-        // 批量插入新的关联记录
+        // Batch insert new association records
         Long userId = SecurityUser.getUserId();
         Date now = new Date();
         List<AgentCorrectWordMappingEntity> mappings = new ArrayList<>();
@@ -242,7 +242,7 @@ public class CorrectWordFileServiceImpl extends BaseServiceImpl<CorrectWordFileD
     }
 
     /**
-     * 解析替换词内容，每条格式：原词|替换词
+     * Parse replacement word content, each line format: original word|replacement word
      */
     private List<CorrectWordItemEntity> parseContent(List<String> lines) {
         List<CorrectWordItemEntity> items = new ArrayList<>();
@@ -294,3 +294,4 @@ public class CorrectWordFileServiceImpl extends BaseServiceImpl<CorrectWordFileD
         return entities.stream().map(this::toVO).collect(Collectors.toList());
     }
 }
+ 

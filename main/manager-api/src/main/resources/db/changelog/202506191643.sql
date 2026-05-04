@@ -1,19 +1,20 @@
--- LLM意图识别配置说明
+-- LLM intent recognition configuration explanation
 UPDATE `ai_model_config` SET 
 `doc_link` = NULL,
-`remark` = 'LLM意图识别配置说明：
-1. 使用独立的LLM进行意图识别
-2. 默认使用selected_module.LLM的模型
-3. 可以配置使用独立的LLM（如免费的ChatGLMLLM）
-4. 通用性强，但会增加处理时间
-配置说明：
-1. 在llm字段中指定使用的LLM模型
-2. 如果不指定，则使用selected_module.LLM的模型' WHERE `id` = 'Intent_intent_llm';
+`remark` = 'LLM intent recognition configuration explanation:
+1. Use an independent LLM for intent recognition
+2. By default use the model of selected_module.LLM
+3. Can configure to use an independent LLM (e.g., free ChatGLMLLM)
+4. Strong versatility, but will increase processing time
+Configuration explanation:
+1. Specify the LLM model to use in the llm field
+2. If not specified, then use the model of selected_module.LLM' WHERE `id` = 'Intent_intent_llm';
 
--- 函数调用意图识别配置说明
+-- Function call intent recognition configuration explanation
 UPDATE `ai_model_config` SET 
 `doc_link` = NULL,
-`remark` = '函数调用意图识别配置说明：
-1. 使用LLM的function_call功能进行意图识别
-2. 需要所选择的LLM支持function_call
-3. 按需调用工具，处理速度快' WHERE `id` = 'Intent_function_call';
+`remark` = 'Function call intent recognition configuration explanation:
+1. Use the LLMs function_call feature for intent recognition
+2. Require the selected LLM to support function_call
+3. Call tools as needed, processing speed is fast' WHERE `id` = 'Intent_function_call';
+ 

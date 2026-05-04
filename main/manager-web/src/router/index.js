@@ -4,246 +4,245 @@ import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 
 const routes = [
-  {
+	{
     path: '/',
     name: 'welcome',
-    component: function () {
+		component: function () {
       return import('../views/login.vue')
     }
-  },
-  {
+	},
+	{
     path: '/role-config',
     name: 'RoleConfig',
-    component: function () {
+		component: function () {
       return import('../views/roleConfig.vue')
     }
-  },
-  {
+	},
+	{
     path: '/voice-print',
     name: 'VoicePrint',
-    component: function () {
+		component: function () {
       return import('../views/VoicePrint.vue')
     }
-  },
-  {
+	},
+	{
     path: '/login',
     name: 'login',
-    component: function () {
+		component: function () {
       return import('../views/login.vue')
     }
-  },
-  {
+	},
+	{
     path: '/home',
     name: 'home',
-    component: function () {
+		component: function () {
       return import('../views/home.vue')
     }
-  },
-  {
+	},
+	{
     path: '/register',
     name: 'Register',
-    component: function () {
+		component: function () {
       return import('../views/register.vue')
     }
-  },
-  {
+	},
+	{
     path: '/retrieve-password',
     name: 'RetrievePassword',
-    component: function () {
+		component: function () {
       return import('../views/retrievePassword.vue')
     }
-  },
-  // 设备管理页面路由
-  {
+	},
+	// Device Management Page Route
+	{
     path: '/device-management',
     name: 'DeviceManagement',
-    component: function () {
+		component: function () {
       return import('../views/DeviceManagement.vue')
     }
-  },
-  // 添加用户管理路由
-  {
+	},
+	// Add User Management Route
+	{
     path: '/user-management',
     name: 'UserManagement',
-    component: function () {
+		component: function () {
       return import('../views/UserManagement.vue')
     }
-  },
-  {
+	},
+	{
     path: '/model-config',
     name: 'ModelConfig',
-    component: function () {
+		component: function () {
       return import('../views/ModelConfig.vue')
     }
-  },
-  {
+	},
+	{
     path: '/params-management',
     name: 'ParamsManagement',
-    component: function () {
+		component: function () {
       return import('../views/ParamsManagement.vue')
-    },
-    meta: {
-      requiresAuth: true,
-      title: '参数管理'
-    }
-  },
-  {
+		},
+		meta: {
+			requiresAuth: true,
+			title: "Parameter Management",
+		},
+	},
+	{
     path: '/knowledge-base-management',
     name: 'KnowledgeBaseManagement',
-    component: function () {
+		component: function () {
       return import('../views/KnowledgeBaseManagement.vue')
-    },
-    meta: {
-      requiresAuth: true,
-      title: '知识库管理'
-    }
-  },
-  {
+		},
+		meta: {
+			requiresAuth: true,
+			title: "Knowledge Base Management",
+		},
+	},
+	{
     path: '/knowledge-file-upload',
     name: 'KnowledgeFileUpload',
-    component: function () {
+		component: function () {
       return import('../views/KnowledgeFileUpload.vue')
-    },
-    meta: {
-      requiresAuth: true,
-      title: '文档上传管理'
-    }
-  },
-
-  {
+		},
+		meta: {
+			requiresAuth: true,
+			title: "Document Upload Management",
+		},
+	},
+	{
     path: '/server-side-management',
     name: 'ServerSideManager',
-    component: function () {
+		component: function () {
       return import('../views/ServerSideManager.vue')
-    },
-    meta: {
-      requiresAuth: true,
-      title: '服务端管理'
-    }
-  },
-  {
+		},
+		meta: {
+			requiresAuth: true,
+			title: "Server Management",
+		},
+	},
+	{
     path: '/ota-management',
     name: 'OtaManagement',
-    component: function () {
+		component: function () {
       return import('../views/OtaManagement.vue')
-    },
-    meta: {
-      requiresAuth: true,
-      title: 'OTA管理'
-    }
-  },
-  {
+		},
+		meta: {
+			requiresAuth: true,
+			title: "OTA Management",
+		},
+	},
+	{
     path: '/voice-resource-management',
     name: 'VoiceResourceManagement',
-    component: function () {
+		component: function () {
       return import('../views/VoiceResourceManagement.vue')
-    },
-    meta: {
-      requiresAuth: true,
-      title: '音色资源开通'
-    }
-  },
-  {
-    path: '/voice-clone-management',
-    name: 'VoiceCloneManagement',
-    component: function () {
-      return import('../views/VoiceCloneManagement.vue')
-    },
-    meta: {
-      requiresAuth: true,
-      title: '音色克隆管理'
-    }
-  },
-  {
-    path: '/dict-management',
-    name: 'DictManagement',
-    component: function () {
-      return import('../views/DictManagement.vue')
-    }
-  },
-  {
-    path: '/provider-management',
-    name: 'ProviderManagement',
-    component: function () {
-      return import('../views/ProviderManagement.vue')
-    }
-  },
-  // 添加默认角色管理路由
-  {
-    path: '/agent-template-management',
-    name: 'AgentTemplateManagement',
-    component: function () {
-      return import('../views/AgentTemplateManagement.vue')
-    }
-  },
-  // 添加模板快速配置路由
-  {
-    path: '/template-quick-config',
-    name: 'TemplateQuickConfig',
-    component: function () {
-      return import('../views/TemplateQuickConfig.vue')
-    }
-  },
-  // 功能配置页面路由
-  {
-    path: '/feature-management',
-    name: 'FeatureManagement',
-    component: function () {
-      return import('../views/FeatureManagement.vue')
-    },
-    meta: {
-      requiresAuth: true,
-      title: '功能配置'
-    }
-  },
-  // 替换词管理
-  {
-    path: '/replacement-word-management',
-    name: 'ReplacementWordManagement',
-    component: function () {
-      return import('../views/ReplacementWordManagement.vue')
-    },
-    meta: {
-      requiresAuth: true,
-      title: '替换词管理'
-    }
-  },
+		},
+		meta: {
+			requiresAuth: true,
+			title: "Voice Resource Activation",
+		},
+	},
+	{
+		path: "/voice-clone-management",
+		name: "VoiceCloneManagement",
+		component: function () {
+			return import("../views/VoiceCloneManagement.vue");
+		},
+		meta: {
+			requiresAuth: true,
+			title: "Voice Clone Management",
+		},
+	},
+	{
+		path: "/dict-management",
+		name: "DictManagement",
+		component: function () {
+			return import("../views/DictManagement.vue");
+		},
+	},
+	{
+		path: "/provider-management",
+		name: "ProviderManagement",
+		component: function () {
+			return import("../views/ProviderManagement.vue");
+		},
+	},
+	// Add default role management route
+	{
+		path: "/agent-template-management",
+		name: "AgentTemplateManagement",
+		component: function () {
+			return import("../views/AgentTemplateManagement.vue");
+		},
+	},
+	// Add template quick configuration route
+	{
+		path: "/template-quick-config",
+		name: "TemplateQuickConfig",
+		component: function () {
+			return import("../views/TemplateQuickConfig.vue");
+		},
+	},
+	// Feature configuration page route
+	{
+		path: "/feature-management",
+		name: "FeatureManagement",
+		component: function () {
+			return import("../views/FeatureManagement.vue");
+		},
+		meta: {
+			requiresAuth: true,
+			title: "Feature Configuration",
+		},
+	},
+	// Replacement word management
+	{
+		path: "/replacement-word-management",
+		name: "ReplacementWordManagement",
+		component: function () {
+			return import("../views/ReplacementWordManagement.vue");
+		},
+		meta: {
+			requiresAuth: true,
+			title: "Replacement word management",
+		},
+	},
 ]
 const router = new VueRouter({
-  base: process.env.VUE_APP_PUBLIC_PATH || '/',
-  routes
-})
+	base: process.env.VUE_APP_PUBLIC_PATH || "/",
+	routes,
+});
 
-// 全局处理重复导航，改为刷新页面
-const originalPush = VueRouter.prototype.push
+// Handle duplicate navigation globally, change to refresh the page
+const originalPush = VueRouter.prototype.push;
 VueRouter.prototype.push = function push(location) {
-  return originalPush.call(this, location).catch(err => {
-    if (err.name === 'NavigationDuplicated') {
-      // 如果是重复导航，刷新页面
-      window.location.reload()
-    } else {
-      // 其他错误正常抛出
-      throw err
-    }
+	return originalPush.call(this, location).catch((err) => {
+		if (err.name === "NavigationDuplicated") {
+			// If it is a duplicate navigation, refresh the page
+			window.location.reload();
+		} else {
+			// Other errors are thrown normally
+			throw err;
+		}
   })
 }
 
-// 需要登录才能访问的路由
+// Routes that require login to access
 const protectedRoutes = ['home', 'RoleConfig', 'DeviceManagement', 'UserManagement', 'ModelConfig', 'KnowledgeBaseManagement', 'KnowledgeFileUpload']
 
-// 路由守卫
+// Route guard
 router.beforeEach((to, from, next) => {
-  // 检查是否是需要保护的路由
-  if (protectedRoutes.includes(to.name)) {
-    // 从localStorage获取token
-    const token = localStorage.getItem('token')
-    if (!token) {
-      // 未登录，跳转到登录页
-      next({ name: 'login', query: { redirect: to.fullPath } })
-      return
-    }
-  }
+	// Check if it is a protected route
+	if (protectedRoutes.includes(to.name)) {
+		// Get token from localStorage
+		const token = localStorage.getItem("token");
+		if (!token) {
+			// Not logged in, redirect to login page
+			next({ name: "login", query: { redirect: to.fullPath } });
+			return;
+		}
+	}
   next()
 })
 
-export default router
+export default router;

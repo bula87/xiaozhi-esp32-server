@@ -23,10 +23,12 @@ class MemoryProvider(MemoryProviderBase):
 
         try:
             self.client = MemoryClient(api_key=self.api_key)
-            logger.bind(tag=TAG).info("成功连接到 Mem0ai 服务")
+            logger.bind(tag=TAG).info("Successfully connected to Mem0ai service")
         except Exception as e:
-            logger.bind(tag=TAG).error(f"连接到 Mem0ai 服务时发生错误: {str(e)}")
-            logger.bind(tag=TAG).error(f"详细错误: {traceback.format_exc()}")
+            logger.bind(tag=TAG).error(
+                f"Error occurred connecting to Mem0ai service: {str(e)}"
+            )
+            logger.bind(tag=TAG).error(f"Detailed error: {traceback.format_exc()}")
             self.use_mem0 = False
 
     async def save_memory(self, msgs, session_id=None):
@@ -37,7 +39,6 @@ class MemoryProvider(MemoryProviderBase):
                 for message in msgs:
                     if message.role == "system":
                         continue
-
                     if message.role == "tool":
                         continue
 
@@ -49,7 +50,11 @@ class MemoryProvider(MemoryProviderBase):
                     # Extract content from JSON format if present (for ASR with emotion/language tags)
                     # Same logic as in query_memory method
                     try:
-                        if content and content.strip().startswith("{") and content.strip().endswith("}"):
+                        if (
+                            content
+                            and content.strip().startswith("{")
+                            and content.strip().endswith("}")
+                        ):
                             data = json.loads(content)
                             if "content" in data:
                                 content = data["content"]
@@ -62,7 +67,7 @@ class MemoryProvider(MemoryProviderBase):
                 result = self.client.add(messages, user_id=self.role_id)
                 logger.bind(tag=TAG).debug(f"Save memory result: {result}")
         except Exception as e:
-            logger.bind(tag=TAG).error(f"保存记忆失败: {str(e)}")
+            logger.bind(tag=TAG).error(f"Save memory failed: {str(e)}")
 
         return None
 
@@ -72,7 +77,6 @@ class MemoryProvider(MemoryProviderBase):
         try:
             if not getattr(self, "role_id", None):
                 return ""
-
             filters = {"user_id": self.role_id}
 
             search_query = query
@@ -97,7 +101,7 @@ class MemoryProvider(MemoryProviderBase):
                         # Parse and reformat the timestamp
                         dt = timestamp.split(".")[0]  # Remove milliseconds
                         formatted_time = dt.replace("T", " ")
-                    except:
+                    except IndexError:
                         formatted_time = timestamp
                 memory = entry.get("memory", "")
                 if timestamp and memory:
@@ -112,5 +116,5 @@ class MemoryProvider(MemoryProviderBase):
             logger.bind(tag=TAG).debug(f"Query results: {memories_str}")
             return memories_str
         except Exception as e:
-            logger.bind(tag=TAG).error(f"查询记忆失败: {str(e)}")
+            logger.bind(tag=TAG).error(f"Query memory failed: {str(e)}")
             return ""

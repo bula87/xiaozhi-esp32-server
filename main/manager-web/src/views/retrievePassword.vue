@@ -1,7 +1,7 @@
 <template>
   <div class="welcome" @keyup.enter="retrievePassword">
     <el-container style="height: 100%;">
-      <!-- 保持相同的头部 -->
+      <!-- Keep the same header -->
       <el-header>
         <div style="display: flex;align-items: center;margin-top: 15px;margin-left: 10px;gap: 10px;">
           <img loading="lazy" alt="" src="@/assets/xiaozhi-logo.png" style="width: 45px;height: 45px;" />
@@ -14,7 +14,7 @@
       <el-main style="position: relative;">
         <form @submit.prevent="retrievePassword">
           <div class="login-box">
-            <!-- 修改标题部分 -->
+            <!-- Modify title section -->
             <div style="display: flex;align-items: center;gap: 20px;margin-bottom: 39px;padding: 0 30px;">
               <img loading="lazy" alt="" src="@/assets/login/hi.png" style="width: 34px;height: 34px;" />
               <div class="login-text">{{ $t('retrievePassword.title') }}</div>
@@ -24,8 +24,8 @@
             </div>
 
             <div style="padding: 0 30px;">
-              <!-- 手机号输入 -->
-              <div class="input-box">
+              <!-- Mobile number input -->
+               <div class="input-box">
                 <div style="display: flex; align-items: center; width: 100%;">
                   <el-select v-model="form.areaCode" style="width: 220px; margin-right: 10px;">
                     <el-option v-for="item in mobileAreaList" :key="item.key" :label="`${item.name} (${item.key})`"
@@ -44,44 +44,44 @@
                   style="width: 150px; height: 40px; cursor: pointer;" @click="fetchCaptcha" />
               </div>
 
-              <!-- 手机验证码 -->
+              <!-- Mobile verification code -->
               <div style="display: flex; align-items: center; margin-top: 20px; width: 100%; gap: 10px;">
                 <div class="input-box" style="width: calc(100% - 130px); margin-top: 0;">
                   <img loading="lazy" alt="" class="input-icon" src="@/assets/login/phone.png" />
                   <el-input v-model="form.mobileCaptcha" :placeholder="$t('retrievePassword.mobileCaptchaPlaceholder')" style="flex: 1;" maxlength="6" />
                 </div>
                 <el-button type="primary" class="send-captcha-btn" :disabled="!canSendMobileCaptcha"
-                  @click="sendMobileCaptcha">
+                    @click="sendMobileCaptcha">
                   <span>
                     {{ countdown > 0 ? `${countdown}${$t('register.secondsLater')}` : $t('retrievePassword.getMobileCaptcha') }}
                   </span>
                 </el-button>
               </div>
 
-              <!-- 新密码 -->
+              <!-- New password -->
               <div class="input-box">
                 <img loading="lazy" alt="" class="input-icon" src="@/assets/login/password.png" />
                 <el-input v-model="form.newPassword" :placeholder="$t('retrievePassword.newPasswordPlaceholder')" type="password" show-password />
               </div>
 
-              <!-- 确认新密码 -->
+              <!-- Confirm new password -->
               <div class="input-box">
                 <img loading="lazy" alt="" class="input-icon" src="@/assets/login/password.png" />
                 <el-input v-model="form.confirmPassword" :placeholder="$t('retrievePassword.confirmNewPasswordPlaceholder')" type="password" show-password />
               </div>
-
-              <!-- 修改底部链接 -->
+ 
+              <!-- Modify bottom link -->
               <div style="font-weight: 400;font-size: 14px;text-align: left;color: #5778ff;margin-top: 20px;">
                 <div style="cursor: pointer;" @click="goToLogin">{{ $t('retrievePassword.goToLogin') }}</div>
               </div>
-            </div>
+              </div>
 
-            <!-- 修改按钮文本 -->
+            <!-- Modify button text -->
             <div class="login-btn" @click="retrievePassword">{{ $t('retrievePassword.resetButton') }}</div>
 
-            <!-- 保持相同的协议声明 -->
+            <!-- Keep the same protocol declaration -->
             <div style="font-size: 14px;color: #979db1;">
-              {{ $t('retrievePassword.agreeTo') }}
+               {{ $t('retrievePassword.agreeTo') }}
               <div style="display: inline-block;color: #5778FF;cursor: pointer;" @click="openPage('/user-agreement.html')">{{ $t('register.userAgreement') }}</div>
               {{ $t('login.and') }}
               <div style="display: inline-block;color: #5778FF;cursor: pointer;" @click="openPage('/privacy-policy.html')">{{ $t('register.privacyPolicy') }}</div>
@@ -90,7 +90,7 @@
         </form>
       </el-main>
 
-      <!-- 保持相同的页脚 -->
+      <!-- Keep the same footer -->
       <el-footer>
         <version-footer />
       </el-footer>
@@ -105,7 +105,7 @@ import { getUUID, goToPage, showDanger, showSuccess, validateMobile, sm2Encrypt 
 import { mapState } from 'vuex';
 import i18n from '@/i18n';
 
-// 导入语言切换功能
+// Import language switching functionality
 import { changeLanguage } from '@/i18n';
 
 export default {
@@ -116,21 +116,21 @@ export default {
   computed: {
     ...mapState({
       allowUserRegister: state => state.pubConfig.allowUserRegister,
-      mobileAreaList: state => state.pubConfig.mobileAreaList,
+       mobileAreaList: state => state.pubConfig.mobileAreaList,
       sm2PublicKey: state => state.pubConfig.sm2PublicKey
     }),
-    // 获取当前语言
+    // Get current language
     currentLanguage() {
       return i18n.locale || "zh_CN";
     },
-    // 根据当前语言获取对应的xiaozhi-ai图标
+    // Get corresponding xiaozhi-ai icon based on the current language
     xiaozhiAiIcon() {
       const currentLang = this.currentLanguage;
       switch (currentLang) {
         case "zh_CN":
           return require("@/assets/xiaozhi-ai.png");
         case "zh_TW":
-          return require("@/assets/xiaozhi-ai_zh_TW.png");
+           return require("@/assets/xiaozhi-ai_zh_TW.png");
         case "en":
           return require("@/assets/xiaozhi-ai_en.png");
         case "de":
@@ -174,7 +174,7 @@ export default {
       }
       window.open(url, '_blank');
     },
-    // 复用验证码获取方法
+    // Reuse captcha fetching method
     fetchCaptcha() {
       this.form.captchaId = getUUID();
       Api.user.getCaptcha(this.form.captchaId, (res) => {
@@ -183,13 +183,13 @@ export default {
           this.captchaUrl = URL.createObjectURL(blob);
 
         } else {
-          console.error('验证码加载异常:', error);
+          console.error('Captcha load failed:', error);
           showDanger(this.$t('register.captchaLoadFailed'));
         }
       });
     },
 
-    // 封装输入验证逻辑
+    // Encapsulate input validation logic
     validateInput(input, message) {
       if (!input.trim()) {
         showDanger(message);
@@ -198,26 +198,26 @@ export default {
       return true;
     },
 
-    // 发送手机验证码
+    // Send mobile verification code
     sendMobileCaptcha() {
-      if (!validateMobile(this.form.mobile, this.form.areaCode)) {
+       if (!validateMobile(this.form.mobile, this.form.areaCode)) {
         showDanger(this.$t('retrievePassword.inputCorrectMobile'));
         return;
       }
 
-      // 验证图形验证码
+      // Validate graphical captcha
       if (!this.validateInput(this.form.captcha, this.$t('retrievePassword.captchaRequired'))) {
         this.fetchCaptcha();
         return;
       }
 
-      // 清除可能存在的旧定时器
+      // Clear possibly existing old timer
       if (this.timer) {
         clearInterval(this.timer);
         this.timer = null;
       }
-
-      // 开始倒计时
+ 
+      // Start countdown
       this.countdown = 60;
       this.timer = setInterval(() => {
         if (this.countdown > 0) {
@@ -227,24 +227,23 @@ export default {
           this.timer = null;
         }
       }, 1000);
-
-      // 调用发送验证码接口
+       // Call the interface to send verification code
       Api.user.sendSmsVerification({
         phone: this.form.areaCode + this.form.mobile,
         captcha: this.form.captcha,
         captchaId: this.form.captchaId
       }, (res) => {
-        showSuccess(this.$t('retrievePassword.captchaSendSuccess'));
-      }, (err) => {
-        showDanger(err.data.msg || this.$t('register.captchaSendFailed'));
-        this.countdown = 0;
-        this.fetchCaptcha();
-      });
+            showSuccess(this.$t('retrievePassword.captchaSendSuccess'));
+          }, (err) => {
+            showDanger(err.data.msg || this.$t('register.captchaSendFailed'));
+            this.countdown = 0;
+            this.fetchCaptcha();
+          });
     },
 
-    // 修改逻辑
+    // Modification logic
     retrievePassword() {
-      // 验证逻辑
+      // Validation logic
       if (!validateMobile(this.form.mobile, this.form.areaCode)) {
         showDanger(this.$t('retrievePassword.inputCorrectMobile'));
         return;
@@ -262,25 +261,25 @@ export default {
         return;
       }
 
-      // 加密密码
+      // Encrypt password
       let encryptedPassword;
       try {
-        // 拼接图形验证码和新密码进行加密
+        // Concatenate captcha and new password for encryption
         const captchaAndPassword = this.form.captcha + this.form.newPassword;
         encryptedPassword = sm2Encrypt(this.sm2PublicKey, captchaAndPassword);
       } catch (error) {
-        console.error("密码加密失败:", error);
+        console.error("Password encryption failed:", error);
         showDanger(this.$t('sm2.encryptionFailed'));
         return;
       }
-
+ 
       Api.user.retrievePassword({
         phone: this.form.areaCode + this.form.mobile,
         password: encryptedPassword,
         code: this.form.mobileCaptcha,
         captchaId: this.form.captchaId
       }, (res) => {
-        showSuccess(this.$t('retrievePassword.passwordUpdateSuccess'));
+         showSuccess(this.$t('retrievePassword.passwordUpdateSuccess'));
         goToPage('/login');
       }, (err) => {
         showDanger(err.data.msg || this.$t('message.error'));
@@ -295,7 +294,7 @@ export default {
     }
   },
   beforeDestroy() {
-    if (this.timer) {
+     if (this.timer) {
       clearInterval(this.timer);
     }
   }

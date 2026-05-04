@@ -14,46 +14,47 @@ import lombok.Data;
 import xiaozhi.common.validator.group.UpdateGroup;
 
 @Data
-@Schema(description = "模型供应器/商")
+@Schema(description = "Model Supplier/Provider")
 public class ModelProviderDTO implements Serializable {
-    @Schema(description = "主键")
-    @NotBlank(message = "id不能为空", groups = UpdateGroup.class)
+    @Schema(description = "Primary Key")
+    @NotBlank(message = "id cannot be empty", groups = UpdateGroup.class)
     private String id;
 
-    @Schema(description = "模型类型(Memory/ASR/VAD/LLM/TTS)")
-    @NotBlank(message = "modelType不能为空")
+    @Schema(description = "Model Type(Memory/ASR/VAD/LLM/TTS)")
+    @NotBlank(message = "modelType cannot be empty")
     private String modelType;
 
-    @Schema(description = "供应器类型")
-    @NotBlank(message = "providerCode不能为空")
+    @Schema(description = "Provider Type")
+    @NotBlank(message = "providerCode cannot be empty")
     private String providerCode;
 
-    @Schema(description = "供应器名称")
-    @NotBlank(message = "name不能为空")
+    @Schema(description = "Provider Name")
+    @NotBlank(message = "name cannot be empty")
     private String name;
 
-    @Schema(description = "供应器字段列表(JSON格式)")
+    @Schema(description = "Provider Field List(JSON format)")
     @TableField(typeHandler = JacksonTypeHandler.class)
-    @NotBlank(message = "fields(JSON格式)不能为空")
+    @NotBlank(message = "fields(JSON format) cannot be empty")
     private String fields;
 
-    @Schema(description = "排序")
-    @NotNull(message = "sort不能为空")
+    @Schema(description = "Sort")
+    @NotNull(message = "sort cannot be empty")
     private Integer sort;
 
-    @Schema(description = "更新者")
+    @Schema(description = "Updater")
     @TableField(fill = FieldFill.UPDATE)
     private Long updater;
 
-    @Schema(description = "更新时间")
+    @Schema(description = "Update Time")
     @TableField(fill = FieldFill.UPDATE)
     private Date updateDate;
 
-    @Schema(description = "创建者")
+    @Schema(description = "Creator")
     @TableField(fill = FieldFill.INSERT)
     private Long creator;
 
-    @Schema(description = "创建时间")
+    @Schema(description = "Create Time")
     @TableField(fill = FieldFill.INSERT)
     private Date createDate;
 }
+ 

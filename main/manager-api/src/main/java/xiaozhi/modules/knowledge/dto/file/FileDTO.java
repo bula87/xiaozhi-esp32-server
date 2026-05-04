@@ -9,355 +9,356 @@ import jakarta.validation.constraints.*;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
- * 文件管理聚合 DTO
+ * File management aggregation DTO
  * <p>
- * 容器类，内含文件模块所有请求/响应对象的静态内部类定义。
+ * Container class, contains the static inner class definitions of all request/response objects in the file module.
  * </p>
  */
-@Schema(description = "文件管理聚合 DTO")
+@Schema(description = "File management aggregation DTO")
 public class FileDTO {
 
-    // ========== 请求类 ==========
+    // ========== Request classes ==========
 
     /**
-     * 文件上传请求 (对应接口 1: upload)
+     * File upload request (corresponding interface 1: upload)
      */
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
-    @Schema(description = "文件上传请求")
+    @Schema(description = "File upload request")
     public static class UploadReq implements Serializable {
 
-        @NotNull(message = "文件不能为空")
-        @Schema(description = "上传的文件", requiredMode = Schema.RequiredMode.REQUIRED)
+        @NotNull(message = "File cannot be empty")
+        @Schema(description = "Uploaded file", requiredMode = Schema.RequiredMode.REQUIRED)
         private MultipartFile file;
 
-        @Schema(description = "父文件夹 ID (为空则上传到根目录)", example = "folder_001")
+        @Schema(description = "Parent folder ID (empty means upload to the root directory)", example = "folder_001")
         @JsonProperty("parent_id")
         private String parentId;
     }
 
     /**
-     * 新建文件夹请求 (对应接口 2: create)
+     * Create new folder request (corresponding interface 2: create)
      */
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
-    @Schema(description = "新建文件夹请求")
+    @Schema(description = "Create new folder request")
     public static class CreateReq implements Serializable {
 
-        @NotBlank(message = "文件夹名称不能为空")
-        @Schema(description = "文件夹名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "新建文件夹")
+        @NotBlank(message = "Folder name cannot be empty")
+        @Schema(description = "Folder name", requiredMode = Schema.RequiredMode.REQUIRED, example = "New folder")
         private String name;
 
-        @Schema(description = "父文件夹 ID (为空则创建在根目录)", example = "folder_001")
+        @Schema(description = "Parent folder ID (empty means create in the root directory)", example = "folder_001")
         @JsonProperty("parent_id")
         private String parentId;
 
-        @NotBlank(message = "类型不能为空")
-        @Schema(description = "类型: FOLDER", requiredMode = Schema.RequiredMode.REQUIRED, example = "FOLDER")
+        @NotBlank(message = "Type cannot be empty")
+        @Schema(description = "Type: FOLDER", requiredMode = Schema.RequiredMode.REQUIRED, example = "FOLDER")
         @Builder.Default
         private String type = "FOLDER";
     }
 
     /**
-     * 重命名请求 (对应接口 6: rename)
+     * Rename request (corresponding interface 6: rename)
      */
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
-    @Schema(description = "重命名请求")
+    @Schema(description = "Rename request")
     public static class RenameReq implements Serializable {
 
-        @NotBlank(message = "文件 ID 不能为空")
-        @Schema(description = "文件/文件夹 ID", requiredMode = Schema.RequiredMode.REQUIRED, example = "file_001")
+        @NotBlank(message = "File ID cannot be empty")
+        @Schema(description = "File/folder ID", requiredMode = Schema.RequiredMode.REQUIRED, example = "file_001")
         @JsonProperty("file_id")
         private String fileId;
 
-        @NotBlank(message = "新名称不能为空")
-        @Schema(description = "新名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "重命名后的文件")
+        @NotBlank(message = "New name cannot be empty")
+        @Schema(description = "New name", requiredMode = Schema.RequiredMode.REQUIRED, example = "Renamed file")
         private String name;
     }
 
     /**
-     * 移动请求 (对应接口 7: move)
+     * Move request (corresponding interface 7: move)
      */
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
-    @Schema(description = "移动请求")
+    @Schema(description = "Move request")
     public static class MoveReq implements Serializable {
 
-        @NotEmpty(message = "源文件 ID 列表不能为空")
-        @Schema(description = "源文件/文件夹 ID 列表", requiredMode = Schema.RequiredMode.REQUIRED, example = "[\"file_001\", \"file_002\"]")
+        @NotEmpty(message = "Source file ID list cannot be empty")
+        @Schema(description = "Source file/folder ID list", requiredMode = Schema.RequiredMode.REQUIRED, example = "[\"file_001\", \"file_002\"]")
         @JsonProperty("src_file_ids")
         private List<String> srcFileIds;
 
-        @NotBlank(message = "目标文件夹 ID 不能为空")
-        @Schema(description = "目标文件夹 ID", requiredMode = Schema.RequiredMode.REQUIRED, example = "folder_002")
+        @NotBlank(message = "Target folder ID cannot be empty")
+        @Schema(description = "Target folder ID", requiredMode = Schema.RequiredMode.REQUIRED, example = "folder_002")
         @JsonProperty("dest_file_id")
         private String destFileId;
     }
 
     /**
-     * 批量删除请求 (对应接口 8: rm)
+     * Batch delete request (corresponding interface 8: rm)
      */
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
-    @Schema(description = "批量删除请求")
+    @Schema(description = "Batch delete request")
     public static class RemoveReq implements Serializable {
 
-        @NotEmpty(message = "文件 ID 列表不能为空")
-        @Schema(description = "文件/文件夹 ID 列表", requiredMode = Schema.RequiredMode.REQUIRED, example = "[\"file_001\", \"file_002\"]")
+        @NotEmpty(message = "File ID list cannot be empty")
+        @Schema(description = "File/folder ID list", requiredMode = Schema.RequiredMode.REQUIRED, example = "[\"file_001\", \"file_002\"]")
         @JsonProperty("file_ids")
         private List<String> fileIds;
     }
 
     /**
-     * 导入知识库请求 (对应接口 9: convert)
+     * Import knowledge base request (corresponding interface 9: convert)
      */
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
-    @Schema(description = "导入知识库请求")
+    @Schema(description = "Import knowledge base request")
     public static class ConvertReq implements Serializable {
 
-        @NotEmpty(message = "文件 ID 列表不能为空")
-        @Schema(description = "文件 ID 列表", requiredMode = Schema.RequiredMode.REQUIRED, example = "[\"file_001\", \"file_002\"]")
+        @NotEmpty(message = "File ID list cannot be empty")
+        @Schema(description = "File ID list", requiredMode = Schema.RequiredMode.REQUIRED, example = "[\"file_001\", \"file_002\"]")
         @JsonProperty("file_ids")
         private List<String> fileIds;
 
-        @NotEmpty(message = "知识库 ID 列表不能为空")
-        @Schema(description = "目标知识库 ID 列表", requiredMode = Schema.RequiredMode.REQUIRED, example = "[\"kb_001\"]")
+        @NotEmpty(message = "Knowledge base ID list cannot be empty")
+        @Schema(description = "Target knowledge base ID list", requiredMode = Schema.RequiredMode.REQUIRED, example = "[\"kb_001\"]")
         @JsonProperty("kb_ids")
         private List<String> kbIds;
     }
 
     /**
-     * 列表查询请求 (对应接口 3: list_files)
+     * List query request (corresponding interface 3: list_files)
      */
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
-    @Schema(description = "列表查询请求")
+    @Schema(description = "List query request")
     public static class ListReq implements Serializable {
 
-        @Schema(description = "父文件夹 ID (为空则查询根目录)", example = "folder_001")
+        @Schema(description = "Parent folder ID (empty means query the root directory)", example = "folder_001")
         @JsonProperty("parent_id")
         private String parentId;
 
-        @Schema(description = "关键词搜索", example = "文档")
+        @Schema(description = "Keyword search", example = "Document")
         private String keywords;
 
-        @Schema(description = "页码 (从 1 开始)", example = "1")
+        @Schema(description = "Page number (starting from 1)", example = "1")
         private Integer page;
 
-        @Schema(description = "每页数量", example = "30")
+        @Schema(description = "Number of items per page", example = "30")
         @JsonProperty("page_size")
         private Integer pageSize;
 
-        @Schema(description = "排序字段: create_time / update_time / name / size", example = "create_time")
+        @Schema(description = "Sort field: create_time / update_time / name / size", example = "create_time")
         private String orderby;
 
-        @Schema(description = "是否降序", example = "true")
+        @Schema(description = "Descending order", example = "true")
         private Boolean desc;
     }
 
-    // ========== 响应类 ==========
+    // ========== Response classes ==========
 
     /**
-     * 文件/文件夹基础信息 VO
+     * File/folder basic information VO
      */
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
-    @Schema(description = "文件/文件夹基础信息")
+    @Schema(description = "File/folder basic information")
     public static class InfoVO implements Serializable {
 
-        @Schema(description = "文件/文件夹 ID", example = "file_001")
+        @Schema(description = "File/folder ID", example = "file_001")
         private String id;
 
-        @Schema(description = "父文件夹 ID", example = "folder_001")
+        @Schema(description = "Parent folder ID", example = "folder_001")
         @JsonProperty("parent_id")
         private String parentId;
 
-        @Schema(description = "租户 ID", example = "tenant_001")
+        @Schema(description = "Tenant ID", example = "tenant_001")
         @JsonProperty("tenant_id")
         private String tenantId;
 
-        @Schema(description = "创建者 ID", example = "user_001")
+        @Schema(description = "Creator ID", example = "user_001")
         @JsonProperty("created_by")
         private String createdBy;
 
-        @Schema(description = "类型: FOLDER / FILE", example = "FOLDER")
+        @Schema(description = "Type: FOLDER / FILE", example = "FOLDER")
         private String type;
 
-        @Schema(description = "名称", example = "我的文件夹")
+        @Schema(description = "Name", example = "My folder")
         private String name;
 
-        @Schema(description = "路径位置", example = "/root/folder")
+        @Schema(description = "Path location", example = "/root/folder")
         private String location;
 
-        @Schema(description = "文件大小 (字节)", example = "1024")
+        @Schema(description = "File size (bytes)", example = "1024")
         private Long size;
 
-        @Schema(description = "来源类型", example = "local")
+        @Schema(description = "Source type", example = "local")
         @JsonProperty("source_type")
         private String sourceType;
 
-        @Schema(description = "创建时间 (时间戳)", example = "1700000000000")
+        @Schema(description = "Creation time (timestamp)", example = "1700000000000")
         @JsonProperty("create_time")
         private Long createTime;
 
-        @Schema(description = "创建日期 (格式化)", example = "2024-01-15 10:30:00")
+        @Schema(description = "Creation date (formatted)", example = "2024-01-15 10:30:00")
         @JsonProperty("create_date")
         private String createDate;
 
-        @Schema(description = "更新时间 (时间戳)", example = "1700000001000")
+        @Schema(description = "Update time (timestamp)", example = "1700000001000")
         @JsonProperty("update_time")
         private Long updateTime;
 
-        @Schema(description = "更新日期 (格式化)", example = "2024-01-15 11:00:00")
+        @Schema(description = "Update date (formatted)", example = "2024-01-15 11:00:00")
         @JsonProperty("update_date")
         private String updateDate;
 
-        @Schema(description = "文件扩展名", example = "pdf")
+        @Schema(description = "File extension", example = "pdf")
         private String extension;
     }
 
     /**
-     * 列表响应 VO (对应接口 3: list_files)
+     * List response VO (corresponding interface 3: list_files)
      */
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
-    @Schema(description = "文件列表响应")
+    @Schema(description = "File list response")
     public static class ListVO implements Serializable {
 
-        @Schema(description = "总记录数", example = "100")
+        @Schema(description = "Total number of records", example = "100")
         private Long total;
 
-        @Schema(description = "当前父文件夹信息")
+        @Schema(description = "Current parent folder information")
         @JsonProperty("parent_folder")
         private InfoVO parentFolder;
 
-        @Schema(description = "文件/文件夹列表")
+        @Schema(description = "File/folder list")
         private List<InfoVO> files;
 
-        @Schema(description = "面包屑导航路径")
+        @Schema(description = "Breadcrumb navigation path")
         private List<InfoVO> breadcrumb;
     }
 
     /**
-     * 转换结果项 VO (对应接口 9: convert)
+     * Conversion result item VO (corresponding interface 9: convert)
      */
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
-    @Schema(description = "文件转换结果项")
+    @Schema(description = "File conversion result item")
     public static class ConvertVO implements Serializable {
 
-        @Schema(description = "转换记录 ID", example = "convert_001")
+        @Schema(description = "Conversion record ID", example = "convert_001")
         private String id;
 
-        @Schema(description = "源文件 ID", example = "file_001")
+        @Schema(description = "Source file ID", example = "file_001")
         @JsonProperty("file_id")
         private String fileId;
 
-        @Schema(description = "目标文档 ID", example = "doc_001")
+        @Schema(description = "Target document ID", example = "doc_001")
         @JsonProperty("document_id")
         private String documentId;
 
-        @Schema(description = "创建时间 (时间戳)", example = "1700000000000")
+        @Schema(description = "Creation time (timestamp)", example = "1700000000000")
         @JsonProperty("create_time")
         private Long createTime;
 
-        @Schema(description = "创建日期 (格式化)", example = "2024-01-15 10:30:00")
+        @Schema(description = "Creation date (formatted)", example = "2024-01-15 10:30:00")
         @JsonProperty("create_date")
         private String createDate;
 
-        @Schema(description = "更新时间 (时间戳)", example = "1700000001000")
+        @Schema(description = "Update time (timestamp)", example = "1700000001000")
         @JsonProperty("update_time")
         private Long updateTime;
 
-        @Schema(description = "更新日期 (格式化)", example = "2024-01-15 11:00:00")
+        @Schema(description = "Update date (formatted)", example = "2024-01-15 11:00:00")
         @JsonProperty("update_date")
         private String updateDate;
     }
 
     /**
-     * 转换状态 VO (对应接口 10: get_convert_status)
+     * Conversion status VO (corresponding interface 10: get_convert_status)
      */
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
-    @Schema(description = "文件转换状态")
+    @Schema(description = "File conversion status")
     public static class ConvertStatusVO implements Serializable {
 
-        @Schema(description = "转换状态: pending / processing / completed / failed", example = "completed")
+        @Schema(description = "Conversion status: pending / processing / completed / failed", example = "completed")
         private String status;
 
-        @Schema(description = "转换进度 (0.0 - 1.0)", example = "1.0")
+        @Schema(description = "Conversion progress (0.0 - 1.0)", example = "1.0")
         private Float progress;
 
-        @Schema(description = "状态消息", example = "转换完成")
+        @Schema(description = "Status message", example = "Conversion complete")
         private String message;
     }
 
     /**
-     * 面包屑 VO (对应接口 12: all_parent_folder)
+     * Breadcrumb VO (corresponding interface 12: all_parent_folder)
      */
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
-    @Schema(description = "面包屑导航 (所有父文件夹)")
+    @Schema(description = "Breadcrumb navigation (all parent folders)")
     public static class BreadcrumbVO implements Serializable {
 
-        @Schema(description = "父文件夹列表 (从根到当前的路径)")
+        @Schema(description = "Parent folder list (from root to current path)")
         @JsonProperty("parent_folders")
         private List<InfoVO> parentFolders;
     }
 
     /**
-     * 根目录信息 VO (对应接口 10: get_root_folder)
+     * Root directory information VO (corresponding interface 10: get_root_folder)
      */
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
-    @Schema(description = "根目录信息")
+    @Schema(description = "Root directory information")
     public static class RootFolderVO implements Serializable {
 
-        @Schema(description = "根文件夹信息")
+        @Schema(description = "Root folder information")
         @JsonProperty("root_folder")
         private InfoVO rootFolder;
     }
 
     /**
-     * 父目录信息 VO (对应接口 11: get_parent_folder)
+     * Parent directory information VO (corresponding interface 11: get_parent_folder)
      */
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
-    @Schema(description = "父目录信息")
+    @Schema(description = "Parent directory information")
     public static class ParentFolderVO implements Serializable {
 
-        @Schema(description = "父文件夹信息")
+        @Schema(description = "Parent folder information")
         @JsonProperty("parent_folder")
         private InfoVO parentFolder;
     }
 }
+ 

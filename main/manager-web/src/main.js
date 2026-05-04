@@ -1,29 +1,31 @@
-import 'element-ui/lib/theme-chalk/index.css';
-import 'normalize.css/normalize.css'; // A modern alternative to CSS resets
-import Vue from 'vue';
-import ElementUI from 'element-ui';
-import App from './App.vue';
-import router from './router';
-import store from './store';
-import i18n from './i18n';
-import './styles/global.scss';
-import { register as registerServiceWorker } from './registerServiceWorker';
-import featureManager from './utils/featureManager';
+import "element-ui/lib/theme-chalk/index.css";
+import "normalize.css/normalize.css"; // A modern alternative to CSS resets
+import Vue from "vue";
+import ElementUI from "element-ui";
+import App from "./App.vue";
+import router from "./router";
+import store from "./store";
+import i18n from "./i18n";
+import "./styles/global.scss";
+import { register as registerServiceWorker } from "./registerServiceWorker";
+import featureManager from "./utils/featureManager";
 
-// 创建事件总线，用于组件间通信
+// Create event bus, used for inter-component communication
 Vue.prototype.$eventBus = new Vue();
 
 Vue.use(ElementUI);
 
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
 
-// 注册Service Worker
+// Register Service Worker
 registerServiceWorker();
 
-// 创建Vue实例
+// Create Vue instance
 new Vue({
-  router,
-  store,
-  i18n,
-  render: function (h) { return h(App) }
-}).$mount('#app')
+	router,
+	store,
+	i18n,
+	render: function (h) {
+		return h(App);
+	},
+}).$mount("#app");

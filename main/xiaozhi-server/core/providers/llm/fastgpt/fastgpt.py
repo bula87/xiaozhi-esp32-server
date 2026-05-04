@@ -19,10 +19,10 @@ class LLMProvider(LLMProviderBase):
             logger.bind(tag=TAG).error(model_key_msg)
 
     def response(self, session_id, dialogue, **kwargs):
-        # 取最后一条用户消息
+        # Retrieve the last user message
         last_msg = next(m for m in reversed(dialogue) if m["role"] == "user")
 
-        # 发起流式请求
+        # Initiate streamed request
         with requests.post(
             f"{self.base_url}/chat/completions",
             headers={"Authorization": f"Bearer {self.api_key}"},
@@ -56,13 +56,12 @@ class LLMProvider(LLMProviderBase):
                                     if "</think>" in content:
                                         continue
                                     yield content
-
-                    except json.JSONDecodeError as e:
+                    except json.JSONDecodeError:
                         continue
-                    except Exception as e:
+                    except Exception:
                         continue
 
     def response_with_functions(self, session_id, dialogue, functions=None):
         logger.bind(tag=TAG).error(
-            f"fastgpt暂未实现完整的工具调用（function call），建议使用其他意图识别"
+            "fastgpt has not yet implemented complete tool calling (function call), suggest using other intent recognition"
         )

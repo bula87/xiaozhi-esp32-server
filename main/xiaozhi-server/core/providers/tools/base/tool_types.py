@@ -1,27 +1,26 @@
-"""工具系统的类型定义"""
+"""Tool system type definition"""
 
 from enum import Enum
 
 from dataclasses import dataclass
 from typing import Any, Dict, Optional
-from plugins_func.register import Action
 
 
 class ToolType(Enum):
-    """工具类型枚举"""
+    """Tool type enumeration"""
 
-    SERVER_PLUGIN = "server_plugin"  # 服务端插件
-    SERVER_MCP = "server_mcp"  # 服务端MCP
-    DEVICE_IOT = "device_iot"  # 设备端IoT
-    DEVICE_MCP = "device_mcp"  # 设备端MCP
-    MCP_ENDPOINT = "mcp_endpoint"  # MCP接入点
+    SERVER_PLUGIN = "server_plugin"  # server side plugin
+    SERVER_MCP = "server_mcp"  # server mcp
+    DEVICE_IOT = "device_iot"  # device iot
+    DEVICE_MCP = "device_mcp"  # device mcp
+    MCP_ENDPOINT = "mcp_endpoint"  # mcp endpoint
 
 
 @dataclass
 class ToolDefinition:
-    """工具定义"""
+    """Tool definition"""
 
-    name: str  # 工具名称
-    description: Dict[str, Any]  # 工具描述（OpenAI函数调用格式）
-    tool_type: ToolType  # 工具类型
-    parameters: Optional[Dict[str, Any]] = None  # 额外参数
+    name: str  # Tool name
+    description: Dict[str, Any]  # Tool description (OpenAI function call format)
+    tool_type: ToolType  # Tool type
+    parameters: Optional[Dict[str, Any]] = None  # Extra parameters

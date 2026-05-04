@@ -1,45 +1,47 @@
--- 添加 MinimaxHTTPStream 流式 TTS 供应器
+-- Add MinimaxHTTPStream streaming TTS provider
 delete from `ai_model_provider` where id = 'SYSTEM_TTS_MinimaxStreamTTS';
 INSERT INTO `ai_model_provider` (`id`, `model_type`, `provider_code`, `name`, `fields`, `sort`, `creator`, `create_date`, `updater`, `update_date`) VALUES
-('SYSTEM_TTS_MinimaxStreamTTS', 'TTS', 'minimax_httpstream', 'Minimax流式语音合成', '[{"key":"group_id","label":"组ID","type":"string"},{"key":"api_key","label":"API密钥","type":"string"},{"key":"model","label":"模型","type":"string"},{"key":"voice_id","label":"音色ID","type":"string"},{"key":"output_dir","label":"输出目录","type":"string"},{"key":"voice_setting","label":"音色设置","type":"dict","dict_name":"voice_setting"},{"key":"pronunciation_dict","label":"发音字典","type":"dict","dict_name":"pronunciation_dict"},{"key":"audio_setting","label":"音频设置","type":"dict","dict_name":"audio_setting"},{"key":"timber_weights","label":"音色权重","type":"string"}]', 18, 1, NOW(), 1, NOW());
+('SYSTEM_TTS_MinimaxStreamTTS', 'TTS', 'minimax_httpstream', 'Minimax Streaming Speech Synthesis', '[{"key":"group_id","label":"Group ID","type":"string"},{"key":"api_key","label":"API Key","type":"string"},{"key":"model","label":"Model","type":"string"},{"key":"voice_id","label":"Voice ID","type":"string"},{"key":"output_dir","label":"Output Directory","type":"string"},{"key":"voice_setting","label":"Voice Settings","type":"dict","dict_name":"voice_setting"},{"key":"pronunciation_dict","label":"Pronunciation Dictionary","type":"dict","dict_name":"pronunciation_dict"},{"key":"audio_setting","label":"Audio Settings","type":"dict","dict_name":"audio_setting"},{"key":"timber_weights","label":"Voice Weights","type":"string"}]', 18, 1, NOW(), 1, NOW());
 
--- 添加Minimax流式TTS模型配置
+-- Add Minimax streaming TTS model configuration
 delete from `ai_model_config` where id = 'TTS_MinimaxStreamTTS';
-INSERT INTO `ai_model_config` VALUES ('TTS_MinimaxStreamTTS', 'TTS', 'MinimaxStreamTTS', 'Minimax流式语音合成', 0, 1, '{"type": "minimax_httpstream", "group_id": "", "api_key": "", "model": "speech-01-turbo", "voice_id": "female-shaonv", "output_dir": "tmp/", "voice_setting": {"speed": 1, "vol": 1, "pitch": 0, "emotion": "happy"}, "pronunciation_dict": {"tone": ["处理/(chu3)(li3)", "危险/dangerous"]}, "audio_setting": {"sample_rate": 24000, "bitrate": 128000, "format": "pcm", "channel": 1}}', NULL, NULL, 21, NULL, NULL, NULL, NULL);
+INSERT INTO `ai_model_config` VALUES ('TTS_MinimaxStreamTTS', 'TTS', 'MinimaxStreamTTS', 'Minimax Streaming Speech Synthesis', 0, 1, '{"type": "minimax_httpstream", "group_id": "", "api_key": "", "model": "speech-01-turbo", "voice_id": "female-shaonv", "output_dir": "tmp/", "voice_setting": {"speed": 1, "vol": 1, "pitch": 0, "emotion": "happy"}, "pronunciation_dict": {"tone": ["Processing/(chu3)(li3)", "Dangerous/dangerous"]}, "audio_setting": {"sample_rate": 24000, "bitrate": 128000, "format": "pcm", "channel": 1}}', NULL, NULL, 21, NULL, NULL, NULL, NULL);
 
--- 更新Minimax流式TTS配置说明
+-- Update Minimax streaming TTS configuration description
 UPDATE `ai_model_config` SET 
 `doc_link` = 'https://platform.minimaxi.com/',
-`remark` = 'Minimax流式TTS配置说明：
-1. 需要先申请Minimax API Key
-2. 需要填写Group ID
-3. 支持多种音色设置和音频参数调整
-4. 支持实时流式合成，具有较低的延迟
-5. 支持自定义发音字典和音色权重
-6. 隐藏参数配置：声音设定(voice_setting)、发音字典(pronunciation_dict)、音色权重(timber_weights)
-   - 语速(speed): 范围[0.5,2]，默认1.0，取值越大语速越快
-   - 音量(vol): 范围(0,10]，默认1.0，取值越大音量越高
-   - 音调(pitch): 范围[-12,12]，默认0，取值需为整数
-   - 情绪(emotion): 控制合成语音的情绪，支持7种值：["happy", "sad", "angry", "fearful", "disgusted", "surprised", "calm"]，该参数仅对 speech-2.5-hd-preview、speech-2.5-turbo-preview、speech-02-hd、speech-02-turbo、speech-01-turbo、speech-01-hd 生效
-   - timbre_weights与voice_id二选一必填
-   - voice_id(请求的音色id，须和weight参数同步填写)
-   - weight(权重，最多支持4种音色混合。范围[1,100])
+`remark` = 'Minimax Streaming TTS Configuration Instructions:
+1. Need to apply for a Minimax API Key first
+2. Need to fill in the Group ID
+3. Supports multiple voice settings and audio parameter adjustments
+4. Supports real-time streaming synthesis with low latency
+5. Supports custom pronunciation dictionary and voice weights
+6. Hidden parameter configurations: Voice Settings (voice_setting), Pronunciation Dictionary (pronunciation_dict), Voice Weights (timber_weights)
+   - Speed (speed): Range [0.5,2], default 1.0, the larger the value, the faster the speech
+   - Volume (vol): Range (0,10], default 1.0, the larger the value, the higher the volume
+   - Pitch (pitch): Range [-12,12], default 0, value must be an integer
+   - Emotion (emotion): Controls the emotion of synthesized speech, supports 7 values: ["happy", "sad", "angry", "fearful", "disgusted", "surprised", "calm"], this parameter only applies to speech-2.5-hd-preview, speech-2.5-turbo-preview, speech-02-hd, speech-02-turbo, speech-01-turbo, speech-01-hd
+   - Either timbre_weights or voice_id must be filled in
+   - voice_id (requested voice ID, must be filled in together with the weight parameter)
+   - weight (weight, supports up to 4 voice blends. Range [1,100])
 ' WHERE `id` = 'TTS_MinimaxStreamTTS';
 
--- 添加Minimax流式TTS音色
+-- Add Minimax streaming TTS voice
 delete from `ai_tts_voice` where tts_model_id = 'TTS_MinimaxStreamTTS';
 
--- 默认音色
-INSERT INTO `ai_tts_voice` VALUES ('TTS_MinimaxStreamTTS_0001', 'TTS_MinimaxStreamTTS', '少女音', 'female-shaonv', '中文', NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL);
-INSERT INTO `ai_tts_voice` VALUES ('TTS_MinimaxStreamTTS_0002', 'TTS_MinimaxStreamTTS', '成熟女声', 'female-chengshu', '中文', NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL);
-INSERT INTO `ai_tts_voice` VALUES ('TTS_MinimaxStreamTTS_0003', 'TTS_MinimaxStreamTTS', '霸道少爷', 'badao_shaoye', '中文', NULL, NULL, NULL, NULL, 3, NULL, NULL, NULL, NULL);
-INSERT INTO `ai_tts_voice` VALUES ('TTS_MinimaxStreamTTS_0004', 'TTS_MinimaxStreamTTS', '病娇弟弟', 'bingjiao_didi', '中文', NULL, NULL, NULL, NULL, 4, NULL, NULL, NULL, NULL);
-INSERT INTO `ai_tts_voice` VALUES ('TTS_MinimaxStreamTTS_0005', 'TTS_MinimaxStreamTTS', '纯真学弟', 'chunzhen_xuedi', '中文', NULL, NULL, NULL, NULL, 5, NULL, NULL, NULL, NULL);
-INSERT INTO `ai_tts_voice` VALUES ('TTS_MinimaxStreamTTS_0006', 'TTS_MinimaxStreamTTS', '冷淡学长', 'lengdan_xiongzhang', '中文', NULL, NULL, NULL, NULL, 6, NULL, NULL, NULL, NULL);
-INSERT INTO `ai_tts_voice` VALUES ('TTS_MinimaxStreamTTS_0007', 'TTS_MinimaxStreamTTS', '甜美小玲', 'tianxin_xiaoling', '中文', NULL, NULL, NULL, NULL, 7, NULL, NULL, NULL, NULL);
-INSERT INTO `ai_tts_voice` VALUES ('TTS_MinimaxStreamTTS_0008', 'TTS_MinimaxStreamTTS', '俏皮萌妹', 'qiaopi_mengmei', '中文', NULL, NULL, NULL, NULL, 8, NULL, NULL, NULL, NULL);
-INSERT INTO `ai_tts_voice` VALUES ('TTS_MinimaxStreamTTS_0009', 'TTS_MinimaxStreamTTS', '妩媚御姐', 'wumei_yujie', '中文', NULL, NULL, NULL, NULL, 9, NULL, NULL, NULL, NULL);
-INSERT INTO `ai_tts_voice` VALUES ('TTS_MinimaxStreamTTS_0010', 'TTS_MinimaxStreamTTS', '嗲嗲学妹', 'diadia_xuemei', '中文', NULL, NULL, NULL, NULL, 7, NULL, NULL, NULL, NULL);
-INSERT INTO `ai_tts_voice` VALUES ('TTS_MinimaxStreamTTS_0011', 'TTS_MinimaxStreamTTS', '淡雅学姐', 'danya_xuejie', '中文', NULL, NULL, NULL, NULL, 8, NULL, NULL, NULL, NULL);
-INSERT INTO `ai_tts_voice` VALUES ('TTS_MinimaxStreamTTS_0012', 'TTS_MinimaxStreamTTS', 'Santa Claus', 'Santa_Claus', '中文', NULL, NULL, NULL, NULL, 9, NULL, NULL, NULL, NULL);
-INSERT INTO `ai_tts_voice` VALUES ('TTS_MinimaxStreamTTS_0013', 'TTS_MinimaxStreamTTS', 'Grinch', 'Grinch', '中文', NULL, NULL, NULL, NULL, 10, NULL, NULL, NULL, NULL);
+-- Default voice
+INSERT INTO `ai_tts_voice` VALUES ('TTS_MinimaxStreamTTS_0001', 'TTS_MinimaxStreamTTS', 'Young Girl Voice', 'female-shaonv', 'Chinese', NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL);
+INSERT INTO `ai_tts_voice` VALUES ('TTS_MinimaxStreamTTS_0002', 'TTS_MinimaxStreamTTS', 'Mature Female Voice', 'female-chengshu', 'Chinese', NULL, NULL, NULL, NULL, 2, NULL, NULL, NULL, NULL);
+INSERT INTO `ai_tts_voice` VALUES ('TTS_MinimaxStreamTTS_0003', 'TTS_MinimaxStreamTTS', 'Bossy Young Master', 'badao_shaoye', 'Chinese', NULL, NULL, NULL, NULL, 3, NULL, NULL, NULL, NULL);
+INSERT INTO `ai_tts_voice` VALUES ('TTS_MinimaxStreamTTS_0004', 'TTS_MinimaxStreamTTS', 'Tsundere Little Brother', 'bingjiao_didi', 'Chinese', NULL, NULL, NULL, NULL, 4, NULL, NULL, NULL, NULL);
+INSERT INTO `ai_tts_voice` VALUES ('TTS_MinimaxStreamTTS_0005', 'TTS_MinimaxStreamTTS', 'Innocent Junior', 'chunzhen_xuedi', 'Chinese', NULL, NULL, NULL, NULL, 5, NULL, NULL, NULL, NULL);
+INSERT INTO `ai_tts_voice` VALUES ('TTS_MinimaxStreamTTS_0006', 'TTS_MinimaxStreamTTS', 'Indifferent Senior', 'lengdan_xiongzhang', 'Chinese', NULL, NULL, NULL, NULL, 6, NULL, NULL, NULL, NULL);
+INSERT INTO `ai_tts_voice` VALUES ('TTS_MinimaxStreamTTS_0007', 'TTS_MinimaxStreamTTS', 'Sweet Little Ling', 'tianxin_xiaoling', 'Chinese', NULL, NULL, NULL, NULL, 7, NULL, NULL, NULL, NULL);
+INSERT INTO `ai_tts_voice` VALUES ('TTS_MinimaxStreamTTS_0008', 'TTS_MinimaxStreamTTS', 'Playful Cute Girl', 'qiaopi_mengmei', 'Chinese', NULL, NULL, NULL, NULL, 8, NULL, NULL, NULL, NULL);
+INSERT INTO `ai_tts_voice` VALUES ('TTS_MinimaxStreamTTS_0009', 'TTS_MinimaxStreamTTS', 'Charming Big Sister', 'wumei_yujie', 'Chinese', NULL, NULL, NULL, NULL, 9, NULL, NULL, NULL, NULL);
+INSERT INTO `ai_tts_voice` VALUES ('TTS_MinimaxStreamTTS_0010', 'TTS_MinimaxStreamTTS', 'Cute Little Sister', 'diadia_xuemei', 'Chinese', NULL, NULL, NULL, NULL, 7, NULL, NULL, NULL, NULL);
+INSERT INTO `ai_tts_voice` VALUES ('TTS_MinimaxStreamTTS_0011', 'TTS_MinimaxStreamTTS', 'Elegant Senior', 'danya_xuejie', 'Chinese', NULL, NULL, NULL, NULL, 8, NULL, NULL, NULL, NULL);
+INSERT INTO `ai_tts_voice` VALUES ('TTS_MinimaxStreamTTS_0012', 'TTS_MinimaxStreamTTS', 'Santa Claus', 'Santa_Claus', 'Chinese', NULL, NULL, NULL, NULL, 9, NULL, NULL, NULL, NULL);
+INSERT INTO `ai_tts_voice` VALUES ('TTS_MinimaxStreamTTS_0013', 'TTS_MinimaxStreamTTS', 'Grinch', 'Grinch', 'Chinese', NULL, NULL, NULL, NULL, 10, NULL, NULL, NULL, NULL);
+ 
+ 

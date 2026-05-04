@@ -1,5 +1,3 @@
-"""MCP接入点工具执行器"""
-
 from typing import Dict, Any
 from ..base import ToolType, ToolDefinition, ToolExecutor
 from plugins_func.register import Action, ActionResponse
@@ -7,7 +5,7 @@ from .mcp_endpoint_handler import call_mcp_endpoint_tool
 
 
 class MCPEndpointExecutor(ToolExecutor):
-    """MCP接入点工具执行器"""
+    """MCP Endpoint Tool Executor"""
 
     def __init__(self, conn):
         self.conn = conn
@@ -15,26 +13,26 @@ class MCPEndpointExecutor(ToolExecutor):
     async def execute(
         self, conn, tool_name: str, arguments: Dict[str, Any]
     ) -> ActionResponse:
-        """执行MCP接入点工具"""
+        """Execute MCP endpoint tool"""
         if not hasattr(conn, "mcp_endpoint_client") or not conn.mcp_endpoint_client:
             return ActionResponse(
                 action=Action.ERROR,
-                response="MCP接入点客户端未初始化",
+                response="MCP endpoint client not initialized",
             )
 
         if not await conn.mcp_endpoint_client.is_ready():
             return ActionResponse(
                 action=Action.ERROR,
-                response="MCP接入点客户端未准备就绪",
+                response="MCP endpoint client is not ready",
             )
 
         try:
-            # 转换参数为JSON字符串
+            # Convert parameters to JSON string
             import json
 
             args_str = json.dumps(arguments) if arguments else "{}"
 
-            # 调用MCP接入点工具
+            # Call MCP access point tool
             result = await call_mcp_endpoint_tool(
                 conn.mcp_endpoint_client, tool_name, args_str
             )
@@ -43,10 +41,10 @@ class MCPEndpointExecutor(ToolExecutor):
             if isinstance(result, str):
                 try:
                     resultJson = json.loads(result)
-                except Exception as e:
+                except Exception:
                     pass
 
-            # 视觉大模型不经过二次LLM处理
+            # Visual large model does not undergo secondary LLM processing
             if (
                 resultJson is not None
                 and isinstance(resultJson, dict)
@@ -56,7 +54,6 @@ class MCPEndpointExecutor(ToolExecutor):
                     action=Action[resultJson["action"]],
                     response=resultJson.get("response", ""),
                 )
-
             return ActionResponse(action=Action.REQLLM, result=str(result))
 
         except ValueError as e:
@@ -65,7 +62,7 @@ class MCPEndpointExecutor(ToolExecutor):
             return ActionResponse(action=Action.ERROR, response=str(e))
 
     def get_tools(self) -> Dict[str, ToolDefinition]:
-        """获取所有MCP接入点工具"""
+        """Get all MCP endpoint tools"""
         if (
             not hasattr(self.conn, "mcp_endpoint_client")
             or not self.conn.mcp_endpoint_client
@@ -87,7 +84,7 @@ class MCPEndpointExecutor(ToolExecutor):
         return tools
 
     def has_tool(self, tool_name: str) -> bool:
-        """检查是否有指定的MCP接入点工具"""
+        """Check if the specified MCP endpoint tool exists"""
         if (
             not hasattr(self.conn, "mcp_endpoint_client")
             or not self.conn.mcp_endpoint_client

@@ -1,26 +1,27 @@
--- 添加讯飞流式语音识别服务配置
+-- Add Xunfei Streaming Speech Recognition Service Configuration
 delete from `ai_model_provider` where id = 'SYSTEM_ASR_XunfeiStream';
 INSERT INTO `ai_model_provider` (`id`, `model_type`, `provider_code`, `name`, `fields`, `sort`, `creator`, `create_date`, `updater`, `update_date`) VALUES
-('SYSTEM_ASR_XunfeiStream', 'ASR', 'xunfei_stream', '讯飞流式语音识别', '[{"key":"app_id","label":"应用ID","type":"string"},{"key":"api_key","label":"API_KEY","type":"password"},{"key":"api_secret","label":"API_SECRET","type":"password"},{"key":"domain","label":"识别领域","type":"string"},{"key":"language","label":"识别语言","type":"string"},{"key":"accent","label":"方言","type":"string"},{"key":"dwa","label":"动态修正","type":"string"},{"key":"output_dir","label":"输出目录","type":"string"}]', 18, 1, NOW(), 1, NOW());
+('SYSTEM_ASR_XunfeiStream', 'ASR', 'xunfei_stream', 'Xunfei Streaming Speech Recognition', '[{"key":"app_id","label":"Application ID","type":"string"},{"key":"api_key","label":"API_KEY","type":"password"},{"key":"api_secret","label":"API_SECRET","type":"password"},{"key":"domain","label":"Recognition Domain","type":"string"},{"key":"language","label":"Recognition Language","type":"string"},{"key":"accent","label":"Dialect","type":"string"},{"key":"dwa","label":"Dynamic Correction","type":"string"},{"key":"output_dir","label":"Output Directory","type":"string"}]', 18, 1, NOW(), 1, NOW());
 
 delete from `ai_model_config` where id = 'ASR_XunfeiStream';
-INSERT INTO `ai_model_config` VALUES ('ASR_XunfeiStream', 'ASR', '讯飞流式语音识别', '讯飞流式语音识别服务', 0, 1, '{"type": "xunfei_stream", "app_id": "", "api_key": "", "api_secret": "", "domain": "slm", "language": "zh_cn", "accent": "mandarin", "dwa": "wpgs", "output_dir": "tmp/"}', 'https://www.xfyun.cn/doc/spark/spark_zh_iat.html', '支持实时流式语音识别，适用于中文普通话及多种方言识别', 21, NULL, NULL, NULL, NULL);
+INSERT INTO `ai_model_config` VALUES ('ASR_XunfeiStream', 'ASR', 'Xunfei Streaming Speech Recognition', 'Xunfei Streaming Speech Recognition Service', 0, 1, '{"type": "xunfei_stream", "app_id": "", "api_key": "", "api_secret": "", "domain": "slm", "language": "zh_cn", "accent": "mandarin", "dwa": "wpgs", "output_dir": "tmp/"}', 'https://www.xfyun.cn/doc/spark/spark_zh_iat.html', 'Supports real-time streaming speech recognition, suitable for Chinese Mandarin and multiple dialect recognition', 21, NULL, NULL, NULL, NULL);
 
--- 更新讯飞流式语音识别模型配置的说明文档
+-- Update Xunfei Streaming Speech Recognition Model Configuration Documentation
 UPDATE `ai_model_config` SET
 `doc_link` = 'https://www.xfyun.cn/doc/spark/spark_zh_iat.html',
-`remark` = '讯飞流式语音识别配置说明：
-1. 登录讯飞开放平台 https://www.xfyun.cn/
-2. 创建语音识别应用获取APPID、APISecret、APIKey
-3. 参数说明：
-   - app_id: 应用ID，在讯飞开放平台创建应用后获得
-   - api_key: API密钥，用于接口鉴权
-   - api_secret: API密钥，用于生成签名
-   - domain: 识别领域，默认slm（智能化语音转写）
-   - language: 识别语言，默认zh_cn（中文）
-   - accent: 方言类型，默认mandarin（普通话），支持cantonese（粤语）等
-   - dwa: 动态修正，默认wpgs（开启动态修正）
-   - output_dir: 音频文件输出目录，默认tmp/
-4. 支持实时流式识别，适用于实时语音交互场景
-5. 支持多种方言和语言识别
+`remark` = 'Xunfei Streaming Speech Recognition Configuration Description：
+1. Log in to the Xunfei Open Platform https://www.xfyun.cn/
+2. Create a speech recognition application to obtain APPID, APISecret, and APIKey
+3. Parameter Description：
+   - app_id: Application ID, obtained after creating an application on the Xunfei Open Platform
+   - api_key: API Key, used for interface authentication
+   - api_secret: API Secret, used to generate signature
+   - domain: Recognition domain, default slm (intelligent speech transcription)
+   - language: Recognition language, default zh_cn (Chinese)
+   - accent: Dialect type, default mandarin (Mandarin), supports cantonese (Cantonese) etc
+   - dwa: Dynamic correction, default wpgs (enable dynamic correction)
+   - output_dir: Audio file output directory, default tmp/
+4. Supports real-time streaming recognition, suitable for real-time voice interaction scenarios
+5. Supports multiple dialect and language recognition
 ' WHERE `id` = 'ASR_XunfeiStream';
+ 

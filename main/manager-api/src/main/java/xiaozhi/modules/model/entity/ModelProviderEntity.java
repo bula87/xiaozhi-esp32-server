@@ -11,37 +11,38 @@ import lombok.Data;
 
 @Data
 @TableName("ai_model_provider")
-@Schema(description = "模型供应器表")
+@Schema(description = "Model Provider Table")
 public class ModelProviderEntity {
 
     @TableId(type = IdType.ASSIGN_UUID)
-    @Schema(description = "主键")
+    @Schema(description = "Primary Key")
     private String id;
 
-    @Schema(description = "模型类型(Memory/ASR/VAD/LLM/TTS)")
+    @Schema(description = "Model Type (Memory/ASR/VAD/LLM/TTS)")
     private String modelType;
 
-    @Schema(description = "供应器类型，如 openai、")
+    @Schema(description = "Provider Code, e.g., openai")
     private String providerCode;
 
-    @Schema(description = "供应器名称")
+    @Schema(description = "Provider Name")
     private String name;
 
-    @Schema(description = "供应器字段列表(JSON格式)")
+    @Schema(description = "Provider Field List (JSON format)")
     private String fields;
 
-    @Schema(description = "排序")
+    @Schema(description = "Sort Order")
     private Integer sort;
 
-    @Schema(description = "创建者")
+    @Schema(description = "Creator")
     private Long creator;
 
-    @Schema(description = "创建时间")
+    @Schema(description = "Creation Time")
     private Date createDate;
 
-    @Schema(description = "更新者")
+    @Schema(description = "Updater")
     private Long updater;
 
-    @Schema(description = "更新时间")
+    @Schema(description = "Update Time")
     private Date updateDate;
 }
+ 

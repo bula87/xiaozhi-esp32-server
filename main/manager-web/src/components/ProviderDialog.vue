@@ -1,68 +1,176 @@
 <template>
-  <el-dialog :visible="visible" :close-on-click-modal="false" @update:visible="handleVisibleChange" width="57%" center custom-class="custom-dialog"
-    :show-close="false" class="center-dialog">
-
-    <div style="margin: 0 18px; text-align: left; padding: 10px; border-radius: 10px;">
-      <div style="font-size: 30px; color: #3d4566; margin-top: -15px; margin-bottom: 20px; text-align: center;">
+  <el-dialog
+    :visible="visible"
+    :close-on-click-modal="false"
+    @update:visible="handleVisibleChange"
+    width="57%"
+    center
+    custom-class="custom-dialog"
+    :show-close="false"
+    class="center-dialog"
+  >
+    <div
+      style="
+        margin: 0 18px;
+        text-align: left;
+        padding: 10px;
+        border-radius: 10px;
+      "
+    >
+      <div
+        style="
+          font-size: 30px;
+          color: #3d4566;
+          margin-top: -15px;
+          margin-bottom: 20px;
+          text-align: center;
+        "
+      >
         {{ title }}
       </div>
 
       <button class="custom-close-btn" @click="handleClose">×</button>
 
-      <el-form :model="form" label-width="auto" :rules="rules" ref="form" class="custom-form">
-        <div style="display: flex; gap: 20px; margin-bottom: 20px;">
-          <el-form-item :label="$t('providerDialog.category')" prop="modelType" style="flex: 1;">
-            <el-select v-model="form.modelType" :placeholder="$t('providerDialog.selectCategory')" class="custom-input-bg" style="width: 100%;">
-              <el-option v-for="item in modelTypes" :key="item.value" :label="item.label" :value="item.value">
+      <el-form
+        :model="form"
+        label-width="auto"
+        :rules="rules"
+        ref="form"
+        class="custom-form"
+      >
+        <div style="display: flex; gap: 20px; margin-bottom: 20px">
+          <el-form-item
+            :label="$t('providerDialog.category')"
+            prop="modelType"
+            style="flex: 1"
+          >
+            <el-select
+              v-model="form.modelType"
+              :placeholder="$t('providerDialog.selectCategory')"
+              class="custom-input-bg"
+              style="width: 100%"
+            >
+              <el-option
+                v-for="item in modelTypes"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              >
               </el-option>
             </el-select>
           </el-form-item>
 
-          <el-form-item :label="$t('providerDialog.code')" prop="providerCode" style="flex: 1;">
-            <el-input v-model="form.providerCode" :placeholder="$t('providerDialog.inputCode')" class="custom-input-bg"></el-input>
+          <el-form-item
+            :label="$t('providerDialog.code')"
+            prop="providerCode"
+            style="flex: 1"
+          >
+            <el-input
+              v-model="form.providerCode"
+              :placeholder="$t('providerDialog.inputCode')"
+              class="custom-input-bg"
+            ></el-input>
           </el-form-item>
         </div>
 
-        <div style="display: flex; gap: 20px; margin-bottom: 20px;">
-          <el-form-item :label="$t('providerDialog.name')" prop="name" style="flex: 1;">
-            <el-input v-model="form.name" :placeholder="$t('providerDialog.inputName')" class="custom-input-bg"></el-input>
+        <div style="display: flex; gap: 20px; margin-bottom: 20px">
+          <el-form-item
+            :label="$t('providerDialog.name')"
+            prop="name"
+            style="flex: 1"
+          >
+            <el-input
+              v-model="form.name"
+              :placeholder="$t('providerDialog.inputName')"
+              class="custom-input-bg"
+            ></el-input>
           </el-form-item>
-          <el-form-item :label="$t('providerDialog.sort')" prop="sort" style="flex: 1;">
-            <el-input-number v-model="form.sort" :min="0" controls-position="right" class="custom-input-bg"
-              style="width: 100%;"></el-input-number>
+          <el-form-item
+            :label="$t('providerDialog.sort')"
+            prop="sort"
+            style="flex: 1"
+          >
+            <el-input-number
+              v-model="form.sort"
+              :min="0"
+              controls-position="right"
+              class="custom-input-bg"
+              style="width: 100%"
+            ></el-input-number>
           </el-form-item>
         </div>
 
-        <div style="font-size: 20px; font-weight: bold; color: #3d4566; margin-bottom: 15px;">
-          {{ $t('providerDialog.fieldConfig') }}
-          <div style="display: inline-block; float: right;">
-            <el-button type="primary" @click="addField" size="small" style="background: #5bc98c; border: none;"
-              :disabled="hasIncompleteFields">
-              {{ $t('providerDialog.add') }}
+        <div
+          style="
+            font-size: 20px;
+            font-weight: bold;
+            color: #3d4566;
+            margin-bottom: 15px;
+          "
+        >
+          {{ $t("providerDialog.fieldConfig") }}
+          <div style="display: inline-block; float: right">
+            <el-button
+              type="primary"
+              @click="addField"
+              size="small"
+              style="background: #5bc98c; border: none"
+              :disabled="hasIncompleteFields"
+            >
+              {{ $t("providerDialog.add") }}
             </el-button>
-            <el-button type="primary" @click="toggleSelectAllFields" size="small"
-              style="background: #5f70f3; border: none; margin-left: 10px;">
-              {{ isAllFieldsSelected ? $t('providerDialog.deselectAll') : $t('providerDialog.selectAll') }}
+            <el-button
+              type="primary"
+              @click="toggleSelectAllFields"
+              size="small"
+              style="background: #5f70f3; border: none; margin-left: 10px"
+            >
+              {{
+                isAllFieldsSelected
+                  ? $t("providerDialog.deselectAll")
+                  : $t("providerDialog.selectAll")
+              }}
             </el-button>
-            <el-button type="danger" @click="batchRemoveFields" size="small"
-              style="background: red; border: none; margin-left: 10px;">
-              {{ $t('providerDialog.batchDelete') }}
+            <el-button
+              type="danger"
+              @click="batchRemoveFields"
+              size="small"
+              style="background: red; border: none; margin-left: 10px"
+            >
+              {{ $t("providerDialog.batchDelete") }}
             </el-button>
           </div>
         </div>
-        <div style="height: 2px; background: #e9e9e9; margin-bottom: 22px;"></div>
-
+        <div
+          style="height: 2px; background: #e9e9e9; margin-bottom: 22px"
+        ></div>
         <div class="fields-container">
-          <el-table :data="form.fields" style="width: 100%;" border size="medium" :key="tableKey">
-            <el-table-column :label="$t('modelConfig.select')" align="center" width="50">
+          <el-table
+            :data="form.fields"
+            style="width: 100%"
+            border
+            size="medium"
+            :key="tableKey"
+          >
+            <el-table-column
+              :label="$t('modelConfig.select')"
+              align="center"
+              width="50"
+            >
               <template slot-scope="scope">
-                <el-checkbox v-model="scope.row.selected" @change="handleFieldSelectChange"></el-checkbox>
+                <el-checkbox
+                  v-model="scope.row.selected"
+                  @change="handleFieldSelectChange"
+                ></el-checkbox>
               </template>
             </el-table-column>
             <el-table-column :label="$t('providerDialog.fieldKey')">
               <template slot-scope="scope">
                 <template v-if="scope.row.editing">
-                  <el-input v-model="scope.row.key" :placeholder="$t('providerDialog.fieldKey')"></el-input>
+                  <el-input
+                    v-model="scope.row.key"
+                    :placeholder="$t('providerDialog.fieldKey')"
+                  ></el-input>
                 </template>
                 <template v-else>
                   {{ scope.row.key }}
@@ -72,7 +180,10 @@
             <el-table-column :label="$t('providerDialog.fieldLabel')">
               <template slot-scope="scope">
                 <template v-if="scope.row.editing">
-                  <el-input v-model="scope.row.label" :placeholder="$t('providerDialog.fieldLabel')"></el-input>
+                  <el-input
+                    v-model="scope.row.label"
+                    :placeholder="$t('providerDialog.fieldLabel')"
+                  ></el-input>
                 </template>
                 <template v-else>
                   {{ scope.row.label }}
@@ -82,12 +193,30 @@
             <el-table-column :label="$t('providerDialog.fieldType')">
               <template slot-scope="scope">
                 <template v-if="scope.row.editing">
-                  <el-select v-model="scope.row.type" :placeholder="$t('providerDialog.type')">
-                    <el-option :label="$t('providerDialog.stringType')" value="string"></el-option>
-                    <el-option :label="$t('providerDialog.numberType')" value="number"></el-option>
-                    <el-option :label="$t('providerDialog.booleanType')" value="boolean"></el-option>
-                    <el-option :label="$t('providerDialog.dictType')" value="dict"></el-option>
-                    <el-option :label="$t('providerDialog.arrayType')" value="array"></el-option>
+                  <el-select
+                    v-model="scope.row.type"
+                    :placeholder="$t('providerDialog.type')"
+                  >
+                    <el-option
+                      :label="$t('providerDialog.stringType')"
+                      value="string"
+                    ></el-option>
+                    <el-option
+                      :label="$t('providerDialog.numberType')"
+                      value="number"
+                    ></el-option>
+                    <el-option
+                      :label="$t('providerDialog.booleanType')"
+                      value="boolean"
+                    ></el-option>
+                    <el-option
+                      :label="$t('providerDialog.dictType')"
+                      value="dict"
+                    ></el-option>
+                    <el-option
+                      :label="$t('providerDialog.arrayType')"
+                      value="array"
+                    ></el-option>
                   </el-select>
                 </template>
                 <template v-else>
@@ -98,23 +227,44 @@
             <el-table-column :label="$t('providerDialog.defaultValue')">
               <template slot-scope="scope">
                 <template v-if="scope.row.editing">
-                  <el-input v-model="scope.row.default" :placeholder="$t('providerDialog.inputDefaultValue')"></el-input>
+                  <el-input
+                    v-model="scope.row.default"
+                    :placeholder="$t('providerDialog.inputDefaultValue')"
+                  ></el-input>
                 </template>
                 <template v-else>
                   {{ scope.row.default }}
                 </template>
               </template>
             </el-table-column>
-            <el-table-column :label="$t('providerDialog.operation')" width="150" align="center">
+            <el-table-column
+              :label="$t('providerDialog.operation')"
+              width="150"
+              align="center"
+            >
               <template slot-scope="scope">
-                <el-button v-if="!scope.row.editing" type="primary" size="mini" @click="startEditing(scope.row)">
-                  {{ $t('providerDialog.edit') }}
+                <el-button
+                  v-if="!scope.row.editing"
+                  type="primary"
+                  size="mini"
+                  @click="startEditing(scope.row)"
+                >
+                  {{ $t("providerDialog.edit") }}
                 </el-button>
-                <el-button v-else type="success" size="mini" @click="stopEditing(scope.row)">
-                  {{ $t('providerDialog.complete') }}
+                <el-button
+                  v-else
+                  type="success"
+                  size="mini"
+                  @click="stopEditing(scope.row)"
+                >
+                  {{ $t("providerDialog.complete") }}
                 </el-button>
-                <el-button type="danger" size="mini" @click="removeField(scope.$index)">
-                  {{ $t('providerDialog.delete') }}
+                <el-button
+                  type="danger"
+                  size="mini"
+                  @click="removeField(scope.$index)"
+                >
+                  {{ $t("providerDialog.delete") }}
                 </el-button>
               </template>
             </el-table-column>
@@ -123,8 +273,14 @@
       </el-form>
     </div>
 
-    <div style="display: flex; justify-content: center;">
-      <el-button type="primary" @click="submit" class="save-btn" :loading="saving">{{ $t('providerDialog.save') }}</el-button>
+    <div style="display: flex; justify-content: center">
+      <el-button
+        type="primary"
+        @click="submit"
+        class="save-btn"
+        :loading="saving"
+        >{{ $t("providerDialog.save") }}</el-button
+      >
     </div>
   </el-dialog>
 </template>
@@ -135,48 +291,69 @@ export default {
     title: String,
     visible: Boolean,
     form: Object,
-    modelTypes: Array
+    modelTypes: Array,
   },
   data() {
     return {
       saving: false,
       isAllFieldsSelected: false,
-      tableKey: 0 // 用于强制表格重新渲染
+      tableKey: 0, // used to force table re-render
     };
   },
   computed: {
     rules() {
       return {
-        modelType: [{ required: true, message: this.$t('providerDialog.requiredCategory'), trigger: 'change' }],
-        providerCode: [{ required: true, message: this.$t('providerDialog.requiredCode'), trigger: 'blur' }],
-        name: [{ required: true, message: this.$t('providerDialog.requiredName'), trigger: 'blur' }]
+        modelType: [
+          {
+            required: true,
+            message: this.$t("providerDialog.requiredCategory"),
+            trigger: "change",
+          },
+        ],
+        providerCode: [
+          {
+            required: true,
+            message: this.$t("providerDialog.requiredCode"),
+            trigger: "blur",
+          },
+        ],
+        name: [
+          {
+            required: true,
+            message: this.$t("providerDialog.requiredName"),
+            trigger: "blur",
+          },
+        ],
       };
     },
     hasIncompleteFields() {
-      return this.form.fields && this.form.fields.some(field =>
-        !field.key || !field.label || !field.type
+      return (
+        this.form.fields &&
+        this.form.fields.some(
+          (field) => !field.key || !field.label || !field.type,
+        )
       );
-    }
+    },
   },
   methods: {
     getTypeLabel(type) {
       const typeMap = {
-        'string': this.$t('providerDialog.stringType'),
-        'number': this.$t('providerDialog.numberType'),
-        'boolean': this.$t('providerDialog.booleanType'),
-        'dict': this.$t('providerDialog.dictType'),
-        'array': this.$t('providerDialog.arrayType'),
-        'RAG': this.$t('providerDialog.ragType')
+        string: this.$t("providerDialog.stringType"),
+        number: this.$t("providerDialog.numberType"),
+        boolean: this.$t("providerDialog.booleanType"),
+        dict: this.$t("providerDialog.dictType"),
+        array: this.$t("providerDialog.arrayType"),
+        RAG: this.$t("providerDialog.ragType"),
       };
       return typeMap[type];
     },
 
     startEditing(row) {
-      this.$set(row, 'editing', true);
+      this.$set(row, "editing", true);
     },
 
     stopEditing(row) {
-      this.$set(row, 'editing', false);
+      this.$set(row, "editing", false);
 
       const index = this.form.fields.indexOf(row);
       if (index > -1) {
@@ -187,20 +364,21 @@ export default {
     },
 
     handleFieldSelectChange() {
-      this.isAllFieldsSelected = this.form.fields.length > 0 &&
-        this.form.fields.every(field => field.selected);
+      this.isAllFieldsSelected =
+        this.form.fields.length > 0 &&
+        this.form.fields.every((field) => field.selected);
     },
 
     toggleSelectAllFields() {
       this.isAllFieldsSelected = !this.isAllFieldsSelected;
-      this.form.fields = this.form.fields.map(field => ({
+      this.form.fields = this.form.fields.map((field) => ({
         ...field,
-        selected: this.isAllFieldsSelected
+        selected: this.isAllFieldsSelected,
       }));
     },
 
     handleVisibleChange(val) {
-      this.$emit('update:visible', val);
+      this.$emit("update:visible", val);
       if (!val) {
         this.resetForm();
       }
@@ -208,114 +386,132 @@ export default {
 
     handleClose() {
       this.resetForm();
-      this.$emit('update:visible', false);
-      this.$emit('cancel');
+      this.$emit("update:visible", false);
+      this.$emit("cancel");
     },
 
     addField() {
       if (this.hasIncompleteFields) {
         this.$message.warning({
-          message: this.$t('providerDialog.completeFieldEdit'),
-          showClose: true
+          message: this.$t("providerDialog.completeFieldEdit"),
+          showClose: true,
         });
         return;
       }
 
       this.form.fields.unshift({
-        key: '',
-        label: '',
-        type: 'string',
-        default: '',
+        key: "",
+        label: "",
+        type: "string",
+        default: "",
         selected: false,
-        editing: true
+        editing: true,
       });
       this.forceTableRerender();
     },
 
     removeField(index) {
-      this.$confirm(this.$t('providerDialog.confirmDeleteField'), this.$t('common.warning'), {
-        confirmButtonText: this.$t('common.confirm'),
-        cancelButtonText: this.$t('common.cancel'),
-        type: 'warning'
-      }).then(() => {
-        this.form.fields = this.form.fields.filter((_, i) => i !== index);
-        this.updateSelectAllStatus();
-        this.forceTableRerender();
-        this.$message.success({
-            message: this.$t('common.deleteSuccess'),
-            showClose: true
+      this.$confirm(
+        this.$t("providerDialog.confirmDeleteField"),
+        this.$t("common.warning"),
+        {
+          confirmButtonText: this.$t("common.confirm"),
+          cancelButtonText: this.$t("common.cancel"),
+          type: "warning",
+        },
+      )
+        .then(() => {
+          this.form.fields = this.form.fields.filter((_, i) => i !== index);
+          this.updateSelectAllStatus();
+          this.forceTableRerender();
+          this.$message.success({
+            message: this.$t("common.deleteSuccess"),
+            showClose: true,
           });
-      }).catch(() => {
+        })
+        .catch(() => {
           this.$message.info({
-            message: this.$t('common.deleteCancelled'),
-            showClose: true
+            message: this.$t("common.deleteCancelled"),
+            showClose: true,
           });
         });
     },
 
     batchRemoveFields() {
-      const selectedFields = this.form.fields.filter(field => field.selected);
+      const selectedFields = this.form.fields.filter((field) => field.selected);
       if (selectedFields.length === 0) {
         this.$message.warning({
-          message: this.$t('providerDialog.selectFieldsToDelete'),
-          showClose: true
+          message: this.$t("providerDialog.selectFieldsToDelete"),
+          showClose: true,
         });
         return;
       }
-      this.$confirm(this.$t('providerDialog.confirmBatchDeleteFields', { count: selectedFields.length }), this.$t('common.warning'), {
-        confirmButtonText: this.$t('common.confirm'),
-        cancelButtonText: this.$t('common.cancel'),
-        type: 'warning'
-      }).then(() => {
-        this.form.fields = this.form.fields.filter(field => !field.selected);
-        this.isAllFieldsSelected = false;
-        this.forceTableRerender();
-        this.$message.success({
-            message: this.$t('providerDialog.batchDeleteFieldsSuccess', { count: selectedFields.length }),
-            showClose: true
+      this.$confirm(
+        this.$t("providerDialog.confirmBatchDeleteFields", {
+          count: selectedFields.length,
+        }),
+        this.$t("common.warning"),
+        {
+          confirmButtonText: this.$t("common.confirm"),
+          cancelButtonText: this.$t("common.cancel"),
+          type: "warning",
+        },
+      )
+        .then(() => {
+          this.form.fields = this.form.fields.filter(
+            (field) => !field.selected,
+          );
+          this.isAllFieldsSelected = false;
+          this.forceTableRerender();
+          this.$message.success({
+            message: this.$t("providerDialog.batchDeleteFieldsSuccess", {
+              count: selectedFields.length,
+            }),
+            showClose: true,
           });
-      }).catch(() => {
-        this.$message.info({
-          message: '已取消删除',
-          showClose: true
+        })
+        .catch(() => {
+          this.$message.info({
+            message: "Deletion cancelled",
+            showClose: true,
+          });
         });
-      });
     },
 
     updateSelectAllStatus() {
-      this.isAllFieldsSelected = this.form.fields.length > 0 &&
-        this.form.fields.every(field => field.selected);
+      this.isAllFieldsSelected =
+        this.form.fields.length > 0 &&
+        this.form.fields.every((field) => field.selected);
     },
-
     forceTableRerender() {
-      this.tableKey += 1; // 改变key值强制表格重新渲染
+      this.tableKey += 1; // change key value force table re-render
     },
 
     submit() {
-      this.$refs.form.validate(valid => {
+      this.$refs.form.validate((valid) => {
         if (valid) {
-          const editingField = this.form.fields.find(field => field.editing);
+          const editingField = this.form.fields.find((field) => field.editing);
           if (editingField) {
-          this.$message.warning({
-            message: this.$t('providerDialog.completeFieldEdit'),
-            showClose: true
-          });
-          return;
-        }
+            this.$message.warning({
+              message: this.$t("providerDialog.completeFieldEdit"),
+              showClose: true,
+            });
+            return;
+          }
 
-          this.form.fields = this.form.fields.map(field => ({
+          this.form.fields = this.form.fields.map((field) => ({
             ...field,
-            selected: false
+            selected: false,
           }));
           this.isAllFieldsSelected = false;
 
           this.saving = true;
-          this.$emit('submit', {
+          this.$emit("submit", {
             form: this.form,
             done: () => {
               this.saving = false;
               this.resetForm();
-            }
+            },
           });
         }
       });
@@ -324,7 +520,7 @@ export default {
     resetForm() {
       this.$refs.form.resetFields();
       if (this.form.fields) {
-        this.form.fields.forEach(field => {
+        this.form.fields.forEach((field) => {
           field.selected = false;
           field.editing = false;
         });
@@ -332,15 +528,14 @@ export default {
       this.isAllFieldsSelected = false;
       this.forceTableRerender();
     },
-
   },
   watch: {
     visible(val) {
       if (!val) {
         this.resetForm();
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -377,8 +572,8 @@ export default {
 }
 
 .custom-close-btn:hover {
-  color: #409EFF;
-  border-color: #409EFF;
+  color: #409eff;
+  border-color: #409eff;
 }
 
 .custom-form .el-form-item {

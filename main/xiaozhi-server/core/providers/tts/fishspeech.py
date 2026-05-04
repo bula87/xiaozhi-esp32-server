@@ -25,7 +25,7 @@ class ServeReferenceAudio(BaseModel):
         ):  # Check if audio is a string (Base64)
             try:
                 values["audio"] = base64.b64decode(audio)
-            except Exception as e:
+            except Exception:
                 # If the audio is not a valid base64 string, we will just ignore it and let the server handle it
                 pass
         return values
@@ -78,7 +78,6 @@ def read_ref_text(ref_text):
 
 
 class TTSProvider(TTSProviderBase):
-
     def __init__(self, config, delete_audio_file):
         super().__init__(config, delete_audio_file)
 
@@ -86,10 +85,14 @@ class TTSProvider(TTSProviderBase):
             None if not config.get("reference_id") else config.get("reference_id")
         )
         self.reference_audio = parse_string_to_list(
-             config.get('ref_audio')if config.get('ref_audio') else config.get("reference_audio")
+            config.get("ref_audio")
+            if config.get("ref_audio")
+            else config.get("reference_audio")
         )
         self.reference_text = parse_string_to_list(
-             config.get('ref_text')if config.get('ref_text') else config.get("reference_text")
+            config.get("ref_text")
+            if config.get("ref_text")
+            else config.get("reference_text")
         )
         self.audio_file_type = config.get("response_format", "wav")
         self.api_key = config.get("api_key", "YOUR_API_KEY")
@@ -103,7 +106,7 @@ class TTSProvider(TTSProviderBase):
             "yes",
         )
 
-        # 处理空字符串的情况
+        # Handle the case of empty strings
         channels = config.get("channels", "1")
         rate = config.get("rate", "44100")
         max_new_tokens = config.get("max_new_tokens", "1024")
@@ -113,8 +116,7 @@ class TTSProvider(TTSProviderBase):
         self.rate = int(rate) if rate else 44100
         self.max_new_tokens = int(max_new_tokens) if max_new_tokens else 1024
         self.chunk_length = int(chunk_length) if chunk_length else 200
-
-        # 处理空字符串的情况
+        # Handle the case of empty strings
         top_p = config.get("top_p", "0.7")
         temperature = config.get("temperature", "0.7")
         repetition_penalty = config.get("repetition_penalty", "1.2")
@@ -124,7 +126,6 @@ class TTSProvider(TTSProviderBase):
         self.repetition_penalty = (
             float(repetition_penalty) if repetition_penalty else 1.2
         )
-
         self.streaming = str(config.get("streaming", False)).lower() in (
             "true",
             "1",

@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <router-view />
+    <router-view :key="$i18n.locale" />
     <cache-viewer v-if="isCDNEnabled" :visible.sync="showCacheViewer" />
   </div>
 </template>
@@ -44,135 +44,186 @@ nav {
   top: 70px !important;
 }
 </style>
+
 <script>
-import CacheViewer from '@/components/CacheViewer.vue';
-import { logCacheStatus } from '@/utils/cacheViewer';
+import CacheViewer from "@/components/CacheViewer.vue";
+import { logCacheStatus } from "@/utils/cacheViewer";
+
+// 1. Import Element UI Locale manager and language packs
+import locale from 'element-ui/lib/locale';
+import en from 'element-ui/lib/locale/lang/en';
+import zhCn from 'element-ui/lib/locale/lang/zh-CN';
+import zhTw from 'element-ui/lib/locale/lang/zh-TW';
+import ja from 'element-ui/lib/locale/lang/ja';
+import vi from 'element-ui/lib/locale/lang/vi';
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    CacheViewer
+    CacheViewer,
   },
   data() {
     return {
       showCacheViewer: false,
-      isCDNEnabled: process.env.VUE_APP_USE_CDN === 'true'
+      isCDNEnabled: process.env.VUE_APP_USE_CDN === "true",
+      // Map your i18n codes to Element UI language packs
+      localeMap: {
+        'en': en,
+        'zh-CN': zhCn,
+        'zh-TW': zhTw,
+        'ja': ja,
+        'vi': vi
+      }
     };
   },
+  watch: {
+    // 2. Watch for i18n language changes and update Element UI globally
+    '$i18n.locale': {
+      handler(newLocale) {
+        // Change Element UI's internal language
+        locale.use(this.localeMap[newLocale] || en);
+      },
+      immediate: true // Run immediately on startup
+    }
+  },
   created() {
-    // 挂载 store 状态
-    this.$store.commit('setUserInfo', JSON.parse(localStorage.getItem('userInfo') || '{}'));
-    this.$store.commit('setPubConfig', JSON.parse(localStorage.getItem('pubConfig') || '{}'));
+    // Mount store state
+    this.$store.commit(
+      "setUserInfo",
+      JSON.parse(localStorage.getItem("userInfo") || "{}"),
+    );
+    this.$store.commit(
+      "setPubConfig",
+      JSON.parse(localStorage.getItem("pubConfig") || "{}"),
+    );
   },
   mounted() {
-    // 检测是否为移动设备且VUE_APP_H5_URL不为空，如果两个条件都满足则跳转到H5页面
+    // Check if it is a mobile device and VUE_APP_H5_URL is not empty, if both conditions are met, jump to the H5 page
     if (this.isMobileDevice() && process.env.VUE_APP_H5_URL) {
       window.location.href = process.env.VUE_APP_H5_URL;
       return;
     }
-    
-    // 只有在启用CDN时才添加相关事件和功能
-    if (this.isCDNEnabled) {
-      // 添加全局快捷键Alt+C用于显示缓存查看器
-      document.addEventListener('keydown', this.handleKeyDown);
 
-      // 在全局对象上添加缓存检查方法，便于调试
+    // Only add related events and functions when CDN is enabled
+    if (this.isCDNEnabled) {
+      // Add global shortcut Alt+C to show cache viewer
+      document.addEventListener("keydown", this.handleKeyDown);
+
+      // Add cache inspection method to the global object for debugging
       window.checkCDNCacheStatus = () => {
         this.showCacheViewer = true;
       };
 
-      // 在控制台输出提示信息
+      // Output prompt information in the console
       console.info(
-        '%c[' + this.$t('system.name') + '] ' + this.$t('cache.cdnEnabled'),
-        'color: #409EFF; font-weight: bold;'
+        "%c[" + this.$t("system.name") + "] " + this.$t("cache.cdnEnabled"),
+        "color: #409EFF; font-weight: bold;",
       );
       console.info(
-        '按下 Alt+C 组合键或在控制台运行 checkCDNCacheStatus() 可以查看CDN缓存状态'
+        "Press Alt+C combination key or run checkCDNCacheStatus() in the console to view the CDN cache status",
       );
 
-      // 检查Service Worker状态
+      // Check Service Worker status
       this.checkServiceWorkerStatus();
     } else {
       console.info(
-        '%c[' + this.$t('system.name') + '] ' + this.$t('cache.cdnDisabled'),
-        'color: #67C23A; font-weight: bold;'
+        "%c[" + this.$t("system.name") + "] " + this.$t("cache.cdnDisabled"),
+        "color: #67C23A; font-weight: bold;",
       );
     }
   },
   beforeDestroy() {
-    // 只有在启用CDN时才需要移除事件监听
+    // Only need to remove event listeners when CDN is enabled
     if (this.isCDNEnabled) {
-      document.removeEventListener('keydown', this.handleKeyDown);
+      document.removeEventListener("keydown", this.handleKeyDown);
     }
   },
   methods: {
     handleKeyDown(e) {
-      // Alt+C 快捷键
-      if (e.altKey && e.key === 'c') {
+      // Alt+C shortcut key
+      if (e.altKey && e.key === "c") {
         this.showCacheViewer = true;
       }
     },
     isMobileDevice() {
-      // 检测是否为移动设备的函数
-      return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      // Function to check if it is a mobile device
+      return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent,
+      );
     },
-    
+
     async checkServiceWorkerStatus() {
-      // 检查Service Worker是否已注册
-      if ('serviceWorker' in navigator) {
+      // Check if Service Worker is registered
+      if ("serviceWorker" in navigator) {
         try {
-          const registrations = await navigator.serviceWorker.getRegistrations();
+          const registrations =
+            await navigator.serviceWorker.getRegistrations();
           if (registrations.length > 0) {
             console.info(
-              '%c[' + this.$t('system.name') + '] ' + this.$t('cache.serviceWorkerRegistered'),
-              'color: #67C23A; font-weight: bold;'
+              "%c[" +
+                this.$t("system.name") +
+                "] " +
+                this.$t("cache.serviceWorkerRegistered"),
+              "color: #67C23A; font-weight: bold;",
             );
 
-            // 输出缓存状态到控制台
+            // Output cache status to the console
             setTimeout(async () => {
               const hasCaches = await logCacheStatus();
               if (!hasCaches) {
                 console.info(
-                '%c[' + this.$t('system.name') + '] ' + this.$t('cache.noCacheDetected'),
-                'color: #E6A23C; font-weight: bold;'
-              );
-
-              // 开发环境下提供额外提示
-              if (process.env.NODE_ENV === 'development') {
-                console.info(
-                  '%c[' + this.$t('system.name') + '] ' + this.$t('cache.swDevEnvWarning'),
-                  'color: #E6A23C; font-weight: bold;'
+                  "%c[" +
+                    this.$t("system.name") +
+                    "] " +
+                    this.$t("cache.noCacheDetected"),
+                  "color: #E6A23C; font-weight: bold;",
                 );
-                console.info(this.$t('cache.swCheckMethods'));
-                console.info('1. ' + this.$t('cache.swCheckMethod1'));
-                console.info('2. ' + this.$t('cache.swCheckMethod2'));
-                console.info('3. ' + this.$t('cache.swCheckMethod3'));
-              }
+
+                // Provide extra tips in development environment
+                if (process.env.NODE_ENV === "development") {
+                  console.info(
+                    "%c[" +
+                      this.$t("system.name") +
+                      "] " +
+                      this.$t("cache.swDevEnvWarning"),
+                    "color: #E6A23C; font-weight: bold;",
+                  );
+                  console.info(this.$t("cache.swCheckMethods"));
+                  console.info("1. " + this.$t("cache.swCheckMethod1"));
+                  console.info("2. " + this.$t("cache.swCheckMethod2"));
+                  console.info("3. " + this.$t("cache.swCheckMethod3"));
+                }
               }
             }, 2000);
           } else {
             console.info(
-                  '%c[' + this.$t('system.name') + '] ' + this.$t('cache.serviceWorkerNotRegistered'),
-                  'color: #F56C6C; font-weight: bold;'
-                );
+              "%c[" +
+                this.$t("system.name") +
+                "] " +
+                this.$t("cache.serviceWorkerNotRegistered"),
+              "color: #F56C6C; font-weight: bold;",
+            );
 
-                if (process.env.NODE_ENV === 'development') {
-                  console.info(
-                    '%c[' + this.$t('system.name') + '] ' + this.$t('cache.swDevEnvNormal'),
-                    'color: #E6A23C; font-weight: bold;'
-                  );
-                  console.info(this.$t('cache.swProdOnly'));
-                  console.info(this.$t('cache.swTestingTitle'));
-                  console.info('1. ' + this.$t('cache.swTestingStep1'));
-                  console.info('2. ' + this.$t('cache.swTestingStep2'));
-                }
+            if (process.env.NODE_ENV === "development") {
+              console.info(
+                "%c[" +
+                  this.$t("system.name") +
+                  "] " +
+                  this.$t("cache.swDevEnvNormal"),
+                "color: #E6A23C; font-weight: bold;",
+              );
+              console.info(this.$t("cache.swProdOnly"));
+              console.info(this.$t("cache.swTestingTitle"));
+              console.info("1. " + this.$t("cache.swTestingStep1"));
+              console.info("2. " + this.$t("cache.swTestingStep2"));
+            }
           }
         } catch (error) {
-          console.error('检查Service Worker状态失败:', error);
+          console.error("Check Service Worker status failed:", error);
         }
       } else {
-          console.warn(this.$t('cache.swNotSupported'));
-        }
+        console.warn(this.$t("cache.swNotSupported"));
+      }
     }
   }
 };

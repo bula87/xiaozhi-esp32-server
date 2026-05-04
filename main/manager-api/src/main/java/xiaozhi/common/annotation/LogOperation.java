@@ -7,9 +7,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 操作日志注解
- * Copyright (c) 人人开源 All rights reserved.
- * Website: https://www.renren.io
+ * Operation log annotation
+ * Copyright (c) RuoYi-Cloud All rights reserved.
+ * Website: https://www.ruoyi.cloud
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
@@ -18,3 +18,4 @@ public @interface LogOperation {
 
     String value() default "";
 }
+ 

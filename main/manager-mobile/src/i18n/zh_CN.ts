@@ -417,7 +417,7 @@ export default {
   'deviceConfig.signalFair': '信号一般',
   'deviceConfig.signalWeak': '信号弱',
   'deviceConfig.channel': '频道',
-  'deviceConfig.about': '约',
+  'deviceConfig.about': 'About',
   'deviceConfig.seconds': '秒',
   'deviceConfig.generating': '生成中...',
   'deviceConfig.playing': '播放中...',

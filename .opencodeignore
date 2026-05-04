@@ -1,0 +1,8 @@
+mysql/
+data/
+docs/
+uploadfile/
+*.log
+.git/
+node_modules/
+venv/

@@ -3,26 +3,27 @@ package xiaozhi.modules.agent.dto;
 import lombok.Data;
 
 /**
- * 修改智能体声纹的dto
+ * Modify the dto of agent voice print
  *
  * @author zjy
  */
 @Data
 public class AgentVoicePrintUpdateDTO {
     /**
-     * 智能体声纹id
+     * The id of agent voice print
      */
     private String id;
     /**
-     * 音频文件id
+     * The id of audio file
      */
     private String audioId;
     /**
-     * 声纹来源的人姓名
+     * The name of the person whose voice print is from
      */
     private String sourceName;
     /**
-     * 描述声纹来源的人
+     * Introduce the person whose voice print is from
      */
     private String introduce;
 }
+ 

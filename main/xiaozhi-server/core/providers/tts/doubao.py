@@ -6,7 +6,6 @@ import requests
 from config.logger import setup_logging
 from core.utils.util import check_model_key
 from core.providers.tts.base import TTSProviderBase
-from core.utils.tts import convert_percentage_to_range
 
 
 TAG = __name__
@@ -34,7 +33,7 @@ class TTSProvider(TTSProviderBase):
         else:
             self.voice = config.get("voice")
 
-        # 处理空字符串的情况
+        # Handle empty string cases
         speed_ratio = config.get("speed_ratio", "1.0")
         volume_ratio = config.get("volume_ratio", "1.0")
         pitch_ratio = config.get("pitch_ratio", "1.0")
@@ -43,7 +42,7 @@ class TTSProvider(TTSProviderBase):
         self.volume_ratio = float(volume_ratio) if volume_ratio else 1.0
         self.pitch_ratio = float(pitch_ratio) if pitch_ratio else 1.0
 
-        # 应用百分比调整（如果存在），否则使用公有化配置
+        # Apply percentage adjustments (if exist), otherwise use public configuration
         self._apply_percentage_params(config)
 
         self.api_url = config.get("api_url")
@@ -79,9 +78,7 @@ class TTSProvider(TTSProviderBase):
         }
 
         try:
-            resp = requests.post(
-                self.api_url, json.dumps(request_json), headers=self.header
-            )
+            resp = requests.post(self.api_url, json=request_json, headers=self.header)
             if "data" in resp.json():
                 data = resp.json()["data"]
                 audio_bytes = base64.b64decode(data)

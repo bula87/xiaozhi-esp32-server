@@ -1,106 +1,243 @@
 <template>
-  <el-dialog :visible="dialogVisible" @update:visible="handleVisibleChange" width="57%" center
-    custom-class="custom-dialog" :show-close="false" class="center-dialog">
-    <div style="margin: 0 18px; text-align: left; padding: 10px; border-radius: 10px;">
-      <div style="font-size: 30px; color: #3d4566; margin-top: -10px; margin-bottom: 10px; text-align: center;">
-        {{ $t('modelConfigDialog.addModel') }}
+  <el-dialog
+    :visible="dialogVisible"
+    @update:visible="handleVisibleChange"
+    width="57%"
+    center
+    custom-class="custom-dialog"
+    :show-close="false"
+    class="center-dialog"
+  >
+    <div
+      style="
+        margin: 0 18px;
+        text-align: left;
+        padding: 10px;
+        border-radius: 10px;
+      "
+    >
+      <div
+        style="
+          font-size: 30px;
+          color: #3d4566;
+          margin-top: -10px;
+          margin-bottom: 10px;
+          text-align: center;
+        "
+      >
+        {{ $t("modelConfigDialog.addModel") }}
       </div>
 
-      <button class="custom-close-btn" @click="handleClose">
-        ×
-      </button>
+      <button class="custom-close-btn" @click="handleClose">×</button>
 
-      <!-- 模型信息部分 -->
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-        <div style="font-size: 20px; font-weight: bold; color: #3d4566;">{{ $t('modelConfigDialog.modelInfo') }}</div>
-        <div style="display: flex; align-items: center; gap: 20px;">
-          <div style="display: flex; align-items: center;">
-            <span style="margin-right: 8px;">{{ $t('modelConfigDialog.enable') }}</span>
-            <el-switch v-model="formData.isEnabled" class="custom-switch"></el-switch>
+      <!-- Model information section -->
+      <div
+        style="
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 10px;
+        "
+      >
+        <div style="font-size: 20px; font-weight: bold; color: #3d4566">
+          {{ $t("modelConfigDialog.modelInfo") }}
+        </div>
+        <div style="display: flex; align-items: center; gap: 20px">
+          <div style="display: flex; align-items: center">
+            <span style="margin-right: 8px">{{
+              $t("modelConfigDialog.enable")
+            }}</span>
+            <el-switch
+              v-model="formData.isEnabled"
+              class="custom-switch"
+            ></el-switch>
           </div>
-          <div style="display: none; align-items: center;">
-            <span style="margin-right: 8px;">{{ $t('modelConfigDialog.setDefault') }}</span>
-            <el-switch v-model="formData.isDefault" class="custom-switch"></el-switch>
+          <div style="display: none; align-items: center">
+            <span style="margin-right: 8px">{{
+              $t("modelConfigDialog.setDefault")
+            }}</span>
+            <el-switch
+              v-model="formData.isDefault"
+              class="custom-switch"
+            ></el-switch>
           </div>
         </div>
       </div>
 
-      <div style="height: 2px; background: #e9e9e9; margin-bottom: 22px;"></div>
-      <el-form :model="formData" label-width="100px" label-position="left" class="custom-form">
-        <div style="display: flex; gap: 20px; margin-bottom: 0;">
-          <el-form-item :label="$t('modelConfigDialog.modelId')" prop="id" style="flex: 1;">
-            <el-input v-model="formData.id" :placeholder="$t('modelConfigDialog.enterModelId')" class="custom-input-bg"
-              maxlength="32"></el-input>
+      <div style="height: 2px; background: #e9e9e9; margin-bottom: 22px"></div>
+      <el-form
+        :model="formData"
+        label-width="100px"
+        label-position="left"
+        class="custom-form"
+      >
+        <div style="display: flex; gap: 20px; margin-bottom: 0">
+          <el-form-item
+            :label="$t('modelConfigDialog.modelId')"
+            prop="id"
+            style="flex: 1"
+          >
+            <el-input
+              v-model="formData.id"
+              :placeholder="$t('modelConfigDialog.enterModelId')"
+              class="custom-input-bg"
+              maxlength="32"
+            ></el-input>
           </el-form-item>
         </div>
-        <div style="display: flex; gap: 20px; margin-bottom: 0;">
-          <el-form-item :label="$t('modelConfigDialog.modelName')" prop="modelName" style="flex: 1;">
-            <el-input v-model="formData.modelName" :placeholder="$t('modelConfigDialog.enterModelName')"
-              class="custom-input-bg"></el-input>
+        <div style="display: flex; gap: 20px; margin-bottom: 0">
+          <el-form-item
+            :label="$t('modelConfigDialog.modelName')"
+            prop="modelName"
+            style="flex: 1"
+          >
+            <el-input
+              v-model="formData.modelName"
+              :placeholder="$t('modelConfigDialog.enterModelName')"
+              class="custom-input-bg"
+            ></el-input>
           </el-form-item>
-          <el-form-item :label="$t('modelConfigDialog.modelCode')" prop="modelCode" style="flex: 1;">
-            <el-input v-model="formData.modelCode" :placeholder="$t('modelConfigDialog.enterModelCode')"
-              class="custom-input-bg"></el-input>
+          <el-form-item
+            :label="$t('modelConfigDialog.modelCode')"
+            prop="modelCode"
+            style="flex: 1"
+          >
+            <el-input
+              v-model="formData.modelCode"
+              :placeholder="$t('modelConfigDialog.enterModelCode')"
+              class="custom-input-bg"
+            ></el-input>
           </el-form-item>
         </div>
 
-        <div style="display: flex; gap: 20px; margin-bottom: 0;">
-          <el-form-item :label="$t('modelConfigDialog.supplier')" prop="supplier" style="flex: 1;">
-            <el-select v-model="formData.supplier" :placeholder="$t('modelConfigDialog.selectSupplier')"
-              class="custom-select custom-input-bg" style="width: 100%;" @focus="loadProviders" filterable>
-              <el-option v-for="item in providers" :key="item.value" :label="item.label" :value="item.value" />
+        <div style="display: flex; gap: 20px; margin-bottom: 0">
+          <el-form-item
+            :label="$t('modelConfigDialog.supplier')"
+            prop="supplier"
+            style="flex: 1"
+          >
+            <el-select
+              v-model="formData.supplier"
+              :placeholder="$t('modelConfigDialog.selectSupplier')"
+              class="custom-select custom-input-bg"
+              style="width: 100%"
+              @focus="loadProviders"
+              filterable
+            >
+              <el-option
+                v-for="item in providers"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
             </el-select>
           </el-form-item>
-          <el-form-item :label="$t('modelConfigDialog.sortOrder')" prop="sortOrder" style="flex: 1;">
-            <el-input v-model="formData.sort" type="number" :placeholder="$t('modelConfigDialog.enterSortOrder')"
-              class="custom-input-bg"></el-input>
+          <el-form-item
+            :label="$t('modelConfigDialog.sortOrder')"
+            prop="sortOrder"
+            style="flex: 1"
+          >
+            <el-input
+              v-model="formData.sort"
+              type="number"
+              :placeholder="$t('modelConfigDialog.enterSortOrder')"
+              class="custom-input-bg"
+            ></el-input>
           </el-form-item>
         </div>
 
-
-        <el-form-item :label="$t('modelConfigDialog.docLink')" prop="docLink" style="margin-bottom: 27px;">
-          <el-input v-model="formData.docLink" :placeholder="$t('modelConfigDialog.enterDocLink')"
-            class="custom-input-bg"></el-input>
+        <el-form-item
+          :label="$t('modelConfigDialog.docLink')"
+          prop="docLink"
+          style="margin-bottom: 27px"
+        >
+          <el-input
+            v-model="formData.docLink"
+            :placeholder="$t('modelConfigDialog.enterDocLink')"
+            class="custom-input-bg"
+          ></el-input>
         </el-form-item>
 
-        <el-form-item :label="$t('modelConfigDialog.remark')" prop="remark" class="prop-remark">
-          <el-input v-model="formData.remark" type="textarea" :rows="3"
-            :placeholder="$t('modelConfigDialog.enterRemark')" :autosize="{ minRows: 3, maxRows: 5 }"
-            class="custom-input-bg"></el-input>
+        <el-form-item
+          :label="$t('modelConfigDialog.remark')"
+          prop="remark"
+          class="prop-remark"
+        >
+          <el-input
+            v-model="formData.remark"
+            type="textarea"
+            :rows="3"
+            :placeholder="$t('modelConfigDialog.enterRemark')"
+            :autosize="{ minRows: 3, maxRows: 5 }"
+            class="custom-input-bg"
+          ></el-input>
         </el-form-item>
       </el-form>
 
-      <div style="font-size: 20px; font-weight: bold; color: #3d4566; margin-bottom: 15px;">{{
-        $t('modelConfigDialog.callInfo') }}</div>
-      <div style="height: 2px; background: #e9e9e9; margin-bottom: 22px;"></div>
+      <div
+        style="
+          font-size: 20px;
+          font-weight: bold;
+          color: #3d4566;
+          margin-bottom: 15px;
+        "
+      >
+        {{ $t("modelConfigDialog.callInfo") }}
+      </div>
+      <div style="height: 2px; background: #e9e9e9; margin-bottom: 22px"></div>
 
-      <el-form :model="formData.configJson" label-width="auto" label-position="left" class="custom-form">
-        <div v-for="(row, rowIndex) in chunkedCallInfoFields" :key="rowIndex"
-          style="display: flex; gap: 20px; margin-bottom: 0;">
-          <el-form-item v-for="field in row" :key="field.prop" :label="field.label" :prop="field.prop" style="flex: 1;">
-            <el-input v-model="formData.configJson[field.prop]" :placeholder="field.placeholder"
-              :type="field.type || 'text'" class="custom-input-bg" :show-password="field.type === 'password'">
+      <el-form
+        :model="formData.configJson"
+        label-width="auto"
+        label-position="left"
+        class="custom-form"
+      >
+        <div
+          v-for="(row, rowIndex) in chunkedCallInfoFields"
+          :key="rowIndex"
+          style="display: flex; gap: 20px; margin-bottom: 0"
+        >
+          <el-form-item
+            v-for="field in row"
+            :key="field.prop"
+            :label="field.label"
+            :prop="field.prop"
+            style="flex: 1"
+          >
+            <el-input
+              v-model="formData.configJson[field.prop]"
+              :placeholder="field.placeholder"
+              :type="field.type || 'text'"
+              class="custom-input-bg"
+              :show-password="field.type === 'password'"
+            >
             </el-input>
           </el-form-item>
         </div>
       </el-form>
     </div>
 
-    <div style="display: flex;justify-content: center;">
-      <el-button type="primary" @click="confirm" class="save-btn" :loading="saving" :disabled="saving">
-        {{ $t('modelConfigDialog.save') }}
+    <div style="display: flex; justify-content: center">
+      <el-button
+        type="primary"
+        @click="confirm"
+        class="save-btn"
+        :loading="saving"
+        :disabled="saving"
+      >
+        {{ $t("modelConfigDialog.save") }}
       </el-button>
     </div>
   </el-dialog>
 </template>
 
 <script>
-import Api from '@/apis/api';
+import Api from "@/apis/api";
 export default {
-  name: 'AddModelDialog',
+  name: "AddModelDialog",
   props: {
     visible: { type: Boolean, required: true },
-    modelType: { type: String, required: true }
+    modelType: { type: String, required: true },
   },
   data() {
     return {
@@ -111,18 +248,18 @@ export default {
       providerFields: [],
       currentProvider: null,
       formData: {
-        id: '',
-        modelName: '',
-        modelCode: '',
-        supplier: '',
+        id: "",
+        modelName: "",
+        modelCode: "",
+        supplier: "",
         sort: 1,
-        docLink: '',
-        remark: '',
+        docLink: "",
+        remark: "",
         isEnabled: true,
         isDefault: true,
-        configJson: {}
-      }
-    }
+        configJson: {},
+      },
+    };
   },
   watch: {
     visible(val) {
@@ -133,11 +270,11 @@ export default {
         this.resetForm();
       }
     },
-    'formData.supplier'(newVal) {
-      this.currentProvider = this.providers.find(p => p.value === newVal);
+    "formData.supplier"(newVal) {
+      this.currentProvider = this.providers.find((p) => p.value === newVal);
       this.providerFields = this.currentProvider?.fields || [];
       this.initDynamicConfig();
-    }
+    },
   },
   computed: {
     dynamicCallInfoFields() {
@@ -150,37 +287,36 @@ export default {
         result.push(this.dynamicCallInfoFields.slice(i, i + chunkSize));
       }
       return result;
-    }
+    },
   },
   methods: {
     loadProviders() {
-      if (this.providersLoaded)
-        return
+      if (this.providersLoaded) return;
 
       Api.model.getModelProviders(this.modelType, (data) => {
-        this.providers = data.map(item => ({
+        this.providers = data.map((item) => ({
           label: item.name,
           value: item.providerCode,
-          fields: JSON.parse(item.fields || '[]').map(f => ({
+          fields: JSON.parse(item.fields || "[]").map((f) => ({
             label: f.label,
             prop: f.key,
-            type: f.type === 'password' ? 'password' : 'text',
-            placeholder: `请输入${f.key}`
-          }))
-        }))
-        this.providersLoaded = true
-      })
+            type: f.type === "password" ? "password" : "text",
+            placeholder: `Please enter${f.key}`,
+          })),
+        }));
+        this.providersLoaded = true;
+      });
     },
     initConfigJson() {
       const defaultConfig = {};
-      this.providerFields.forEach(field => {
-        defaultConfig[field.prop] = '';
+      this.providerFields.forEach((field) => {
+        defaultConfig[field.prop] = "";
       });
       this.formData.configJson = { ...defaultConfig };
     },
     handleVisibleChange(val) {
       this.dialogVisible = val;
-      this.$emit('update:visible', val);
+      this.$emit("update:visible", val);
       if (!val) {
         this.resetForm();
       }
@@ -188,51 +324,51 @@ export default {
 
     handleClose() {
       this.saving = false;
-      this.$emit('update:visible', false);
+      this.$emit("update:visible", false);
     },
     initDynamicConfig() {
       const newConfig = {};
-      this.providerFields.forEach(field => {
-        newConfig[field.prop] = this.formData.configJson[field.prop] || '';
+      this.providerFields.forEach((field) => {
+        newConfig[field.prop] = this.formData.configJson[field.prop] || "";
       });
       this.formData.configJson = newConfig;
     },
     confirm() {
       this.saving = true;
 
-      // 校验模型ID不能为纯文字或空格
+      // Validate that model ID cannot be only letters or spaces
       if (this.formData.id && !this.validateModelId(this.formData.id)) {
-        this.$message.error(this.$t('modelConfigDialog.invalidModelId'));
+        this.$message.error(this.$t("modelConfigDialog.invalidModelId"));
         this.saving = false;
         return;
       }
 
       if (!this.formData.supplier) {
-        this.$message.error(this.$t('addModelDialog.requiredSupplier'));
+        this.$message.error(this.$t("addModelDialog.requiredSupplier"));
         this.saving = false;
         return;
       }
 
       const submitData = {
-        id: this.formData.id || '',
-        modelName: this.formData.modelName || '',
-        modelCode: this.formData.modelCode || '',
+        id: this.formData.id || "",
+        modelName: this.formData.modelName || "",
+        modelCode: this.formData.modelCode || "",
         supplier: this.formData.supplier,
         sort: this.formData.sort || 1,
-        docLink: this.formData.docLink || '',
-        remark: this.formData.remark || '',
+        docLink: this.formData.docLink || "",
+        remark: this.formData.remark || "",
         isEnabled: this.formData.isEnabled ? 1 : 0,
         isDefault: this.formData.isDefault ? 1 : 0,
         provideCode: this.formData.supplier,
         configJson: {
           ...this.formData.configJson,
-          type: this.formData.supplier
-        }
+          type: this.formData.supplier,
+        },
       };
 
       try {
-        this.$emit('confirm', submitData);
-        this.$emit('update:visible', false);
+        this.$emit("confirm", submitData);
+        this.$emit("update:visible", false);
         this.resetForm();
       } catch (e) {
         console.error(e);
@@ -243,58 +379,58 @@ export default {
     resetForm() {
       this.saving = false;
       this.formData = {
-        id: '',
-        modelName: '',
-        modelCode: '',
-        supplier: '',
+        id: "",
+        modelName: "",
+        modelCode: "",
+        supplier: "",
         sort: 1,
-        docLink: '',
-        remark: '',
+        docLink: "",
+        remark: "",
         isEnabled: true,
         isDefault: true,
-        configJson: {}
+        configJson: {},
       };
-      // 重置加载状态
+      // Reset loading state
       this.providers = [];
       this.providersLoaded = false;
-      // 重置字段配置
+      // Reset field configuration
       this.providerFields = [];
       this.currentProvider = null;
     },
-    
-    // 校验模型ID：不能为纯文字或空格
+
+    // Validate model ID: cannot be only letters or spaces
     validateModelId(modelId) {
-      if (!modelId || typeof modelId !== 'string') {
+      if (!modelId || typeof modelId !== "string") {
         return false;
       }
-      
-      // 去除首尾空格
+
+      // Remove leading and trailing spaces
       const trimmedId = modelId.trim();
-      
-      // 检查是否为空或纯空格
-      if (trimmedId === '') {
+
+      // Check if it is empty or only spaces
+      if (trimmedId === "") {
         return false;
       }
-      
-      // 检查是否只包含字母（纯文字）
+
+      // Check if it contains only letters (pure text)
       if (/^[a-zA-Z]+$/.test(trimmedId)) {
         return false;
       }
-      
-      // 检查是否包含空格
+
+      // Check if it contains spaces
       if (/\s/.test(trimmedId)) {
         return false;
       }
-      
-      // 允许字母、数字、下划线、连字符
+
+      // Allow letters, numbers, underscores, hyphens
       if (!/^[a-zA-Z0-9_-]+$/.test(trimmedId)) {
         return false;
       }
-      
+
       return true;
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style>
@@ -345,8 +481,8 @@ export default {
 }
 
 .custom-close-btn:hover {
-  color: #409EFF;
-  border-color: #409EFF;
+  color: #409eff;
+  border-color: #409eff;
 }
 
 .custom-select .el-input__suffix {
@@ -389,7 +525,6 @@ export default {
   font-weight: normal;
   text-align: right;
   padding-right: 20px;
-
 }
 
 .custom-form .el-form-item.prop-remark .el-form-item__label {
@@ -401,12 +536,10 @@ export default {
   color: #9c9f9e;
 }
 
-
 .custom-input-bg .el-input__inner,
 .custom-input-bg .el-textarea__inner {
   background-color: #ffffff;
 }
-
 
 .save-btn {
   background: #e6f0fd;
@@ -424,7 +557,6 @@ export default {
   border: none;
 }
 
-
 .custom-switch .el-switch__core {
   border-radius: 20px;
   height: 23px;
@@ -439,7 +571,7 @@ export default {
   background-color: white;
   top: 3px;
   left: 4px;
-  transition: all .3s;
+  transition: all 0.3s;
 }
 
 .custom-switch.is-checked .el-switch__core {
@@ -453,7 +585,6 @@ export default {
   margin-left: -18px;
   background-color: #1b47ee;
 }
-
 
 [style*="display: flex"] {
   gap: 20px;

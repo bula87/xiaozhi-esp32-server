@@ -1,6 +1,5 @@
 from config.logger import setup_logging
 from openai import OpenAI
-import json
 from core.providers.llm.base import LLMProviderBase
 
 TAG = __name__
@@ -12,7 +11,7 @@ class LLMProvider(LLMProviderBase):
         self.model_name = config.get("model_name")
         self.base_url = config.get("base_url", "http://localhost:9997")
         # Initialize OpenAI client with Xinference base URL
-        # 如果没有v1，增加v1
+        # If no v1, add v1
         if not self.base_url.endswith("/v1"):
             self.base_url = f"{self.base_url}/v1"
 
@@ -41,18 +40,16 @@ class LLMProvider(LLMProviderBase):
         for chunk in responses:
             try:
                 delta = (
-                    chunk.choices[0].delta
-                    if getattr(chunk, "choices", None)
-                    else None
+                    chunk.choices[0].delta if getattr(chunk, "choices", None) else None
                 )
                 content = delta.content if hasattr(delta, "content") else ""
                 if content:
-                    if "<think>" in content:
+                    if "{" in content:
                         is_active = False
-                        content = content.split("<think>")[0]
-                    if "</think>" in content:
+                        content = content.split("{")[0]
+                    if "}" in content:
                         is_active = True
-                        content = content.split("</think>")[-1]
+                        content = content.split("}")[-1]
                     if is_active:
                         yield content
             except Exception as e:

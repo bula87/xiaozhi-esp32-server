@@ -19,7 +19,7 @@
       </div>
     </div>
 
-    <!-- 主体内容 -->
+    <!-- Main content -->
     <div class="main-wrapper">
       <div class="content-panel">
         <div class="content-area">
@@ -36,8 +36,8 @@
               :header-cell-style="{ padding: '10px 20px' }"
               :cell-style="{ padding: '10px 20px' }"
             >
-              <!-- 移除@row-click="handleRowClick" -->
-              <!-- 自定义选择列，实现表头是"选择"文字，数据行是小方框 -->
+              <!-- Remove @row-click="handleRowClick" -->
+              <!-- Customize selection column, implement table header as "Select" text, data row as small square -->
               <el-table-column
                 :label="$t('agentTemplateManagement.select')"
                 align="center"
@@ -51,7 +51,7 @@
                   ></el-checkbox>
                 </template>
               </el-table-column>
-              <!-- 模板名称 -->
+              <!-- Template Name -->
               <el-table-column
                 :label="$t('agentTemplateManagement.templateName')"
                 prop="agentName"
@@ -62,7 +62,7 @@
                   <span>{{ scope.row.agentName }}</span>
                 </template>
               </el-table-column>
-              <!-- 修改为序号列，并移动到此处 -->
+              <!-- Change to serial number column, and move here -->
               <el-table-column
                 :label="$t('agentTemplateManagement.serialNumber')"
                 min-width="120"
@@ -72,7 +72,7 @@
                   <span>{{ (currentPage - 1) * pageSize + scope.$index + 1 }}</span>
                 </template>
               </el-table-column>
-              <!-- 操作列 -->
+              <!-- Operation column -->
               <el-table-column
                 :label="$t('agentTemplateManagement.action')"
                 min-width="250"
@@ -91,7 +91,7 @@
               </el-table-column>
             </el-table>
 
-            <!-- 表格底部操作栏 -->
+            <!-- Table bottom operation bar -->
             <div class="table_bottom">
               <div class="ctrl_btn">
                 <el-button
@@ -119,7 +119,7 @@
                 </el-button>
               </div>
 
-              <!-- 分页 -->
+              <!-- Pagination -->
               <div class="custom-pagination">
                 <el-pagination
                   v-model:current-page="currentPage"
@@ -156,14 +156,14 @@ export default {
 
   data() {
     return {
-      // 模板相关
+      // Template related
       templateList: [],
       templateLoading: false,
       selectedTemplates: [],
-      isAllSelected: false, // 添加全选状态
+      isAllSelected: false, // Add select all status
 
       search: "",
-      // 分页相关数据
+      // Pagination related data
       pageSizeOptions: [10, 20, 50, 100],
       currentPage: 1,
       pageSize: 10,
@@ -173,7 +173,7 @@ export default {
   created() {
     this.loadTemplateList();
   },
-  // 在computed部分添加hasSelected属性
+  // Add the hasSelected property to the computed section
   computed: {
     pageCount() {
       return Math.ceil(this.total / this.pageSize);
@@ -184,10 +184,10 @@ export default {
     hasSelected() {
       return this.selectedTemplates.length > 0;
     },
-  },
+   },
   methods: {
-    // 加载模板列表
-    // 改进loadTemplateList方法的错误处理逻辑
+    // Load template list
+    // Improve the error handling logic of the loadTemplateList method
     loadTemplateList() {
       this.templateLoading = true;
       const params = {
@@ -202,18 +202,18 @@ export default {
         agentApi.getAgentTemplatesPage(
           params,
           (res) => {
-            // 更健壮的响应处理逻辑
+            // More robust response handling logic
             if (res && typeof res === "object") {
               if (res.data && res.data.code === 0) {
                 const responseData = res.data.data || {};
-                // 为每个模板添加selected属性
+                // Add selected attribute to each template
                 this.templateList = Array.isArray(responseData.list)
                   ? responseData.list.map((item) => ({ ...item, selected: false }))
                   : [];
                 this.total =
                   typeof responseData.total === "number" ? responseData.total : 0;
               } else {
-                this.templateList = [];
+                 this.templateList = [];
                 this.total = 0;
                 this.$message.error(
                   res?.data?.msg || this.$t("agentTemplateManagement.fetchTemplateFailed")
@@ -234,7 +234,7 @@ export default {
             this.templateLoading = false;
             this.$message.error(this.$t("common.networkError"));
           }
-        );
+          );
       } catch (error) {
         this.templateList = [];
         this.total = 0;
@@ -243,7 +243,7 @@ export default {
       }
     },
 
-    // 搜索模板
+    // Search template
     handleSearch() {
       if (this.search) {
         const searchValue = this.search.toLowerCase();
@@ -257,29 +257,29 @@ export default {
       }
     },
 
-    // 修改showAddTemplateDialog方法，使其跳转到与编辑页面相同的页面
-    // 显示新增模板弹窗
+    // Modify showAddTemplateDialog method to redirect to the same page as the editing page
+    // Show the add template dialog window
     showAddTemplateDialog() {
-      // 跳转到模板快速配置页面，不传递templateId参数表示新增
+      // Redirect to the template quick configuration page, do not pass templateId parameter to indicate new
       this.$router.push({
         path: "/template-quick-config",
       });
     },
 
-    // 编辑模板
+    // Edit template
     editTemplate(row) {
-      // 跳转到模板快速配置页面，并传递模板ID参数
+      // Redirect to the template quick configuration page, and pass the template ID parameter
       this.$router.push({
         path: "/template-quick-config",
         query: { templateId: row.id },
       });
     },
 
-    // 删除模板
+    // Delete template
     deleteTemplate(row) {
       this.$confirm(
         this.$t("agentTemplateManagement.confirmSingleDelete"),
-        this.$t("common.warning"),
+         this.$t("common.warning"),
         {
           confirmButtonText: this.$t("common.confirm"),
           cancelButtonText: this.$t("common.cancel"),
@@ -289,7 +289,7 @@ export default {
         .then(() => {
           agentApi.deleteAgentTemplate(row.id, (res) => {
             if (res && typeof res === "object") {
-              // 检查res.data是否存在且包含code=0
+              // Check if res.data exists and contains code=0
               if (res.data && res.data.code === 0) {
                 this.$message.success(this.$t("agentTemplateManagement.deleteSuccess"));
                 this.loadTemplateList();
@@ -301,14 +301,14 @@ export default {
             } else {
               this.$message.error(this.$t("agentTemplateManagement.deleteBackendError"));
             }
-          });
+          })
         })
         .catch(() => {
           this.$message.info(this.$t("common.deleteCancelled"));
         });
     },
 
-    // 批量删除模板
+    // Batch delete template
     batchDeleteTemplate() {
       if (this.selectedTemplates.length === 0) {
         this.$message.warning(this.$t("agentTemplateManagement.selectTemplate"));
@@ -319,7 +319,7 @@ export default {
         this.$t("agentTemplateManagement.confirmBatchDelete", {
           count: this.selectedTemplates.length,
         }),
-        this.$t("common.warning"),
+         this.$t("common.warning"),
         {
           confirmButtonText: this.$t("common.confirm"),
           cancelButtonText: this.$t("common.cancel"),
@@ -327,7 +327,7 @@ export default {
         }
       )
         .then(() => {
-          // 确保参数格式正确 - 将id数组作为请求体
+          // Ensure parameter format is correct - use the id array as the request body
           const ids = this.selectedTemplates.map((template) => template.id);
 
           agentApi.batchDeleteAgentTemplate(ids, (res) => {
@@ -336,9 +336,9 @@ export default {
                 this.$message.success(
                   this.$t("agentTemplateManagement.batchDeleteSuccess")
                 );
-                // 重新加载模板列表
+                // Reload the template list
                 this.loadTemplateList();
-                // 清空选中状态
+                 // Clear selected status
                 this.selectedTemplates = [];
                 this.isAllSelected = false;
               } else {
@@ -347,16 +347,16 @@ export default {
                 );
               }
             } else {
-              this.$message.error(this.$t("agentTemplateManagement.deleteBackendError"));
+               this.$message.error(this.$t("agentTemplateManagement.deleteBackendError"));
             }
-          });
+           });
         })
         .catch(() => {
           this.$message.info(this.$t("common.deleteCancelled"));
         });
     },
 
-    // 完善分页相关方法
+    // Complete pagination related methods
     handlePageChange(page) {
       this.currentPage = page;
       this.loadTemplateList();
@@ -416,21 +416,21 @@ export default {
       return pages;
     },
 
-    // 修改handleSelectAll方法
+    // Modify handleSelectAll method
     handleSelectAll() {
       this.isAllSelected = !this.isAllSelected;
       this.templateList.forEach((row) => {
         row.selected = this.isAllSelected;
       });
-      // 更新选中的模板列表
+      // Update selected template list
       this.selectedTemplates = this.isAllSelected ? [...this.templateList] : [];
     },
 
-    // 处理行选择变化
-    handleRowSelectionChange(row) {
-      // 查找选中的模板
+    // Handle row selection change
+     handleRowSelectionChange(row) {
+      // Find selected templates
       this.selectedTemplates = this.templateList.filter((template) => template.selected);
-      // 更新全选状态
+      // Update all selected status
       this.isAllSelected =
         this.templateList.length > 0 &&
         this.selectedTemplates.length === this.templateList.length;
@@ -438,9 +438,8 @@ export default {
   },
 };
 </script>
-
 <style scoped lang="scss">
-/* 基础背景和布局设置 */
+/* Basic background and layout settings */
 .welcome {
   min-height: 100vh;
   display: flex;
@@ -452,7 +451,7 @@ export default {
   width: 100%;
 }
 
-/* 操作栏样式 */
+/* Operation bar style */
 .operation-bar {
   display: flex;
   justify-content: space-between;
@@ -481,9 +480,9 @@ export default {
   color: white;
 }
 
-/* 主容器样式 */
+/* Main container styles */
 .main-wrapper {
-  // 顶部 63px 底部 35px 查询72px
+  /* Top 63px bottom 35px search 72px */
   height: calc(100vh - 63px - 35px - 72px);
   margin: 0 22px;
   border-radius: 15px;
@@ -514,7 +513,7 @@ export default {
   position: relative;
 }
 
-/* 模板卡片样式 */
+/* Template card style */
 .template-card {
   border: none;
   box-shadow: none;
@@ -532,13 +531,12 @@ export default {
   }
 }
 
-/* 表格样式 - 优化整合版 */
+/* Table Style - Optimized Integrated Version */
 .transparent-table {
   width: 100%;
   flex: 1;
   min-height: 0;
 }
-
 :deep(.el-table) {
   height: 100%;
   display: flex;
@@ -546,7 +544,7 @@ export default {
   --table-max-height: calc(100vh - 42vh);
   max-height: var(--table-max-height);
 
-  /* 表格头部样式 */
+  /* Table header style */
   .el-table__header th {
     padding: 8px 0 !important;
     height: 40px !important;
@@ -556,8 +554,7 @@ export default {
     color: #303133 !important;
     font-weight: 600;
   }
-
-  /* 表格主体样式 */
+   /* Table body style */
   .el-table__body {
     .el-table__row td {
       padding: 12px 0 !important;
@@ -567,8 +564,7 @@ export default {
       background-color: #f5f7fa;
     }
   }
-
-  /* 表格按钮样式 */
+   /* Table button style */
   .el-button--text {
     color: #7079aa;
   }
@@ -577,15 +573,15 @@ export default {
     color: #5a64b5;
   }
 
-  /* 单元格文本样式 */
+  /* Cell text style */
   .cell {
-    white-space: nowrap;
+     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
 }
 
-/* 表格底部操作栏 */
+/* Table bottom operation bar */
 .table_bottom {
   display: flex;
   justify-content: space-between !important;
@@ -595,8 +591,7 @@ export default {
   width: 100% !important;
   box-sizing: border-box !important;
 }
-
-/* 控制按钮样式 */
+ /* Control button style */
 .ctrl_btn {
   display: flex;
   gap: 8px;
@@ -607,7 +602,7 @@ export default {
     min-width: 72px;
     height: 32px;
     padding: 7px 12px 7px 10px;
-    font-size: 12px;
+     font-size: 12px;
     border-radius: 4px;
     line-height: 1;
     font-weight: 500;

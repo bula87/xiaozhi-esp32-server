@@ -15,42 +15,43 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @TableName("ai_voice_clone")
-@Schema(description = "声音克隆")
+@Schema(description = "Voice Clone")
 public class VoiceCloneEntity {
 
     @TableId(type = IdType.ASSIGN_UUID)
-    @Schema(description = "唯一标识")
+    @Schema(description = "Unique Identifier")
     private String id;
 
-    @Schema(description = "声音名称")
+    @Schema(description = "Voice Name")
     private String name;
 
-    @Schema(description = "模型id")
+    @Schema(description = "Model ID")
     private String modelId;
 
-    @Schema(description = "声音id")
+    @Schema(description = "Voice ID")
     private String voiceId;
 
-    @Schema(description = "语言")
+    @Schema(description = "Language")
     private String languages;
 
-    @Schema(description = "用户 ID（关联用户表）")
+    @Schema(description = "User ID (Linked to User Table)")
     private Long userId;
 
-    @Schema(description = "声音")
+    @Schema(description = "Voice")
     private byte[] voice;
 
-    @Schema(description = "训练状态：0待训练 1训练中 2训练成功 3训练失败")
+    @Schema(description = "Training Status: 0 Pending Training, 1 In Training, 2 Training Successful, 3 Training Failed")
     private Integer trainStatus;
 
-    @Schema(description = "训练错误原因")
+    @Schema(description = "Training Error Reason")
     private String trainError;
 
-    @Schema(description = "创建者")
+    @Schema(description = "Creator")
     @TableField(fill = FieldFill.INSERT)
     private Long creator;
 
-    @Schema(description = "创建时间")
+    @Schema(description = "Creation Date")
     @TableField(fill = FieldFill.INSERT)
     private Date createDate;
 }
+ 

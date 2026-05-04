@@ -3,11 +3,18 @@
     <HeaderBar />
 
     <div class="operation-bar">
-      <h2 class="page-title">{{ $t('header.userManagement') }}</h2>
+      <h2 class="page-title">{{ $t("header.userManagement") }}</h2>
       <div class="right-operations">
-        <el-input :placeholder="$t('user.searchPhone')" v-model="searchPhone" class="search-input" clearable
-          @keyup.enter.native="handleSearch" />
-        <el-button class="btn-search" @click="handleSearch">{{ $t('user.search') }}</el-button>
+        <el-input
+          :placeholder="$t('user.searchPhone')"
+          v-model="searchPhone"
+          class="search-input"
+          clearable
+          @keyup.enter.native="handleSearch"
+        />
+        <el-button class="btn-search" @click="handleSearch">{{
+          $t("user.search")
+        }}</el-button>
       </div>
     </div>
 
@@ -15,73 +22,178 @@
       <div class="content-panel">
         <div class="content-area">
           <el-card class="user-card" shadow="never">
-            <el-table ref="userTable" :data="userList" class="transparent-table" v-loading="loading"
-              :element-loading-text="$t('modelConfig.loading')" element-loading-spinner="el-icon-loading"
-              element-loading-background="rgba(255, 255, 255, 0.7)">
-              <el-table-column :label="$t('modelConfig.select')" align="center" width="120">
+            <el-table
+              ref="userTable"
+              :data="userList"
+              class="transparent-table"
+              v-loading="loading"
+              :element-loading-text="$t('modelConfig.loading')"
+              element-loading-spinner="el-icon-loading"
+              element-loading-background="rgba(255, 255, 255, 0.7)"
+            >
+              <el-table-column
+                :label="$t('modelConfig.select')"
+                align="center"
+                width="120"
+              >
                 <template slot-scope="scope">
                   <el-checkbox v-model="scope.row.selected"></el-checkbox>
                 </template>
               </el-table-column>
-              <el-table-column :label="$t('user.userid')" prop="userid" align="center"></el-table-column>
-              <el-table-column :label="$t('user.mobile')" prop="mobile" align="center"></el-table-column>
-              <el-table-column :label="$t('user.deviceCount')" prop="deviceCount" align="center"></el-table-column>
-              <el-table-column :label="$t('user.createDate')" prop="createDate" align="center"></el-table-column>
-              <el-table-column :label="$t('user.status')" prop="status" align="center">
+              <el-table-column
+                :label="$t('user.userid')"
+                prop="userid"
+                align="center"
+              ></el-table-column>
+              <el-table-column
+                :label="$t('user.mobile')"
+                prop="mobile"
+                align="center"
+              ></el-table-column>
+              <el-table-column
+                :label="$t('user.deviceCount')"
+                prop="deviceCount"
+                align="center"
+              ></el-table-column>
+              <el-table-column
+                :label="$t('user.createDate')"
+                prop="createDate"
+                align="center"
+              ></el-table-column>
+              <el-table-column
+                :label="$t('user.status')"
+                prop="status"
+                align="center"
+              >
                 <template slot-scope="scope">
-                  <el-tag v-if="scope.row.status === 1" type="success">{{ $t('user.normal') }}</el-tag>
-                  <el-tag v-else type="danger">{{ $t('user.disabled') }}</el-tag>
+                  <el-tag v-if="scope.row.status === 1" type="success">{{
+                    $t("user.normal")
+                  }}</el-tag>
+                  <el-tag v-else type="danger">{{
+                    $t("user.disabled")
+                  }}</el-tag>
                 </template>
               </el-table-column>
-              <el-table-column :label="$t('modelConfig.action')" align="center" width="300px">
+              <el-table-column
+                :label="$t('modelConfig.action')"
+                align="center"
+                width="300px"
+              >
                 <template slot-scope="scope">
-                  <el-button size="mini" type="text" @click="resetPassword(scope.row)">{{ $t('user.resetPassword')
-                    }}</el-button>
-                  <el-button size="mini" type="text" v-if="scope.row.status === 1"
-                    @click="handleChangeStatus(scope.row, 0)">{{ $t('user.disableAccount') }}</el-button>
-                  <el-button size="mini" type="text" v-if="scope.row.status === 0"
-                    @click="handleChangeStatus(scope.row, 1)">{{ $t('user.enableAccount') }}</el-button>
-                  <el-button size="mini" type="text" @click="deleteUser(scope.row)">{{ $t('user.deleteUser')
-                    }}</el-button>
+                  <el-button
+                    size="mini"
+                    type="text"
+                    @click="resetPassword(scope.row)"
+                    >{{ $t("user.resetPassword") }}</el-button
+                  >
+                  <el-button
+                    size="mini"
+                    type="text"
+                    v-if="scope.row.status === 1"
+                    @click="handleChangeStatus(scope.row, 0)"
+                    >{{ $t("user.disableAccount") }}</el-button
+                  >
+                  <el-button
+                    size="mini"
+                    type="text"
+                    v-if="scope.row.status === 0"
+                    @click="handleChangeStatus(scope.row, 1)"
+                    >{{ $t("user.enableAccount") }}</el-button
+                  >
+                  <el-button
+                    size="mini"
+                    type="text"
+                    @click="deleteUser(scope.row)"
+                    >{{ $t("user.deleteUser") }}</el-button
+                  >
                 </template>
               </el-table-column>
             </el-table>
 
             <div class="table_bottom">
               <div class="ctrl_btn">
-                <el-button size="mini" type="primary" class="select-all-btn" @click="handleSelectAll">
-                  {{ isAllSelected ? $t('user.deselectAll') : $t('user.selectAll') }}
+                <el-button
+                  size="mini"
+                  type="primary"
+                  class="select-all-btn"
+                  @click="handleSelectAll"
+                >
+                  {{
+                    isAllSelected
+                      ? $t("user.deselectAll")
+                      : $t("user.selectAll")
+                  }}
                 </el-button>
-                <el-button size="mini" type="success" icon="el-icon-circle-check" @click="batchEnable">{{
-                  $t('user.enable')
-                  }}</el-button>
-                <el-button size="mini" type="warning" @click="batchDisable"><i
-                    class="el-icon-remove-outline rotated-icon"></i>{{
-                      $t('user.disable') }}</el-button>
-                <el-button size="mini" type="danger" icon="el-icon-delete" @click="batchDelete">{{ $t('user.delete')
-                  }}</el-button>
+                <el-button
+                  size="mini"
+                  type="success"
+                  icon="el-icon-circle-check"
+                  @click="batchEnable"
+                  >{{ $t("user.enable") }}</el-button
+                >
+                <el-button size="mini" type="warning" @click="batchDisable"
+                  ><i class="el-icon-remove-outline rotated-icon"></i
+                  >{{ $t("user.disable") }}</el-button
+                >
+                <el-button
+                  size="mini"
+                  type="danger"
+                  icon="el-icon-delete"
+                  @click="batchDelete"
+                  >{{ $t("user.delete") }}</el-button
+                >
               </div>
               <div class="custom-pagination">
-                <el-select v-model="pageSize" @change="handlePageSizeChange"
-                  :class="['page-size-select', { 'page-size-select-en': $i18n.locale === 'en' }]">
-                  <el-option v-for="item in pageSizeOptions" :key="item"
-                    :label="$t('modelConfig.itemsPerPage', { items: item })" :value="item">
+                <el-select
+                  v-model="pageSize"
+                  @change="handlePageSizeChange"
+                  :class="[
+                    'page-size-select',
+                    { 'page-size-select-en': $i18n.locale === 'en' },
+                  ]"
+                >
+                  <el-option
+                    v-for="item in pageSizeOptions"
+                    :key="item"
+                    :label="$t('modelConfig.itemsPerPage', { items: item })"
+                    :value="item"
+                  >
                   </el-option>
                 </el-select>
 
-                <button class="pagination-btn" :disabled="currentPage === 1" @click="goFirst">
-                  {{ $t('modelConfig.firstPage') }}
+                <button
+                  class="pagination-btn"
+                  :disabled="currentPage === 1"
+                  @click="goFirst"
+                >
+                  {{ $t("modelConfig.firstPage") }}
                 </button>
-                <button class="pagination-btn" :disabled="currentPage === 1" @click="goPrev">
-                  {{ $t('modelConfig.prevPage') }}
+                <button
+                  class="pagination-btn"
+                  :disabled="currentPage === 1"
+                  @click="goPrev"
+                >
+                  {{ $t("modelConfig.prevPage") }}
                 </button>
-                <button v-for="page in visiblePages" :key="page" class="pagination-btn"
-                  :class="{ active: page === currentPage }" @click="goToPage(page)">
+                <button
+                  v-for="page in visiblePages"
+                  :key="page"
+                  class="pagination-btn"
+                  :class="{ active: page === currentPage }"
+                  @click="goToPage(page)"
+                >
                   {{ page }}
-                </button> <button class="pagination-btn" :disabled="currentPage === pageCount" @click="goNext">
-                  {{ $t('modelConfig.nextPage') }}
                 </button>
-                <span class="total-text">{{ $t('modelConfig.totalRecords', { total: total }) }}</span>
+                <button
+                  class="pagination-btn"
+                  :disabled="currentPage === pageCount"
+                  @click="goNext"
+                >
+                  {{ $t("modelConfig.nextPage") }}
+                </button>
+                <span class="total-text">{{
+                  $t("modelConfig.totalRecords", { total: total })
+                }}</span>
               </div>
             </div>
           </el-card>
@@ -89,7 +201,10 @@
       </div>
     </div>
 
-    <view-password-dialog :visible.sync="showViewPassword" :password="currentPassword" />
+    <view-password-dialog
+      :visible.sync="showViewPassword"
+      :password="currentPassword"
+    />
     <el-footer>
       <version-footer />
     </el-footer>
@@ -101,7 +216,7 @@ import Api from "@/apis/api";
 import HeaderBar from "@/components/HeaderBar.vue";
 import VersionFooter from "@/components/VersionFooter.vue";
 import ViewPasswordDialog from "@/components/ViewPasswordDialog.vue";
-import i18n from '@/i18n';
+import i18n from "@/i18n";
 export default {
   components: { HeaderBar, ViewPasswordDialog, VersionFooter },
   data() {
@@ -128,18 +243,52 @@ export default {
     visiblePages() {
       const pages = [];
       const maxVisible = 3;
-      let start = Math.max(1, this.currentPage - 1);
+      let start = Math.max(1, this.currentPage - Math.floor(maxVisible / 2));
       let end = Math.min(this.pageCount, start + maxVisible - 1);
 
       if (end - start + 1 < maxVisible) {
-        start = Math.max(1, end - maxVisible + 1);
+        if (this.currentPage < maxVisible / 2 + 1) {
+          start = 1;
+          end = Math.min(this.pageCount, maxVisible);
+        } else {
+          end = this.pageCount;
+          start = Math.max(1, end - maxVisible + 1);
+        }
       }
 
-      for (let i = start; i <= end; i++) {
-        pages.push(i);
+      // Fallback logic to ensure we show at least 1, and not too many pages
+      if (start > this.pageCount) start = this.pageCount;
+      if (end < 1) end = 1;
+
+      let actualStart = Math.max(1, start);
+      let actualEnd = Math.min(this.pageCount, end);
+
+      // Recalculate the slice to ensure continuity
+      while (actualStart <= actualEnd) {
+        pages.push(actualStart);
+        actualStart++;
       }
-      return pages;
-    }
+
+      // A simpler method that should work for most cases:
+      const calculatedPages = [];
+      const startPage = Math.max(
+        1,
+        Math.floor((this.currentPage - 1) / 1.5) * 1.5 - 1,
+      );
+      const endPage = Math.min(
+        this.pageCount,
+        Math.ceil((this.currentPage + 1) / 1.5) * 1.5 + 1,
+      );
+
+      let tempStart = Math.max(1, Math.min(this.pageCount, startPage));
+      let tempEnd = Math.min(this.pageCount, Math.max(1, endPage));
+
+      for (let i = tempStart; i <= tempEnd; i++) {
+        calculatedPages.push(i);
+      }
+
+      return calculatedPages;
+    },
   },
   methods: {
     handlePageSizeChange(val) {
@@ -157,15 +306,15 @@ export default {
           mobile: this.searchPhone,
         },
         ({ data }) => {
-          this.loading = false; // 结束加载
+          this.loading = false;
           if (data.code === 0) {
-            this.userList = data.data.list.map(item => ({
+            this.userList = data.data.list.map((item) => ({
               ...item,
-              selected: false
+              selected: false,
             }));
             this.total = data.data.total;
           }
-        }
+        },
       );
     },
     handleSearch() {
@@ -174,26 +323,30 @@ export default {
     },
     handleSelectAll() {
       this.isAllSelected = !this.isAllSelected;
-      this.userList.forEach(row => {
+      this.userList.forEach((row) => {
         row.selected = this.isAllSelected;
       });
     },
     batchDelete() {
-      const selectedUsers = this.userList.filter(user => user.selected);
+      const selectedUsers = this.userList.filter((user) => user.selected);
       if (selectedUsers.length === 0) {
-        this.$message.warning(this.$t('user.selectUsersFirst'));
+        this.$message.warning(this.$t("user.selectUsersFirst"));
         return;
       }
 
-      this.$confirm(this.$t('user.confirmDeleteSelected', { count: selectedUsers.length }), this.$t('common.warning'), {
-        confirmButtonText: this.$t('common.confirm'),
-        cancelButtonText: this.$t('common.cancel'),
-        type: "warning",
-      })
+      this.$confirm(
+        this.$t("user.confirmDeleteSelected", { count: selectedUsers.length }),
+        this.$t("common.warning"),
+        {
+          confirmButtonText: this.$t("common.confirm"),
+          cancelButtonText: this.$t("common.cancel"),
+          type: "warning",
+        },
+      )
         .then(async () => {
           const loading = this.$loading({
             lock: true,
-            text: this.$t('user.deleting'),
+            text: this.$t("user.deleting"),
             spinner: "el-icon-loading",
             background: "rgba(0, 0, 0, 0.7)",
           });
@@ -206,11 +359,15 @@ export default {
                     if (data.code === 0) {
                       resolve({ success: true, userid: user.userid });
                     } else {
-                      resolve({ success: false, userid: user.userid, msg: data.msg });
+                      resolve({
+                        success: false,
+                        userid: user.userid,
+                        msg: data.msg,
+                      });
                     }
                   });
                 });
-              })
+              }),
             );
 
             const successCount = results.filter((r) => r.success).length;
@@ -218,78 +375,100 @@ export default {
 
             if (failCount === 0) {
               this.$message.success({
-                message: this.$t('user.deleteSuccess', { count: successCount }),
-                showClose: true
+                message: this.$t("user.deleteSuccess", { count: successCount }),
+                showClose: true,
               });
             } else if (successCount === 0) {
               this.$message.error({
-                message: this.$t('user.deleteFailed'),
-                showClose: true
+                message: this.$t("user.deleteFailed"),
+                showClose: true,
               });
             } else {
               this.$message.warning(
-                this.$t('user.partialDelete', { successCount: successCount, failCount: failCount })
+                this.$t("user.partialDelete", {
+                  successCount: successCount,
+                  failCount: failCount,
+                }),
               );
             }
 
             this.fetchUsers();
           } catch (error) {
-            this.$message.error(this.$t('user.deleteError'));
+            this.$message.error(this.$t("user.deleteError"));
           } finally {
             loading.close();
           }
         })
         .catch(() => {
-          this.$message.info(this.$t('user.deleteCancelled'));
+          this.$message.info(this.$t("user.deleteCancelled"));
         });
     },
     batchEnable() {
-      const selectedUsers = this.userList.filter(user => user.selected);
+      const selectedUsers = this.userList.filter((user) => user.selected);
       this.handleChangeStatus(selectedUsers, 1);
     },
     batchDisable() {
-      const selectedUsers = this.userList.filter(user => user.selected);
+      const selectedUsers = this.userList.filter((user) => user.selected);
       this.handleChangeStatus(selectedUsers, 0);
     },
     resetPassword(row) {
-      this.$confirm(this.$t('user.confirmResetPassword'), this.$t('common.warning'), {
-        confirmButtonText: this.$t('common.confirm'),
-        cancelButtonText: this.$t('common.cancel'),
-        type: 'warning'
-      }).then(() => {
-        Api.admin.resetUserPassword(row.userid, ({ data }) => {
-          if (data.code === 0) {
-            // 显示生成的默认密码
-            this.$alert(this.$t('user.resetPasswordSuccess') + '\n\n' + this.$t('user.generatedPassword') + ': ' + data.data, this.$t('common.success'), {
-              confirmButtonText: this.$t('common.confirm'),
-              dangerouslyUseHTMLString: true
-            });
-            this.fetchUsers();
-          } else {
-            this.$message.error(data.msg || this.$t('user.operationFailed'));
-          }
+      this.$confirm(
+        this.$t("user.confirmResetPassword"),
+        this.$t("common.warning"),
+        {
+          confirmButtonText: this.$t("common.confirm"),
+          cancelButtonText: this.$t("common.cancel"),
+          type: "warning",
+        },
+      )
+        .then(() => {
+          Api.admin.resetUserPassword(row.userid, ({ data }) => {
+            if (data.code === 0) {
+              this.$alert(
+                this.$t("user.resetPasswordSuccess") +
+                  "\n\n" +
+                  this.$t("user.generatedPassword") +
+                  ": " +
+                  data.data,
+                this.$t("common.success"),
+                {
+                  confirmButtonText: this.$t("common.confirm"),
+                  dangerouslyUseHTMLString: true,
+                },
+              );
+              this.fetchUsers();
+            } else {
+              this.$message.error(data.msg || this.$t("user.operationFailed"));
+            }
+          });
+        })
+        .catch(() => {
+          this.$message.info(this.$t("common.deleteCancelled"));
         });
-      }).catch(() => {
-        this.$message.info(this.$t('common.deleteCancelled'));
-      });
     },
     deleteUser(row) {
-      this.$confirm(this.$t('user.confirmDeleteUser'), this.$t('common.warning'), {
-        confirmButtonText: this.$t('common.confirm'),
-        cancelButtonText: this.$t('common.cancel'),
-        type: 'warning'
-      }).then(() => {
-        Api.admin.deleteUser(row.userid, ({ data }) => {
-          if (data.code === 0) {
-            this.$message.success(this.$t('user.deleteUserSuccess'));
-            this.fetchUsers();
-          } else {
-            this.$message.error(data.msg || this.$t('user.operationFailed'));
-          }
+      this.$confirm(
+        this.$t("user.confirmDeleteUser"),
+        this.$t("common.warning"),
+        {
+          confirmButtonText: this.$t("common.confirm"),
+          cancelButtonText: this.$t("common.cancel"),
+          type: "warning",
+        },
+      )
+        .then(() => {
+          Api.admin.deleteUser(row.userid, ({ data }) => {
+            if (data.code === 0) {
+              this.$message.success(this.$t("user.deleteUserSuccess"));
+              this.fetchUsers();
+            } else {
+              this.$message.error(data.msg || this.$t("user.operationFailed"));
+            }
+          });
+        })
+        .catch(() => {
+          this.$message.info(this.$t("common.deleteCancelled"));
         });
-      }).catch(() => {
-        this.$message.info(this.$t('common.deleteCancelled'));
-      });
     },
     goFirst() {
       this.currentPage = 1;
@@ -312,52 +491,65 @@ export default {
       this.fetchUsers();
     },
     handleChangeStatus(row, status) {
-      // 处理单个用户或用户数组
+      // Handle a single user or an array of users
       const users = Array.isArray(row) ? row : [row];
-      const actionText = status === 0 ? this.$t('user.disable') : this.$t('user.enable');
+      const actionText =
+        status === 0 ? this.$t("user.disable") : this.$t("user.enable");
       const userCount = users.length;
 
-      this.$confirm(this.$t('user.confirmStatusChange', { action: actionText, count: userCount }), this.$t('common.warning'), {
-        confirmButtonText: this.$t('common.confirm'),
-        cancelButtonText: this.$t('common.cancel'),
-        type: 'warning'
-      }).then(() => {
-        const userIds = users.map(user => user.userid);
-        if (userIds.some(id => isNaN(id))) {
-          this.$message.error(this.$t('user.invalidUserId'));
-          return;
-        }
-
-        Api.user.changeUserStatus(status, userIds, ({ data }) => {
-          if (data.code === 0) {
-            this.$message.success({
-              message: this.$t('user.statusChangeSuccess', { action: actionText, count: userCount }),
-              showClose: true
-            });
-            this.fetchUsers(); // 刷新用户列表
-          } else {
-            this.$message.error({
-              message: this.$t('user.operationFailed'),
-              showClose: true
-            });
+      this.$confirm(
+        this.$t("user.confirmStatusChange", {
+          action: actionText,
+          count: userCount,
+        }),
+        this.$t("common.warning"),
+        {
+          confirmButtonText: this.$t("common.confirm"),
+          cancelButtonText: this.$t("common.cancel"),
+          type: "warning",
+        },
+      )
+        .then(() => {
+          const userIds = users.map((user) => user.userid);
+          if (userIds.some((id) => isNaN(id))) {
+            this.$message.error(this.$t("user.invalidUserId"));
+            return;
           }
+
+          Api.user.changeUserStatus(status, userIds, ({ data }) => {
+            if (data.code === 0) {
+              this.$message.success({
+                message: this.$t("user.statusChangeSuccess", {
+                  action: actionText,
+                  count: userCount,
+                }),
+                showClose: true,
+              });
+              this.fetchUsers(); // Refresh user list
+            } else {
+              this.$message.error({
+                message: this.$t("user.operationFailed"),
+                showClose: true,
+              });
+            }
+          });
+        })
+        .catch(() => {
+          // User cancels operation
         });
-      }).catch(() => {
-        // 用户取消操作
-      });
     },
-    // 这个方法已被batchDelete替代，保留用于向后兼容
+    // This method has been replaced by batchDelete, kept for backward compatibility
     handleBatchDelete() {
       this.batchDelete();
     },
     // This method has been fixed to use existing functionality
     handleBatchStatusChange(status) {
-      const selectedUsers = this.userList.filter(user => user.selected);
+      const selectedUsers = this.userList.filter((user) => user.selected);
       if (selectedUsers.length === 0) {
-        this.$message.warning(this.$t('user.selectUsersFirst'));
+        this.$message.warning(this.$t("user.selectUsersFirst"));
         return;
       }
-      
+
       // Call the existing handleChangeStatus method which already handles both single and multiple users
       this.handleChangeStatus(selectedUsers, status);
     },
@@ -381,7 +573,7 @@ export default {
 }
 
 .main-wrapper {
-  // 顶部 63px 底部 35px 查询72px
+  // Top 63px, bottom 35px, search 72px
   height: calc(100vh - 63px - 35px - 72px);
   margin: 0 22px;
   border-radius: 15px;
@@ -550,7 +742,9 @@ export default {
     }
   }
 
-  .pagination-btn:not(:first-child):not(:nth-child(2)):not(:nth-child(3)):not(:nth-last-child(2)) {
+  .pagination-btn:not(:first-child):not(:nth-child(2)):not(:nth-child(3)):not(
+      :nth-last-child(2)
+    ) {
     min-width: 28px;
     height: 32px;
     padding: 0;
@@ -628,7 +822,6 @@ export default {
   color: #5a64b5 !important;
 }
 
-
 :deep(.el-checkbox__inner) {
   background-color: #ffffff !important;
   border-color: #cccccc !important;
@@ -658,7 +851,7 @@ export default {
         padding-bottom: 16px;
       }
 
-      &+tr {
+      & + tr {
         margin-top: 10px;
       }
     }
@@ -720,7 +913,7 @@ export default {
 }
 
 .el-table {
-  // --table-max-height: calc(100vh - 40vh);
+  /* --table-max-height: calc(100vh - 40vh); */
   max-height: var(--table-max-height);
 
   .el-table__body-wrapper {

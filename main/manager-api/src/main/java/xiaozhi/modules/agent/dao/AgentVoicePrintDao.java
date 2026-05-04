@@ -8,7 +8,7 @@ import xiaozhi.modules.agent.entity.AgentChatHistoryEntity;
 import xiaozhi.modules.agent.entity.AgentVoicePrintEntity;
 
 /**
- * {@link AgentChatHistoryEntity} 智能体聊天历史记录Dao对象
+ * {@link AgentChatHistoryEntity} Intelligent Body Chat History Record Dao Object
  *
  * @author Goody
  * @version 1.0, 2025/4/30
@@ -18,3 +18,4 @@ import xiaozhi.modules.agent.entity.AgentVoicePrintEntity;
 public interface AgentVoicePrintDao extends BaseMapper<AgentVoicePrintEntity> {
 
 }
+ 

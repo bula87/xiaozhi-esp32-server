@@ -11,11 +11,12 @@ import xiaozhi.modules.device.entity.DeviceEntity;
 @Mapper
 public interface DeviceDao extends BaseMapper<DeviceEntity> {
     /**
-     * 获取此智能体全部设备的最后连接时间
+     * Get the last connection time of all devices for this agent
      * 
-     * @param agentId 智能体id
+     * @param agentId agent id
      * @return
      */
     Date getAllLastConnectedAtByAgentId(String agentId);
 
 }
+ 

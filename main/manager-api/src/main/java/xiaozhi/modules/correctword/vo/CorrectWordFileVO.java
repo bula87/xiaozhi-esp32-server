@@ -7,24 +7,25 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 @Data
-@Schema(description = "替换词文件列表VO")
+@Schema(description = "Replace Word File List VO")
 public class CorrectWordFileVO {
 
-    @Schema(description = "替换词文件ID")
+    @Schema(description = "Replace Word File ID")
     private String id;
 
-    @Schema(description = "原始文件名")
+    @Schema(description = "Original File Name")
     private String fileName;
 
-    @Schema(description = "替换词数量")
+    @Schema(description = "Number of Replace Words")
     private Integer wordCount;
 
-    @Schema(description = "替换词内容，每行一条")
+    @Schema(description = "Content of Replace Words, one per line")
     private List<String> content;
 
-    @Schema(description = "创建时间")
+    @Schema(description = "Creation Time")
     private Date createdAt;
 
-    @Schema(description = "更新时间")
+    @Schema(description = "Update Time")
     private Date updatedAt;
 }
+ 

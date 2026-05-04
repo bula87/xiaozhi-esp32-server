@@ -12,8 +12,9 @@ public class TokenServiceImpl implements TokenService {
 
     @Override
     public String createToken(long userId) {
-        // 生成一个token
+        // Generate a token
         String token = TokenGenerator.generateValue();
         return token;
     }
 }
+ 

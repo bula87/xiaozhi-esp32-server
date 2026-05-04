@@ -4,7 +4,7 @@ import org.apache.shiro.authc.AuthenticationToken;
 
 /**
  * token
- * Copyright (c) 人人开源 All rights reserved.
+ * Copyright (c) Everyone Open Source All rights reserved.
  * Website: https://www.renren.io
  */
 public class Oauth2Token implements AuthenticationToken {
@@ -24,3 +24,4 @@ public class Oauth2Token implements AuthenticationToken {
         return token;
     }
 }
+ 

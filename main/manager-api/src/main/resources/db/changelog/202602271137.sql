@@ -1,42 +1,43 @@
--- 更新腾讯TTS供应器配置，增加speed、volume和format参数
+-- Update Tencent TTS provider configuration, add speed, volume and format parameters
 UPDATE `ai_model_provider`
-SET fields = '[{"key":"appid","label":"应用ID","type":"string"},{"key":"secret_id","label":"Secret ID","type":"string"},{"key":"secret_key","label":"Secret Key","type":"string"},{"key":"format","label":"音频格式","type":"string"},{"key":"speed","label":"语速","type":"number"},{"key":"volume","label":"音量","type":"number"},{"key":"output_dir","label":"输出目录","type":"string"},{"key":"voice","label":"音色ID","type":"string"},{"key":"region","label":"区域","type":"string"}]'
+SET fields = '[{"key":"appid","label":"App ID","type":"string"},{"key":"secret_id","label":"Secret ID","type":"string"},{"key":"secret_key","label":"Secret Key","type":"string"},{"key":"format","label":"Audio Format","type":"string"},{"key":"speed","label":"Speech Speed","type":"number"},{"key":"volume","label":"Volume","type":"number"},{"key":"output_dir","label":"Output Directory","type":"string"},{"key":"voice","label":"Voice ID","type":"string"},{"key":"region","label":"Region","type":"string"}]'
 WHERE id = 'SYSTEM_TTS_TencentTTS';
 
--- 更新腾讯TTS模型配置，增加speed和volume参数，补充参数说明
+-- Update Tencent TTS model configuration, add speed and volume parameters, supplement parameter explanation
 UPDATE `ai_model_config` SET 
     `config_json` = JSON_SET(`config_json`, '$.speed', 0, '$.volume', 0),
-    `remark` = '腾讯TTS配置说明：
-1. 需要在腾讯云平台开通智能语音交互服务
-2. 支持多种音色，当前配置使用101001
-3. 需要网络连接
-4. 输出文件保存在tmp/目录
-申请步骤：
-1. 访问 https://console.cloud.tencent.com/cam/capi 获取密钥
-2. 访问 https://console.cloud.tencent.com/tts/resourcebundle 领取免费资源
-3. 创建新应用
-4. 获取appid、secret_id和secret_key
-5. 填入配置文件中
-音频参数：
-- format: 音频格式，支持pcm、wav、mp3
-- speed: 语速，范围-2~6，默认0
-- volume: 音量，范围-10~10，默认0'
+    `remark` = 'Tencent TTS configuration description:
+1. Need to enable intelligent voice interaction service on Tencent Cloud platform
+2. Supports multiple voices, current configuration uses 101001
+3. Requires network connection
+4. Output files are saved in tmp/ directory
+Application steps:
+1. Visit https://console.cloud.tencent.com/cam/capi to obtain keys
+2. Visit https://console.cloud.tencent.com/tts/resourcebundle to claim free resources
+3. Create a new application
+4. Obtain appid, secret_id and secret_key
+5. Fill into the configuration file
+Audio parameters:
+- format: Audio format, supports pcm, wav, mp3
+- speed: Speech speed, range -2~6, default 0
+- volume: Volume, range -10~10, default 0'
 WHERE `id` = 'TTS_TencentTTS';
 
--- 更新CozeCnTTS供应器配置，增加speed和loudness_rate参数
+-- Update CozeCnTTS provider configuration, add speed and loudness_rate parameters
 UPDATE `ai_model_provider`
-SET fields = '[{"key":"voice","label":"音色","type":"string"},{"key":"access_token","label":"访问令牌","type":"string"},{"key":"speed","label":"语速","type":"number"},{"key":"loudness_rate","label":"音量增益","type":"number"},{"key":"output_dir","label":"输出目录","type":"string"},{"key":"response_format","label":"响应格式","type":"string"}]'
+SET fields = '[{"key":"voice","label":"Voice","type":"string"},{"key":"access_token","label":"Access Token","type":"string"},{"key":"speed","label":"Speech Speed","type":"number"},{"key":"loudness_rate","label":"Volume Gain","type":"number"},{"key":"output_dir","label":"Output Directory","type":"string"},{"key":"response_format","label":"Response Format","type":"string"}]'
 WHERE id = 'SYSTEM_TTS_cozecn';
 
--- 更新CozeCnTTS模型配置，增加speed和loudness_rate参数，补充参数说明
+-- Update CozeCnTTS model configuration, add speed and loudness_rate parameters, supplement parameter explanation
 UPDATE `ai_model_config` SET 
     `config_json` = JSON_SET(`config_json`, '$.speed', 1, '$.loudness_rate', 0),
-    `remark` = 'Coze中文语音合成配置说明：
-1. 访问 https://www.coze.cn/ 注册并登录
-2. 创建应用并获取access_token
-3. 选择合适的音色ID
-音频参数：
-- response_format: 音频格式，支持pcm、wav、mp3
-- speed: 语速，范围0.5~2，默认1
-- loudness_rate: 音量增益，范围-50~100，默认0'
+    `remark` = 'Coze Chinese speech synthesis configuration description:
+1. Visit https://www.coze.cn/ to register and log in
+2. Create application and obtain access_token
+3. Select appropriate voice ID
+Audio parameters:
+- response_format: Audio format, supports pcm, wav, mp3
+- speed: Speech speed, range 0.5~2, default 1
+- loudness_rate: Volume gain, range -50~100, default 0'
 WHERE `id` = 'TTS_CozeCnTTS';
+ 

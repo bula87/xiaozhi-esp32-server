@@ -47,7 +47,7 @@ class MemoryProvider(MemoryProviderBase):
         try:
             # Check if user profile mode is enabled
             self.enable_user_profile = config.get("enable_user_profile", False)
-            
+
             # Get configuration parameters
             database_provider = config.get("database_provider", "sqlite")
             llm_provider = config.get("llm_provider", "qwen")
@@ -67,7 +67,7 @@ class MemoryProvider(MemoryProviderBase):
             else:
                 powermem_config["vector_store"] = {
                     "provider": database_provider,
-                    "config": {}
+                    "config": {},
                 }
 
             # Configure LLM
@@ -83,17 +83,21 @@ class MemoryProvider(MemoryProviderBase):
                 # - qwen provider uses dashscope_base_url
                 # - openai provider uses openai_base_url
                 if llm_provider == "qwen":
-                    base_url = config.get("dashscope_base_url") or config.get("llm_base_url")
+                    base_url = config.get("dashscope_base_url") or config.get(
+                        "llm_base_url"
+                    )
                     if base_url:
                         llm_config["dashscope_base_url"] = base_url
                 else:
-                    base_url = config.get("openai_base_url") or config.get("llm_base_url")
+                    base_url = config.get("openai_base_url") or config.get(
+                        "llm_base_url"
+                    )
                     if base_url:
                         llm_config["openai_base_url"] = base_url
 
                 powermem_config["llm"] = {
                     "provider": llm_provider,
-                    "config": llm_config
+                    "config": llm_config,
                 }
 
             # Configure embedder
@@ -110,36 +114,42 @@ class MemoryProvider(MemoryProviderBase):
                 # - openai provider uses openai_base_url
                 # Priority: embedding_xxx_base_url > embedding_base_url > xxx_base_url
                 if embedding_provider == "qwen":
-                    base_url = config.get("embedding_dashscope_base_url") or config.get("embedding_base_url")
+                    base_url = config.get("embedding_dashscope_base_url") or config.get(
+                        "embedding_base_url"
+                    )
                     if base_url:
                         embedder_config["dashscope_base_url"] = base_url
                 else:
-                    base_url = config.get("embedding_openai_base_url") or config.get("embedding_base_url")
+                    base_url = config.get("embedding_openai_base_url") or config.get(
+                        "embedding_base_url"
+                    )
                     if base_url:
                         embedder_config["openai_base_url"] = base_url
 
                 powermem_config["embedder"] = {
                     "provider": embedding_provider,
-                    "config": embedder_config
+                    "config": embedder_config,
                 }
 
             # Initialize memory client based on mode
             if self.enable_user_profile:
                 from powermem import UserMemory
+
                 self.memory_client = UserMemory(config=powermem_config)
-                memory_mode = "UserMemory (用户画像模式)"
+                memory_mode = "UserMemory (User Profile Mode)"
             else:
                 from powermem import AsyncMemory
+
                 self.memory_client = AsyncMemory(config=powermem_config)
-                memory_mode = "AsyncMemory (普通记忆模式)"
+                memory_mode = "AsyncMemory (Normal Memory Mode)"
 
             self.use_powermem = True
 
             logger.bind(tag=TAG).info(
                 f"PowerMem initialized successfully: mode={memory_mode}, "
                 f"database={powermem_config['vector_store']['provider']}, llm={powermem_config['llm']['provider']}, embedding={powermem_config['embedder']['provider']}"
-            )            
-            
+            )
+
         except ImportError as e:
             logger.bind(tag=TAG).error(
                 f"PowerMem not installed. Please install with: pip install powermem. Error: {e}"
@@ -175,7 +185,11 @@ class MemoryProvider(MemoryProviderBase):
                     # Extract content from JSON format if present (for ASR with emotion/language tags)
                     # Same logic as in query_memory method
                     try:
-                        if content and content.strip().startswith("{") and content.strip().endswith("}"):
+                        if (
+                            content
+                            and content.strip().startswith("{")
+                            and content.strip().endswith("}")
+                        ):
                             data = json.loads(content)
                             if "content" in data:
                                 content = data["content"]
@@ -186,10 +200,7 @@ class MemoryProvider(MemoryProviderBase):
                     messages.append({"role": message.role, "content": content})
 
                 # Add memory using PowerMem SDK
-                result = self.memory_client.add(
-                    messages=messages,
-                    user_id=self.role_id
-                )
+                result = self.memory_client.add(messages=messages, user_id=self.role_id)
                 # Handle both sync and async returns
                 if asyncio.iscoroutine(result):
                     result = await result
@@ -198,14 +209,20 @@ class MemoryProvider(MemoryProviderBase):
 
                 # Cache user profile if UserMemory mode and profile was extracted
                 if self.enable_user_profile and result:
-                    if result.get('profile_extracted'):
-                        self.last_profile_content = result.get('profile_content', '')
-                        logger.bind(tag=TAG).debug(f"User profile extracted: {self.last_profile_content}")
+                    if result.get("profile_extracted"):
+                        self.last_profile_content = result.get("profile_content", "")
+                        logger.bind(tag=TAG).debug(
+                            f"User profile extracted: {self.last_profile_content}"
+                        )
             else:
                 if not self.use_powermem or self.memory_client is None:
-                    logger.bind(tag=TAG).warning("PowerMem is not available, skipping save_memory")
+                    logger.bind(tag=TAG).warning(
+                        "PowerMem is not available, skipping save_memory"
+                    )
                 elif len(msgs) < 2:
-                    logger.bind(tag=TAG).debug("Not enough messages to save (need at least 2)")
+                    logger.bind(tag=TAG).debug(
+                        "Not enough messages to save (need at least 2)"
+                    )
         except Exception as e:
             logger.bind(tag=TAG).error(f"Error saving memory: {str(e)}")
             logger.bind(tag=TAG).debug(f"Detailed error: {traceback.format_exc()}")
@@ -223,7 +240,9 @@ class MemoryProvider(MemoryProviderBase):
             Formatted string of relevant memories or empty string if none found
         """
         if not self.use_powermem or self.memory_client is None:
-            logger.bind(tag=TAG).warning("PowerMem is not available, skipping query_memory")
+            logger.bind(tag=TAG).warning(
+                "PowerMem is not available, skipping query_memory"
+            )
             return ""
 
         try:
@@ -248,7 +267,7 @@ class MemoryProvider(MemoryProviderBase):
             if self.enable_user_profile:
                 profile = await self.get_user_profile()
                 if profile:
-                    result_parts.append(f"【用户画像】\n{profile}")
+                    result_parts.append(f"User Profile\n{profile}")
 
             # Search memories using PowerMem SDK
             if self.enable_user_profile:
@@ -257,14 +276,12 @@ class MemoryProvider(MemoryProviderBase):
                     self.memory_client.search,
                     query=search_query,
                     user_id=self.role_id,
-                    limit=30
+                    limit=30,
                 )
             else:
                 # AsyncMemory uses async search
                 results = await self.memory_client.search(
-                    query=search_query,
-                    user_id=self.role_id,
-                    limit=30
+                    query=search_query, user_id=self.role_id, limit=30
                 )
 
             if results and "results" in results:
@@ -305,7 +322,7 @@ class MemoryProvider(MemoryProviderBase):
                 # Extract only the formatted strings
                 if memories:
                     memories_str = "\n".join(f"- {memory[1]}" for memory in memories)
-                    result_parts.append(f"【相关记忆】\n{memories_str}")
+                    result_parts.append(f"【Related Memories】\n{memories_str}")
 
             final_result = "\n\n".join(result_parts)
             logger.bind(tag=TAG).debug(f"Query results: {final_result}")
@@ -319,7 +336,7 @@ class MemoryProvider(MemoryProviderBase):
     async def get_user_profile(self) -> str:
         """
         Get user profile from PowerMem (only available in UserMemory mode).
-        
+
         In PowerMem 0.3.0+, user profile is automatically extracted during add()
         and cached in last_profile_content.
 
@@ -338,4 +355,3 @@ class MemoryProvider(MemoryProviderBase):
             return self.last_profile_content
 
         return ""
-

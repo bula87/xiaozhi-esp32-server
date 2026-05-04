@@ -140,9 +140,9 @@ export default {
   'mcpToolCall.help.setDownloadUrl': '設置設備資源文件的下載地址。',
 
   // 其他文本
-  'mcpToolCall.text.strong': '強',
-  'mcpToolCall.text.medium': '中',
-  'mcpToolCall.text.weak': '弱',
+  'mcpToolCall.text.strong': 'Strong',
+  'mcpToolCall.text.medium': 'Medium',
+  'mcpToolCall.text.weak': 'Weak',
   'mcpToolCall.text.dark': '深色',
   'mcpToolCall.text.light': '淺色',
   'mcpToolCall.text.setSuccess': '設置成功',

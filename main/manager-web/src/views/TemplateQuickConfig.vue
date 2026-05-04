@@ -11,7 +11,7 @@
         <div class="content-area">
           <el-card class="config-card" shadow="never">
               <div class="config-header">
-              <!-- 使用角色配置页面相同的彩色图标效果 -->
+              <!-- Use the same colored icon effect as the role configuration page -->
               <div class="header-icon">
                 <img loading="lazy" src="@/assets/home/setting-user.png" alt="">
               </div>
@@ -27,7 +27,7 @@
             <div class="divider"></div>
 
             <el-form ref="form" :model="form" label-width="72px" class="full-height-form">
-              <!-- 助手昵称 -->
+              <!-- Assistant Nickname -->
               <el-form-item :label="$t('templateQuickConfig.agentSettings.agentName')" prop="agentName" class="nickname-item">
                 <el-input
                   v-model="form.agentName"
@@ -37,8 +37,8 @@
                 />
               </el-form-item>
               
-              <!-- 角色介绍 -->
-              <el-form-item :label="$t('templateQuickConfig.agentSettings.systemPrompt')" prop="systemPrompt" class="description-item">
+              <!-- Role Introduction -->
+               <el-form-item :label="$t('templateQuickConfig.agentSettings.systemPrompt')" prop="systemPrompt" class="description-item">
                 <el-input
                   v-model="form.systemPrompt"
                   type="textarea"
@@ -64,7 +64,7 @@ import HeaderBar from "@/components/HeaderBar.vue";
 import agentApi from '@/apis/module/agent';
 import VersionFooter from "@/components/VersionFooter.vue";
 
-// 默认模型配置常量
+// Default model configuration constant
 const DEFAULT_MODEL_CONFIG = {
   ttsModelId: "TTS_EdgeTTS",
   vadModelId: "VAD_SileroVAD",
@@ -81,7 +81,7 @@ export default {
   data() {
     return {
       form: {
-        agentCode: "小智",
+        agentCode: "Xiao Zhi",
         agentName: "",
         systemPrompt: "",
         sort: 0,
@@ -92,23 +92,23 @@ export default {
     };
   },
   methods: {
-    // 返回模板管理页面
+     // Go to template management page
     goToHome() {
       this.$router.push('/agent-template-management');
     },
     
-    // 保存配置
+    // Save configuration
     saveConfig() {
-      const configData = this.prepareConfigData();
-      
-      if (this.templateId) {
-        this.updateExistingTemplate(configData);
-      } else {
-        this.createNewTemplate(configData);
-      }
+        const configData = this.prepareConfigData();
+        
+        if (this.templateId) {
+            this.updateExistingTemplate(configData);
+        } else {
+            this.createNewTemplate(configData);
+        }
     },
     
-    // 准备配置数据
+    // Prepare configuration data
     prepareConfigData() {
       return {
         id: this.templateId || '',
@@ -117,12 +117,12 @@ export default {
         systemPrompt: this.form.systemPrompt,
         sort: this.form.sort,
         functions: [],
-        // 包含必要的模型字段以确保API调用成功
+        // Include necessary model fields to ensure successful API call
         ...this.form.model
       };
     },
     
-    // 更新现有模板
+    // Update existing template
     updateExistingTemplate(configData) {
       agentApi.updateAgentTemplate(configData, (res) => {
         if (res && res.data && res.data.code === 0) {
@@ -133,14 +133,14 @@ export default {
           this.originalForm = JSON.parse(JSON.stringify(this.form));
         } else {
           this.$message.error({ 
-            message: res?.data?.msg || this.$t('templateQuickConfig.saveFailed'), 
+             message: res?.data?.msg || this.$t('templateQuickConfig.saveFailed'), 
             showClose: true 
           });
         }
       });
     },
     
-    // 创建新模板
+    // Create new template
     createNewTemplate(configData) {
       agentApi.addAgentTemplate(configData, (res) => {
         if (res && res.data && res.data.code === 0) {
@@ -151,14 +151,14 @@ export default {
           this.goToHome();
         } else {
           this.$message.error({ 
-            message: res?.data?.msg || this.$t('templateQuickConfig.saveFailed'), 
+             message: res?.data?.msg || this.$t('templateQuickConfig.saveFailed'), 
             showClose: true 
           });
         }
       });
     },
     
-    // 重置配置
+    // Reset Configuration
     resetConfig() {
       this.$confirm(
         this.$t('templateQuickConfig.confirmReset'), 
@@ -169,7 +169,7 @@ export default {
           type: 'warning'
         }
       ).then(() => {
-        if (this.originalForm) {
+         if (this.originalForm) {
           this.form = JSON.parse(JSON.stringify(this.originalForm));
         }
         this.$message.success({ 
@@ -179,7 +179,7 @@ export default {
       }).catch(() => {});
     },
     
-    // 根据ID获取模板
+    // Get template by ID
     fetchTemplateById(templateId) {
       agentApi.getAgentTemplateById(templateId, (res) => {
         if (res && res.data && res.data.code === 0 && res.data.data) {
@@ -190,10 +190,10 @@ export default {
         } else {
           this.$message.error(res?.data?.msg || this.$t('templateQuickConfig.templateNotFound'));
         }
-      });
+       });
     },
     
-    // 应用模板数据
+    // apply template data
     applyTemplateData(templateData) {
       this.form = {
         ...this.form,
@@ -204,7 +204,7 @@ export default {
         model: {
           ttsModelId: templateData.ttsModelId || this.form.model.ttsModelId,
           vadModelId: templateData.vadModelId || this.form.model.vadModelId,
-          asrModelId: templateData.asrModelId || this.form.model.asrModelId,
+           asrModelId: templateData.asrModelId || this.form.model.asrModelId,
           llmModelId: templateData.llmModelId || this.form.model.llmModelId,
           vllmModelId: templateData.vllmModelId || this.form.model.vllmModelId,
           memModelId: templateData.memModelId || this.form.model.memModelId,
@@ -213,12 +213,12 @@ export default {
       };
     },
     
-    // 设置默认模板值
+    // Set default template values
     setDefaultTemplateValues() {
       this.form = {
         ...this.form,
         agentName: this.$t('templateQuickConfig.newTemplate'),
-        agentCode: '小智',
+        agentCode: 'XiaoZhi',
         systemPrompt: '',
         sort: 1
       };
@@ -226,7 +226,7 @@ export default {
       this.originalForm = JSON.parse(JSON.stringify(this.form));
     },
     
-    // 获取模板列表并设置排序号
+    // Get template list and set sort number
     fetchTemplateListForSort() {
       agentApi.getAgentTemplate((res) => {
         if (res && res.data && res.data.code === 0) {
@@ -246,15 +246,15 @@ export default {
     }
   },
   
-  // 组件挂载时执行初始化
+  // Component initialization when mounted
   mounted() {
     const templateId = this.$route.query.templateId;
     
     if (templateId) {
-      // 编辑模式：加载现有模板
+      // Edit mode: Load existing template
       this.fetchTemplateById(templateId);
     } else {
-      // 新建模式：设置默认值并获取排序号
+      // New mode: Set default value and get sort number
       this.form.agentName = this.$t('templateQuickConfig.newTemplate');
       this.fetchTemplateListForSort();
     }

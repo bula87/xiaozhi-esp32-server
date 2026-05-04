@@ -1,11 +1,9 @@
 import asyncio
 import logging
 import os
-import statistics
 import time
 import concurrent.futures
 from typing import Dict, Optional
-import yaml
 import aiohttp
 from tabulate import tabulate
 from core.utils.llm import create_instance as create_llm_instance
@@ -38,7 +36,8 @@ class LLMPerformanceTester:
         """加载系统提示词"""
         try:
             prompt_file = os.path.join(
-                os.path.dirname(os.path.dirname(__file__)), self.config.get("prompt_template", "agent-base-prompt.txt")
+                os.path.dirname(os.path.dirname(__file__)),
+                self.config.get("prompt_template", "agent-base-prompt.txt"),
             )
             with open(prompt_file, "r", encoding="utf-8") as f:
                 content = f.read()
@@ -63,7 +62,6 @@ class LLMPerformanceTester:
     def _collect_response_sync(self, llm, messages, llm_name, sentence_start):
         """同步收集响应数据的辅助方法"""
         chunks = []
-        first_token_received = False
         first_token_time = None
 
         try:
@@ -95,9 +93,8 @@ class LLMPerformanceTester:
                     # 抛出一个包含错误信息的异常
                     raise Exception(chunk_str)
 
-                if not first_token_received and chunk.strip() != "":
+                if first_token_time is None and chunk.strip() != "":
                     first_token_time = time.time() - sentence_start
-                    first_token_received = True
                     print(f"{llm_name} 首个 Token: {first_token_time:.3f}s")
                 chunks.append(chunk)
         except Exception as e:
@@ -150,7 +147,6 @@ class LLMPerformanceTester:
         try:
             print(f"{llm_name} 开始测试: {sentence[:20]}...")
             sentence_start = time.time()
-            first_token_received = False
             first_token_time = None
 
             # 构建包含系统提示词的消息
@@ -161,7 +157,6 @@ class LLMPerformanceTester:
 
             # 使用asyncio.wait_for进行超时控制
             try:
-                loop = asyncio.get_event_loop()
                 with concurrent.futures.ThreadPoolExecutor() as executor:
                     # 创建响应收集任务
                     future = executor.submit(
@@ -327,14 +322,6 @@ class LLMPerformanceTester:
                 if r.get("first_token_time")
             ]
             response_times = [r["response_time"] for r in valid_results]
-
-            # 过滤异常数据（超出3个标准差的数据）
-            if len(response_times) > 1:
-                mean = statistics.mean(response_times)
-                stdev = statistics.stdev(response_times)
-                filtered_times = [t for t in response_times if t <= mean + 3 * stdev]
-            else:
-                filtered_times = response_times
 
             return {
                 "name": llm_name,

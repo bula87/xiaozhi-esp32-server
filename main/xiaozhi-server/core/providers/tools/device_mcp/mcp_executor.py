@@ -1,4 +1,4 @@
-"""设备端MCP工具执行器"""
+"""Device side MCP tool executor"""
 
 from typing import Dict, Any, TYPE_CHECKING
 
@@ -10,7 +10,7 @@ from .mcp_handler import call_mcp_tool
 
 
 class DeviceMCPExecutor(ToolExecutor):
-    """设备端MCP工具执行器"""
+    """Device side MCP tool executor"""
 
     def __init__(self, conn):
         self.conn = conn
@@ -18,36 +18,36 @@ class DeviceMCPExecutor(ToolExecutor):
     async def execute(
         self, conn: "ConnectionHandler", tool_name: str, arguments: Dict[str, Any]
     ) -> ActionResponse:
-        """执行设备端MCP工具"""
+        """Execute device side MCP tool"""
         if not hasattr(conn, "mcp_client") or not conn.mcp_client:
             return ActionResponse(
                 action=Action.ERROR,
-                response="设备端MCP客户端未初始化",
+                response="Device-side MCP client not initialized",
             )
 
         if not await conn.mcp_client.is_ready():
             return ActionResponse(
                 action=Action.ERROR,
-                response="设备端MCP客户端未准备就绪",
+                response="Device-side MCP client is not ready",
             )
 
         try:
-            # 转换参数为JSON字符串
+            # Convert arguments to JSON string
             import json
 
             args_str = json.dumps(arguments) if arguments else "{}"
 
-            # 调用设备端MCP工具
+            # Call device-side MCP tool
             result = await call_mcp_tool(conn, conn.mcp_client, tool_name, args_str)
 
             resultJson = None
             if isinstance(result, str):
                 try:
                     resultJson = json.loads(result)
-                except Exception as e:
+                except Exception:
                     pass
 
-            # 视觉大模型不经过二次LLM处理
+            # Vision large model does not undergo secondary LLM processing
             if (
                 resultJson is not None
                 and isinstance(resultJson, dict)
@@ -66,7 +66,7 @@ class DeviceMCPExecutor(ToolExecutor):
             return ActionResponse(action=Action.ERROR, response=str(e))
 
     def get_tools(self) -> Dict[str, ToolDefinition]:
-        """获取所有设备端MCP工具"""
+        """Get all device MCP tools"""
         if not hasattr(self.conn, "mcp_client") or not self.conn.mcp_client:
             return {}
 
@@ -76,7 +76,6 @@ class DeviceMCPExecutor(ToolExecutor):
         for tool in mcp_tools:
             func_def = tool.get("function", {})
             tool_name = func_def.get("name", "")
-
             if tool_name:
                 tools[tool_name] = ToolDefinition(
                     name=tool_name, description=tool, tool_type=ToolType.DEVICE_MCP
@@ -85,7 +84,7 @@ class DeviceMCPExecutor(ToolExecutor):
         return tools
 
     def has_tool(self, tool_name: str) -> bool:
-        """检查是否有指定的设备端MCP工具"""
+        """Check if there is a specified device-side MCP tool"""
         if not hasattr(self.conn, "mcp_client") or not self.conn.mcp_client:
             return False
 

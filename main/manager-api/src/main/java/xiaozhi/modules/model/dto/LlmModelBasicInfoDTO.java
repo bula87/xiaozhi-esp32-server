@@ -4,10 +4,11 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * LLM的模型的基础展示数据
+ * Basic display data of the LLM model
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class LlmModelBasicInfoDTO extends ModelBasicInfoDTO{
     private String type;
 }
+ 

@@ -33,6 +33,7 @@
             </div>
 
             <!-- 语言切换下拉菜单 -->
+            <!-- Language switching dropdown menu -->
             <el-dropdown trigger="click" class="title-language-dropdown"
               @visible-change="handleLanguageDropdownVisibleChange">
               <span class="el-dropdown-link">
@@ -62,7 +63,7 @@
             </el-dropdown>
           </div>
           <div style="padding: 0 30px">
-            <!-- 用户名登录 -->
+            <!-- Username Login -->
             <template v-if="!isMobileLogin">
               <div class="input-box">
                 <img loading="lazy" alt="" class="input-icon" src="@/assets/login/username.png" />
@@ -70,7 +71,7 @@
               </div>
             </template>
 
-            <!-- 手机号登录 -->
+            <!-- Mobile Number Login -->
             <template v-else>
               <div class="input-box">
                 <div style="display: flex; align-items: center; width: 100%">
@@ -121,7 +122,7 @@
           </div>
           <div class="login-btn" @click="login">{{ $t("login.login") }}</div>
 
-          <!-- 登录方式切换按钮 -->
+          <!-- Login method switch button -->
           <div class="login-type-container" v-if="enableMobileRegister">
             <div style="display: flex; gap: 10px">
               <el-tooltip :content="$t('login.mobileLogin')" placement="bottom">
@@ -173,18 +174,18 @@ export default {
       mobileAreaList: (state) => state.pubConfig.mobileAreaList,
       sm2PublicKey: (state) => state.pubConfig.sm2PublicKey,
     }),
-    // 获取当前语言
+    // Get current language
     currentLanguage() {
       return i18n.locale || "zh_CN";
     },
-    // 获取当前语言显示文本
+    // Get current language display text
     currentLanguageText() {
       const currentLang = this.currentLanguage;
       switch (currentLang) {
         case "zh_CN":
           return this.$t("language.zhCN");
         case "zh_TW":
-          return this.$t("language.zhTW");
+           return this.$t("language.zhTW");
         case "en":
           return this.$t("language.en");
         case "de":
@@ -197,7 +198,7 @@ export default {
           return this.$t("language.zhCN");
       }
     },
-    // 根据当前语言获取对应的xiaozhi-ai图标
+    // Get the corresponding xiaozhi-ai icon based on the current language
     xiaozhiAiIcon() {
       const currentLang = this.currentLanguage;
       switch (currentLang) {
@@ -208,7 +209,7 @@ export default {
         case "en":
           return require("@/assets/xiaozhi-ai_en.png");
         case "de":
-          return require("@/assets/xiaozhi-ai_de.png");
+           return require("@/assets/xiaozhi-ai_de.png");
         case "vi":
           return require("@/assets/xiaozhi-ai_vi.png");
         default:
@@ -236,7 +237,7 @@ export default {
   mounted() {
     this.fetchCaptcha();
     this.$store.dispatch("fetchPubConfig").then(() => {
-      // 根据配置决定默认登录方式
+      // Determine the default login method based on the configuration
       this.isMobileLogin = this.enableMobileRegister;
     });
   },
@@ -249,7 +250,7 @@ export default {
       window.open(url, '_blank');
     },
     fetchCaptcha() {
-      // 处理手动清空localstorage导致无法获取验证码的问题
+      // Handling the issue where manually clearing localstorage prevents obtaining the captcha
       const token = localStorage.getItem('token')
       if (token) {
         if (this.$route.path !== "/home") {
@@ -260,21 +261,20 @@ export default {
 
         Api.user.getCaptcha(this.captchaUuid, (res) => {
           if (res.status === 200) {
-            const blob = new Blob([res.data], { type: res.data.type });
+             const blob = new Blob([res.data], { type: res.data.type });
             this.captchaUrl = URL.createObjectURL(blob);
           } else {
-            showDanger("验证码加载失败，点击刷新");
+            showDanger("Captcha loading failed, click refresh");
           }
         });
       }
     },
 
-    // 切换语言下拉菜单的可见状态变化
+    // Change in visibility status of the language dropdown menu
     handleLanguageDropdownVisibleChange(visible) {
       this.languageDropdownVisible = visible;
     },
-
-    // 切换语言
+    // Switch language
     changeLanguage(lang) {
       changeLanguage(lang);
       this.languageDropdownVisible = false;
@@ -284,10 +284,10 @@ export default {
       });
     },
 
-    // 切换登录方式
+    // Switch login method
     switchLoginType(type) {
       this.isMobileLogin = type === "mobile";
-      // 清空表单
+      // Clear the form
       this.form.username = "";
       this.form.mobile = "";
       this.form.password = "";
@@ -295,100 +295,100 @@ export default {
       this.fetchCaptcha();
     },
 
-    // 封装输入验证逻辑
+    // Encapsulate input validation logic
     validateInput(input, messageKey) {
       if (!input.trim()) {
-        showDanger(this.$t(messageKey));
+         showDanger(this.$t(messageKey));
         return false;
       }
       return true;
     },
-    
-    getUserInfo() {
-      Api.user.getUserInfo(({ data }) => {
-        if (data.code === 0) {
-          this.$store.commit("setUserInfo", data.data);
-          goToPage("/home");
-        } else {
-          showDanger("用户信息获取失败");
-        }
-      });
-    },
 
-    async login() {
-      if (this.isMobileLogin) {
-        // 手机号登录验证
-        if (!validateMobile(this.form.mobile, this.form.areaCode)) {
-          showDanger(this.$t('login.requiredMobile'));
-          return;
-        }
-        // 拼接手机号作为用户名
-        this.form.username = this.form.areaCode + this.form.mobile;
+  getUserInfo() {
+    Api.user.getUserInfo(({ data }) => {
+      if (data.code === 0) {
+        this.$store.commit("setUserInfo", data.data);
+        goToPage("/home");
       } else {
-        // 用户名登录验证
-        if (!this.validateInput(this.form.username, 'login.requiredUsername')) {
-          return;
-        }
+        showDanger("Failed to get user information");
       }
+    });
+  },
 
-      // 验证密码
-      if (!this.validateInput(this.form.password, 'login.requiredPassword')) {
+  async login() {
+    if (this.isMobileLogin) {
+      // Mobile number login validation
+      if (!validateMobile(this.form.mobile, this.form.areaCode)) {
+        showDanger(this.$t('login.requiredMobile'));
         return;
       }
-      // 验证验证码
-      if (!this.validateInput(this.form.captcha, 'login.requiredCaptcha')) {
+        // Concatenate mobile number as username
+        this.form.username = this.form.areaCode + this.form.mobile;
+    } else {
+      // Username login validation
+      if (!this.validateInput(this.form.username, 'login.requiredUsername')) {
         return;
       }
-      // 加密密码
-      let encryptedPassword;
-      try {
-        // 拼接验证码和密码
-        const captchaAndPassword = this.form.captcha + this.form.password;
-        encryptedPassword = sm2Encrypt(this.sm2PublicKey, captchaAndPassword);
-      } catch (error) {
-        console.error("密码加密失败:", error);
-        showDanger(this.$t('sm2.encryptionFailed'));
-        return;
-      }
+    }
 
-      const plainUsername = this.form.username;
+    // Validate password
+    if (!this.validateInput(this.form.password, 'login.requiredPassword')) {
+      return;
+    }
+    // Validate captcha
+    if (!this.validateInput(this.form.captcha, 'login.requiredCaptcha')) {
+      return;
+    }
+    // Encrypt password
+    let encryptedPassword;
+    try {
+      // Concatenate captcha and password
+      const captchaAndPassword = this.form.captcha + this.form.password;
+      encryptedPassword = sm2Encrypt(this.sm2PublicKey, captchaAndPassword);
+    } catch (error) {
+         console.error("Password encryption failed:", error);
+         showDanger(this.$t('sm2.encryptionFailed'));
+         return;
+    }
 
-      this.form.captchaId = this.captchaUuid;
+    const plainUsername = this.form.username;
 
-      // 加密
-      const loginData = {
+    this.form.captchaId = this.captchaUuid;
+
+    // Encrypt
+    const loginData = {
         username: plainUsername,
         password: encryptedPassword,
         captchaId: this.form.captchaId
-      };
+    };
 
-      Api.user.login(
-        loginData,
-        ({ data }) => {
-          showSuccess(this.$t('login.loginSuccess'));
-          this.$store.commit("setToken", JSON.stringify(data.data));
-          this.getUserInfo();
-        },
-        (err) => {
-          // 直接使用后端返回的国际化消息
-          let errorMessage = err.data.msg || "登录失败";
+    Api.user.login(
+      loginData,
+      ({ data }) => {
+        showSuccess(this.$t('login.loginSuccess'));
+        this.$store.commit("setToken", JSON.stringify(data.data));
+        this.getUserInfo();
+      },
+      (err) => {
+        // Use the internationalization message returned by the backend directly
+        let errorMessage = err.data.msg || "Login failed";
 
-          showDanger(errorMessage);
-        }
-      );
+        showDanger(errorMessage);
+      }
+    );
 
-      // 重新获取验证码
-      setTimeout(() => {
-        this.fetchCaptcha();
-      }, 1000);
-    },
+    // Refetch captcha
+    setTimeout(() => {
+      this.fetchCaptcha();
+    }, 1000);
+  },
 
-    goToRegister() {
-      goToPage("/register");
-    },
-    goToForgetPassword() {
-      goToPage("/retrieve-password");
-    }
+  goToRegister() {
+    goToPage("/register");
+  },
+  goToForgetPassword() {
+    goToPage("/retrieve-password");
+  }
   },
 };
 </script>

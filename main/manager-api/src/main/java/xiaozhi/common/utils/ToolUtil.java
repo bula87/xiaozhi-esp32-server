@@ -12,20 +12,20 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * 通用工具类
+ * General utility class
  */
 public class ToolUtil {
     private static final Logger logger = LoggerFactory.getLogger(ToolUtil.class);
 
     /**
-     * 对象是否不为空(新增)
+     * Whether the object is not empty (newly added)
      */
     public static boolean isNotEmpty(Object o) {
         return !isEmpty(o);
     }
 
     /**
-     * 对象是否为空
+     * Whether the object is empty
      */
     public static boolean isEmpty(Object o) {
         if (o == null) {
@@ -64,7 +64,7 @@ public class ToolUtil {
     }
 
     /**
-     * 对象组中是否存在空对象
+     * Whether there is an empty object in the object group
      */
     public static boolean isOneEmpty(Object... os) {
         for (Object o : os) {
@@ -76,7 +76,7 @@ public class ToolUtil {
     }
 
     /**
-     * 对象组中是否全是空对象
+     * Whether all objects in the object group are empty
      */
     public static boolean isAllEmpty(Object... os) {
         for (Object o : os) {
@@ -87,3 +87,4 @@ public class ToolUtil {
         return true;
     }
 }
+ 

@@ -1,39 +1,41 @@
 from enum import Enum
-from typing import Union, Optional
+from typing import Optional
 
 
 class SentenceType(Enum):
-    # 说话阶段
-    FIRST = "FIRST"  # 首句话
-    MIDDLE = "MIDDLE"  # 说话中
-    LAST = "LAST"  # 最后一句
+    # Speaking phase
+    FIRST = "FIRST"  # First sentence
+    MIDDLE = "MIDDLE"  # In progress
+    LAST = "LAST"  # Last sentence
 
 
 class ContentType(Enum):
-    # 内容类型
-    TEXT = "TEXT"  # 文本内容
-    FILE = "FILE"  # 文件内容
-    ACTION = "ACTION"  # 动作内容
+    # Content type
+    TEXT = "TEXT"  # Text content
+    FILE = "FILE"  # File content
+    ACTION = "ACTION"  # Action content
 
 
 class InterfaceType(Enum):
-    # 接口类型
-    DUAL_STREAM = "DUAL_STREAM"  # 双流式
-    SINGLE_STREAM = "SINGLE_STREAM"  # 单流式
-    NON_STREAM = "NON_STREAM"  # 非流式
+    # Interface type
+    DUAL_STREAM = "DUAL_STREAM"  # Dual stream
+    SINGLE_STREAM = "SINGLE_STREAM"  # Single stream
+
+
+NON_STREAM = "NON_STREAM"  # Non-stream
 
 
 class TTSMessageDTO:
     def __init__(
         self,
         sentence_id: str,
-        # 说话阶段
+        # Speaking phase
         sentence_type: SentenceType,
-        # 内容类型
+        # content type
         content_type: ContentType,
-        # 内容详情，一般是需要转换的文本或者音频的歌词
+        # content detail, generally the text or lyrics of the audio that needs conversion
         content_detail: Optional[str] = None,
-        # 如果内容类型为文件，则需要传入文件路径
+        # If the content type is a file, the file path needs to be passed
         content_file: Optional[str] = None,
     ):
         self.sentence_id = sentence_id

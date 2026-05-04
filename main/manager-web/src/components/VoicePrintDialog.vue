@@ -1,45 +1,113 @@
 <template>
-  <el-dialog :title="title" :visible.sync="visible" width="520px" class="param-dialog-wrapper" :append-to-body="true"
-    :close-on-click-modal="false" :key="dialogKey" custom-class="custom-param-dialog" :show-close="false">
+  <el-dialog
+    :title="title"
+    :visible.sync="visible"
+    width="520px"
+    class="param-dialog-wrapper"
+    :append-to-body="true"
+    :close-on-click-modal="false"
+    :key="dialogKey"
+    custom-class="custom-param-dialog"
+    :show-close="false"
+  >
     <div class="dialog-container">
       <div class="dialog-header">
         <h2 class="dialog-title">{{ title }}</h2>
         <button class="custom-close-btn" @click="cancel">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M13 1L1 13M1 1L13 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 14 14"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M13 1L1 13M1 1L13 13"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
           </svg>
         </button>
       </div>
 
-      <el-form :model="form" :rules="rules" ref="form" label-width="auto" label-position="left" class="param-form">
-        <el-form-item :label="$t('voicePrintDialog.voicePrintVector')" prop="audioId" class="form-item">
-          <el-select v-model="form.audioId" :placeholder="$t('voicePrintDialog.selectVoiceMessage')" class="custom-select">
-            <el-option v-for="item in valueTypeOptions" :key="item.audioId" :label="item.content" :value="item.audioId">
+      <el-form
+        :model="form"
+        :rules="rules"
+        ref="form"
+        label-width="auto"
+        label-position="left"
+        class="param-form"
+      >
+        <el-form-item
+          :label="$t('voicePrintDialog.voicePrintVector')"
+          prop="audioId"
+          class="form-item"
+        >
+          <el-select
+            v-model="form.audioId"
+            :placeholder="$t('voicePrintDialog.selectVoiceMessage')"
+            class="custom-select"
+          >
+            <el-option
+              v-for="item in valueTypeOptions"
+              :key="item.audioId"
+              :label="item.content"
+              :value="item.audioId"
+            >
               <span style="float: left">{{ item.content }}</span>
               <span style="float: right; color: #8492a6; font-size: 13px">
-                <i :class="getAudioIconClass(item.audioId)" @click.stop="playAudio(item.audioId)"
-                  class="audio-icon"></i>
+                <i
+                  :class="getAudioIconClass(item.audioId)"
+                  @click.stop="playAudio(item.audioId)"
+                  class="audio-icon"
+                ></i>
               </span>
             </el-option>
           </el-select>
         </el-form-item>
 
-        <el-form-item :label="$t('voicePrintDialog.name')" prop="sourceName" class="form-item">
-          <el-input v-model="form.sourceName" :placeholder="$t('voicePrintDialog.enterName')" class="custom-input"></el-input>
+        <el-form-item
+          :label="$t('voicePrintDialog.name')"
+          prop="sourceName"
+          class="form-item"
+        >
+          <el-input
+            v-model="form.sourceName"
+            :placeholder="$t('voicePrintDialog.enterName')"
+            class="custom-input"
+          ></el-input>
         </el-form-item>
 
-        <el-form-item :label="$t('voicePrintDialog.description')" prop="introduce" class="form-item remark-item">
-          <el-input type="textarea" v-model="form.introduce" :placeholder="$t('voicePrintDialog.enterDescription')" :rows="3" class="custom-textarea"
-            maxlength="100" show-word-limit></el-input>
+        <el-form-item
+          :label="$t('voicePrintDialog.description')"
+          prop="introduce"
+          class="form-item remark-item"
+        >
+          <el-input
+            type="textarea"
+            v-model="form.introduce"
+            :placeholder="$t('voicePrintDialog.enterDescription')"
+            :rows="3"
+            class="custom-textarea"
+            maxlength="100"
+            show-word-limit
+          ></el-input>
         </el-form-item>
       </el-form>
 
       <div class="dialog-footer">
-        <el-button type="primary" @click="submit" class="save-btn" :loading="saving" :disabled="saving">
-          {{ $t('voicePrintDialog.save') }}
+        <el-button
+          type="primary"
+          @click="submit"
+          class="save-btn"
+          :loading="saving"
+          :disabled="saving"
+        >
+          {{ $t("voicePrintDialog.save") }}
         </el-button>
         <el-button @click="cancel" class="cancel-btn">
-          {{ $t('voicePrintDialog.cancel') }}
+          {{ $t("voicePrintDialog.cancel") }}
         </el-button>
       </div>
     </div>
@@ -47,30 +115,24 @@
 </template>
 
 <script>
-import api from '@/apis/api';
+import api from "@/apis/api";
 
 export default {
   props: {
     title: {
       type: String,
-      default: '添加说话人'
+      default: "Add speaker",
     },
     visible: {
       type: Boolean,
-      default: false
+      default: false,
     },
     agentId: {
-      type: String
+      type: String,
     },
     form: {
       type: Object,
-      default: () => ({
-        id: null,
-        audioId: '',
-        sourceName: '',
-        introduce: ''
-      })
-    }
+    },
   },
   data() {
     return {
@@ -78,52 +140,53 @@ export default {
       saving: false,
       playingAudioId: null,
       audioElement: null,
-      valueTypeOptions: [
-        { audioId: '', content: '' }
-      ],
+      valueTypeOptions: [{ audioId: "", content: "" }],
       rules: {
         introduce: [
-          { required: true, message: '请输入描述', trigger: "blur" }
+          {
+            required: true,
+            message: "Please enter description",
+            trigger: "blur",
+          },
         ],
         sourceName: [
-          { required: true, message: '请输入名称', trigger: "blur" }
+          { required: true, message: "Please enter name", trigger: "blur" },
         ],
         audioId: [
-          { required: true, message: '请选择音频向量', trigger: "change" }
-        ]
-      }
+          {
+            required: true,
+            message: "Please select audio vector",
+            trigger: "change",
+          },
+        ],
+      },
     };
   },
   methods: {
     getAudioIconClass(audioId) {
       if (this.playingAudioId === audioId) {
-        return 'el-icon-loading';
+        return "el-icon-loading";
       }
-      return 'el-icon-video-play';
+      return "el-icon-video-play";
     },
     playAudio(audioId) {
+      // Stop currently playing audio
       if (this.playingAudioId === audioId) {
-        // 如果正在播放当前音频，则停止播放
         if (this.audioElement) {
           this.audioElement.pause();
           this.audioElement = null;
         }
         this.playingAudioId = null;
-        return;
       }
 
-      // 停止当前正在播放的音频
-      if (this.audioElement) {
-        this.audioElement.pause();
-        this.audioElement = null;
-      }
-
-      // 先获取音频下载ID
+      // Get the audio download ID first
       this.playingAudioId = audioId;
       api.agent.getAudioId(audioId, (res) => {
         if (res.data && res.data.data) {
-          // 使用获取到的下载ID播放音频
-          this.audioElement = new Audio(api.getServiceUrl() + `/agent/play/${res.data.data}`);
+          // Use the obtained download ID to play the audio
+          this.audioElement = new Audio(
+            api.getServiceUrl() + `/agent/play/${res.data.data}`,
+          );
 
           this.audioElement.onended = () => {
             this.playingAudioId = null;
@@ -137,14 +200,13 @@ export default {
     submit() {
       this.$refs.form.validate((valid) => {
         if (valid) {
-          this.saving = true; // 开始加载
-          this.$emit('submit', {
+          this.saving = true; // Start loading
+          this.$emit("submit", {
             form: this.form,
             done: () => {
-              this.saving = false; // 加载完成
-            }
+              this.saving = false; // Loading complete
+            },
           });
-
           setTimeout(() => {
             this.saving = false;
           }, 3000);
@@ -152,35 +214,36 @@ export default {
       });
     },
     cancel() {
-      this.saving = false; // 取消时重置状态
+      this.saving = false; // reset state when canceled
       this.dialogKey = Date.now();
-      this.$emit('cancel');
-    }
+      this.$emit("cancel");
+    },
   },
   watch: {
     visible(newVal) {
       if (newVal) {
-        api.agent.getRecentlyFiftyByAgentId(this.agentId, ((data) => {
-          this.valueTypeOptions = data.data.data.map(item => ({
-            ...item
+        api.agent.getRecentlyFiftyByAgentId(this.agentId, (data) => {
+          this.valueTypeOptions = data.data.data.map((item) => ({
+            ...item,
           }));
-        }))
+        });
       }
     },
-    'form.audioId'(newVal) {
+    "form.audioId"(newVal) {
       if (newVal == null || newVal == "") {
-        return
-      }
-      if (this.valueTypeOptions.some(item => item.audioId === newVal)) {
         return;
       }
-      api.agent.getContentByAudioId(newVal, ((data) => {
+      if (this.valueTypeOptions.some((item) => item.audioId === newVal)) {
+        return;
+      }
+      api.agent.getContentByAudioId(newVal, (data) => {
         this.valueTypeOptions.push({
-          audioId: newVal, content: data.data.data
-        })
-      }))
-    }
-  }
+          audioId: newVal,
+          content: data.data.data,
+        });
+      });
+    },
+  },
 };
 </script>
 

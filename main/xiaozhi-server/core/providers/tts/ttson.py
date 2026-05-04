@@ -39,7 +39,7 @@ class TTSProvider(TTSProviderBase):
         self.emotion = int(config.get("emotion", 1))
         self.header = {"Content-Type": "application/json"}
 
-        # 应用百分比调整（如果存在），否则使用公有化配置
+        # Apply percentage adjustments (if exists), otherwise use public configuration
         self._apply_percentage_params(config)
 
     def generate_filename(self, extension=".mp3"):
@@ -67,8 +67,8 @@ class TTSProvider(TTSProviderBase):
 
         resp = requests.request("POST", url, data=payload)
         if resp.status_code != 200:
-            logger.bind(tag=TAG).error(f"TTSON 请求失败: {resp.text}")
-            raise Exception(f"{__name__}: TTS请求失败")
+            logger.bind(tag=TAG).error(f"TTSON request failed: {resp.text}")
+            raise Exception(f"{__name__}: TTS request failed")
         resp_json = resp.json()
         try:
             result = (
@@ -82,15 +82,19 @@ class TTSProvider(TTSProviderBase):
             )
 
             audio_content = requests.get(result)
+
             if output_file:
                 with open(output_file, "wb") as f:
                     f.write(audio_content.content)
             else:
                 return audio_content.content
+
             voice_path = resp_json.get("voice_path")
             des_path = output_file
-            shutil.move(voice_path, des_path)
+
+            if voice_path:
+                shutil.move(voice_path, des_path)
 
         except Exception as e:
             print("error:", e)
-            raise Exception(f"{__name__}: TTS请求失败")
+            raise Exception(f"{__name__}: TTS request failed")

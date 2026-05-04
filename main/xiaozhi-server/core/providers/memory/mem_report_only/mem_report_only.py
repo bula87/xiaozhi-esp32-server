@@ -1,6 +1,4 @@
-"""
-仅上报聊天记录，不进行记忆总结
-"""
+# Only report chat records, do not perform memory summarization
 
 from ..base import MemoryProviderBase, logger
 
@@ -12,9 +10,13 @@ class MemoryProvider(MemoryProviderBase):
         super().__init__(config)
 
     async def save_memory(self, msgs, session_id=None):
-        logger.bind(tag=TAG).debug("mem_report_only mode: No memory saving or summarization is performed.")
+        logger.bind(tag=TAG).debug(
+            "mem_report_only mode: No memory saving or summarization is performed."
+        )
         return None
 
     async def query_memory(self, query: str) -> str:
-        logger.bind(tag=TAG).debug("mem_report_only mode: No memory query is performed.")
+        logger.bind(tag=TAG).debug(
+            "mem_report_only mode: No memory query is performed."
+        )
         return ""

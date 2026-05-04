@@ -3,8 +3,46 @@
     <HeaderBar />
 
     <div class="operation-bar">
-          <h2 class="page-title">{{ $t('header.featureManagement') }}</h2>
+      <h2 class="page-title">{{ $t("header.featureManagement") }}</h2>
+      <div class="config-header">
+        <div class="header-icon">
+          <img loading="lazy" src="@/assets/home/equipment.png" alt="" />
         </div>
+        <div class="header-actions">
+          <el-button
+            @click="!isSaving && toggleSelectAll()"
+            class="btn-select-all"
+            :disabled="isSaving"
+          >
+            {{
+              isAllSelected
+                ? $t("featureManagement.deselectAll")
+                : $t("featureManagement.selectAll")
+            }}
+          </el-button>
+          <el-button
+            type="primary"
+            class="save-btn"
+            @click="handleSave"
+            :disabled="isSaving"
+          >
+            {{
+              isSaving
+                ? $t("featureManagement.saving")
+                : $t("featureManagement.save")
+            }}
+          </el-button>
+          <el-button
+            class="reset-btn"
+            @click="handleReset"
+            :disabled="isSaving"
+          >
+            {{ $t("featureManagement.reset") }}
+          </el-button>
+        </div>
+      </div>
+      <div class="divider"></div>
+    </div>
 
     <div class="main-wrapper">
       <div class="content-panel">
@@ -15,34 +53,65 @@
                 <img loading="lazy" src="@/assets/home/equipment.png" alt="" />
               </div>
               <div class="header-actions">
-                <el-button @click="!isSaving && toggleSelectAll()" class="btn-select-all" :disabled="isSaving">
-                  {{ isAllSelected ? $t('featureManagement.deselectAll') : $t('featureManagement.selectAll') }}
+                <el-button
+                  @click="!isSaving && toggleSelectAll()"
+                  class="btn-select-all"
+                  :disabled="isSaving"
+                >
+                  {{
+                    isAllSelected
+                      ? $t("featureManagement.deselectAll")
+                      : $t("featureManagement.selectAll")
+                  }}
                 </el-button>
-                <el-button type="primary" class="save-btn" @click="handleSave" :disabled="isSaving">
-                  {{ isSaving ? $t('featureManagement.saving') : $t('featureManagement.save') }}
+                <el-button
+                  type="primary"
+                  class="save-btn"
+                  @click="handleSave"
+                  :disabled="isSaving"
+                >
+                  {{
+                    isSaving
+                      ? $t("featureManagement.saving")
+                      : $t("featureManagement.save")
+                  }}
                 </el-button>
-                <el-button class="reset-btn" @click="handleReset" :disabled="isSaving">
-                  {{ $t('featureManagement.reset') }}
+                <el-button
+                  class="reset-btn"
+                  @click="handleReset"
+                  :disabled="isSaving"
+                >
+                  {{ $t("featureManagement.reset") }}
                 </el-button>
               </div>
             </div>
             <div class="divider"></div>
-            
-            <!-- 功能分组容器 - 左右布局 -->
+
+            <!-- Feature Group Container - Left Right Layout -->
             <div class="feature-groups-container">
-              <!-- 功能管理分组 -->
-              <div v-if="featureManagementFeatures.length > 0" class="feature-group">
-                <h3 class="group-title">{{ $t('featureManagement.group.featureManagement') }}</h3>
+              <!-- Feature Management Group -->
+              <div
+                v-if="featureManagementFeatures.length > 0"
+                class="feature-group"
+              >
+                <h3 class="group-title">
+                  {{ $t("featureManagement.group.featureManagement") }}
+                </h3>
                 <div class="features-grid">
                   <div
                     v-for="feature in featureManagementFeatures"
                     :key="feature.id"
                     class="feature-card-item"
-                    :class="{ 'feature-enabled': feature.enabled, 'feature-disabled': isSaving }"
+                    :class="{
+                      'feature-enabled': feature.enabled,
+                      'feature-disabled': isSaving,
+                    }"
                     @click="!isSaving && toggleFeature(feature)"
                   >
                     <div class="feature-header">
-                      <h3 class="feature-name">{{ $t(`feature.${feature.id}.name`) }}</h3>
+                      <h3 class="feature-name">
+                        {{ $t(`feature.${feature.id}.name`) }}
+                      </h3>
                       <el-checkbox
                         v-model="feature.enabled"
                         @change="!isSaving && toggleFeature(feature)"
@@ -50,24 +119,36 @@
                         :disabled="isSaving"
                       />
                     </div>
-                    <p class="feature-description">{{ $t(`feature.${feature.id}.description`) }}</p>
+                    <p class="feature-description">
+                      {{ $t(`feature.${feature.id}.description`) }}
+                    </p>
                   </div>
                 </div>
               </div>
-              
-              <!-- 语音管理分组 -->
-              <div v-if="voiceManagementFeatures.length > 0" class="feature-group">
-                <h3 class="group-title">{{ $t('featureManagement.group.voiceManagement') }}</h3>
+
+              <!-- Voice Management Group -->
+              <div
+                v-if="voiceManagementFeatures.length > 0"
+                class="feature-group"
+              >
+                <h3 class="group-title">
+                  {{ $t("featureManagement.group.voiceManagement") }}
+                </h3>
                 <div class="features-grid">
                   <div
                     v-for="feature in voiceManagementFeatures"
                     :key="feature.id"
                     class="feature-card-item"
-                    :class="{ 'feature-enabled': feature.enabled, 'feature-disabled': isSaving }"
+                    :class="{
+                      'feature-enabled': feature.enabled,
+                      'feature-disabled': isSaving,
+                    }"
                     @click="!isSaving && toggleFeature(feature)"
                   >
                     <div class="feature-header">
-                      <h3 class="feature-name">{{ $t(`feature.${feature.id}.name`) }}</h3>
+                      <h3 class="feature-name">
+                        {{ $t(`feature.${feature.id}.name`) }}
+                      </h3>
                       <el-checkbox
                         v-model="feature.enabled"
                         @change="!isSaving && toggleFeature(feature)"
@@ -75,16 +156,20 @@
                         :disabled="isSaving"
                       />
                     </div>
-                    <p class="feature-description">{{ $t(`feature.${feature.id}.description`) }}</p>
+                    <p class="feature-description">
+                      {{ $t(`feature.${feature.id}.description`) }}
+                    </p>
                   </div>
                 </div>
               </div>
-            </div>
-            
-            <div v-if="filteredFeatures.length === 0" class="empty-state">
-              <el-empty :description="$t('featureManagement.noFeatures')">
-                <p class="empty-tip">{{ $t('featureManagement.contactAdmin') }}</p>
-              </el-empty>
+
+              <div v-if="filteredFeatures.length === 0" class="empty-state">
+                <el-empty :description="$t('featureManagement.noFeatures')">
+                  <p class="empty-tip">
+                    {{ $t("featureManagement.contactAdmin") }}
+                  </p>
+                </el-empty>
+              </div>
             </div>
           </el-card>
         </div>
@@ -106,215 +191,250 @@ export default {
   name: "FeatureManagement",
   components: {
     HeaderBar,
-    VersionFooter
+    VersionFooter,
   },
   data() {
     return {
       pendingChanges: false,
       featureManagementFeatures: [],
       voiceManagementFeatures: [],
-      isSaving: false // 添加保存状态锁定
-    }
+      isSaving: false, // Add save status lock
+    };
   },
   computed: {
-    // 所有功能列表
+    // All features list
     filteredFeatures() {
-      return [...this.featureManagementFeatures, ...this.voiceManagementFeatures]
+      return [
+        ...this.featureManagementFeatures,
+        ...this.voiceManagementFeatures,
+      ];
     },
-    
-    // 判断是否所有功能都已选中
+
+    // Determine if all features are selected
     isAllSelected() {
-      const allFeatures = [...this.featureManagementFeatures, ...this.voiceManagementFeatures]
-      return allFeatures.length > 0 && allFeatures.every(feature => feature.enabled)
-    }
+      const allFeatures = [
+        ...this.featureManagementFeatures,
+        ...this.voiceManagementFeatures,
+      ];
+      return (
+        allFeatures.length > 0 &&
+        allFeatures.every((feature) => feature.enabled)
+      );
+    },
   },
   async created() {
-    // 等待功能配置管理器初始化完成
+    // Wait for the feature configuration manager to initialize
     try {
-      await featureManager.waitForInitialization()
-      await this.loadFeatures()
-      this.setupConfigChangeListener()
+      await featureManager.waitForInitialization();
+      await this.loadFeatures();
+      this.setupConfigChangeListener();
     } catch (error) {
-      console.error('功能配置管理器初始化等待失败:', error)
-      await this.loadFeatures()
-      this.setupConfigChangeListener()
+      console.error(
+        "Feature configuration manager initialization wait failed:",
+        error,
+      );
+      await this.loadFeatures();
+      this.setupConfigChangeListener();
     }
   },
-  
+
   beforeDestroy() {
-    this.removeConfigChangeListener()
+    this.removeConfigChangeListener();
   },
-  
+
   methods: {
-    // 根据ID列表获取功能
+    // Get features by ID list
     async getFeaturesByIds(featureIds) {
       try {
-        const featureConfig = await featureManager.getAllFeatures()
-        const result = featureIds.map(id => {
-          const feature = featureConfig[id]
+        const featureConfig = await featureManager.getAllFeatures();
+        const result = featureIds.map((id) => {
+          const feature = featureConfig[id];
           return {
             id: id,
             name: this.$t(`feature.${id}.name`),
             description: this.$t(`feature.${id}.description`),
-            enabled: feature?.enabled || false
-          }
-        })
-        
-        return result
+            enabled: feature?.enabled || false,
+          };
+        });
+
+        return result;
       } catch (error) {
-        console.error('获取功能配置失败:', error)
-        // 如果获取失败，返回默认配置
-        return featureIds.map(id => ({
+        console.error("Failed to get feature configuration:", error);
+        // If fetching fails, return default configuration
+        return featureIds.map((id) => ({
           id: id,
           name: this.$t(`feature.${id}.name`),
           description: this.$t(`feature.${id}.description`),
-          enabled: false
-        }))
+          enabled: false,
+        }));
       }
     },
-    
-    // 加载功能配置
+
+    // Load feature configuration
     async loadFeatures() {
-      // 保存当前用户的选择状态
-      const currentFeatureStates = {}
-      const allCurrentFeatures = [...this.featureManagementFeatures, ...this.voiceManagementFeatures]
-      allCurrentFeatures.forEach(feature => {
-        currentFeatureStates[feature.id] = feature.enabled
-      })
-      
-      // 重新加载配置
-      this.featureManagementFeatures = await this.getFeaturesByIds(['voiceprintRecognition', 'voiceClone', 'knowledgeBase', 'mcpAccessPoint'])
-      this.voiceManagementFeatures = await this.getFeaturesByIds(['vad', 'asr'])
-      
-      // 恢复用户的选择状态（如果存在）
-      const allFeatures = [...this.featureManagementFeatures, ...this.voiceManagementFeatures]
-      allFeatures.forEach(feature => {
+      // Save current user's selection state
+      const currentFeatureStates = {};
+      const allCurrentFeatures = [
+        ...this.featureManagementFeatures,
+        ...this.voiceManagementFeatures,
+      ];
+      allCurrentFeatures.forEach((feature) => {
+        currentFeatureStates[feature.id] = feature.enabled;
+      });
+
+      // Reload configuration
+      this.featureManagementFeatures = await this.getFeaturesByIds([
+        "voiceprintRecognition",
+        "voiceClone",
+        "knowledgeBase",
+        "mcpAccessPoint",
+      ]);
+      this.voiceManagementFeatures = await this.getFeaturesByIds([
+        "vad",
+        "asr",
+      ]);
+
+      // Restore the user's selection state (if it exists)
+      const allFeatures = [
+        ...this.featureManagementFeatures,
+        ...this.voiceManagementFeatures,
+      ];
+      allFeatures.forEach((feature) => {
         if (currentFeatureStates.hasOwnProperty(feature.id)) {
-          feature.enabled = currentFeatureStates[feature.id]
+          feature.enabled = currentFeatureStates[feature.id];
         }
-      })
+      });
     },
-    // 切换功能状态
+    // Toggle feature state
     async toggleFeature(feature) {
-      // 如果正在保存，阻止操作
       if (this.isSaving) {
-        return
+        return;
       }
-      
-      feature.enabled = !feature.enabled
-      this.pendingChanges = true
-      
-      // 不再立即更新到配置管理器，只在保存时统一更新
+
+      feature.enabled = !feature.enabled;
+      this.pendingChanges = true;
     },
-    // 保存配置
+    // Save configuration
     async handleSave() {
       if (!this.pendingChanges) {
         this.$message.info({
-          message: this.$t('featureManagement.noChanges'),
-          showClose: true
-        })
-        return
+          message: this.$t("featureManagement.noChanges"),
+          showClose: true,
+        });
+        return;
       }
-      
-      // 设置保存状态，锁定界面
-      this.isSaving = true
-      
+
+      // Set saving status, lock interface
+      this.isSaving = true;
+
       try {
-        // 获取当前所有功能的状态并保存
-        const featureUpdates = {}
-        const allFeatures = [...this.featureManagementFeatures, ...this.voiceManagementFeatures]
-        allFeatures.forEach(feature => {
-          featureUpdates[feature.id] = feature.enabled
-        })
-        await featureManager.updateFeatures(featureUpdates)
-        
-        this.pendingChanges = false
+        // Get the status of all current features and save
+        const featureUpdates = {};
+        const allFeatures = [
+          ...this.featureManagementFeatures,
+          ...this.voiceManagementFeatures,
+        ];
+        allFeatures.forEach((feature) => {
+          featureUpdates[feature.id] = feature.enabled;
+        });
+        await featureManager.updateFeatures(featureUpdates);
+
+        this.pendingChanges = false;
         this.$message.success({
-          message: this.$t('featureManagement.saveSuccess'),
-          showClose: true
-        })
+          message: this.$t("featureManagement.saveSuccess"),
+          showClose: true,
+        });
 
         setTimeout(() => {
-          this.loadFeatures()
-        }, 1000)
+          this.loadFeatures();
+        }, 1000);
       } catch (error) {
-        console.error('保存配置失败:', error)
+        console.error("Save configuration failed:", error);
         this.$message.error({
-          message: this.$t('featureManagement.saveError'),
-          showClose: true
-        })
+          message: this.$t("featureManagement.saveError"),
+          showClose: true,
+        });
       } finally {
-        // 无论成功与否，都解除保存状态锁定
-        this.isSaving = false
+        // Release save state lock regardless of success or failure
+        this.isSaving = false;
       }
     },
-    // 设置配置变化监听器
+    // Set configuration change listener
     setupConfigChangeListener() {
       this.configChangeHandler = () => {
-        this.loadFeatures()
-      }
-      window.addEventListener('featureConfigReloaded', this.configChangeHandler)
+        this.loadFeatures();
+      };
+      window.addEventListener(
+        "featureConfigReloaded",
+        this.configChangeHandler,
+      );
     },
-    
-    // 移除配置变化监听器
+
+    // Remove configuration change listener
     removeConfigChangeListener() {
       if (this.configChangeHandler) {
-        window.removeEventListener('featureConfigReloaded', this.configChangeHandler)
+        window.removeEventListener(
+          "featureConfigReloaded",
+          this.configChangeHandler,
+        );
       }
     },
-    
-    // 重置配置
+
+    // Reset configuration
     async handleReset() {
       try {
         await this.$confirm(
-          this.$t('featureManagement.resetConfirm'),
-          this.$t('featureManagement.reset'),
+          this.$t("featureManagement.resetConfirm"),
+          this.$t("featureManagement.reset"),
           {
-            confirmButtonText: this.$t('featureManagement.confirm'),
-            cancelButtonText: this.$t('featureManagement.cancel'),
-            type: 'warning'
-          }
-        )
-        
-        featureManager.resetToDefault()
-        this.loadFeatures()
-        this.pendingChanges = false
-        
+            confirmButtonText: this.$t("featureManagement.confirm"),
+            cancelButtonText: this.$t("featureManagement.cancel"),
+            type: "warning",
+          },
+        );
+
+        featureManager.resetToDefault();
+        this.loadFeatures();
+        this.pendingChanges = false;
+
         this.$message.success({
-          message: this.$t('featureManagement.resetSuccess'),
-          showClose: true
-        })
-        
+          message: this.$t("featureManagement.resetSuccess"),
+          showClose: true,
+        });
+
         setTimeout(() => {
-          this.loadFeatures()
-          this.$router.go(0)
-        }, 1000)
+          this.loadFeatures();
+          this.$router.go(0);
+        }, 1000);
       } catch (error) {
-        // 用户取消操作
+        // User cancels operation
       }
     },
-    // 搜索功能（预留接口）
+    // Search function (reserved interface)
     handleSearch() {
-      // 搜索功能待实现
+      // Search function pending implementation
     },
-    // 全选/取消全选
+    // Select all/Deselect all
     toggleSelectAll() {
-      // 如果正在保存，阻止操作
+      // If saving, prevent operation
       if (this.isSaving) {
-        return
+        return;
       }
-      
-      const allFeatures = [...this.featureManagementFeatures, ...this.voiceManagementFeatures]
-      const newStatus = !this.isAllSelected
-      
-      allFeatures.forEach(feature => {
-        feature.enabled = newStatus
-      })
-      
-      this.pendingChanges = true
-    }
-  }
-}
+
+      const allFeatures = [
+        ...this.featureManagementFeatures,
+        ...this.voiceManagementFeatures,
+      ];
+      const newStatus = !this.isAllSelected;
+
+      allFeatures.forEach((feature) => {
+        feature.enabled = newStatus;
+      });
+
+      this.pendingChanges = true;
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -496,7 +616,7 @@ export default {
 }
 
 .feature-card-item.feature-enabled {
-  border-color:#5778ff;
+  border-color: #5778ff;
   box-shadow: 0 4px 16px rgba(95, 112, 243, 0.2);
   transform: translateY(-2px);
 }
@@ -517,10 +637,12 @@ export default {
   border-color: #5778ff;
 }
 
-.feature-checkbox ::v-deep .el-checkbox__input.is-checked + .el-checkbox__label {
+.feature-checkbox
+  ::v-deep
+  .el-checkbox__input.is-checked
+  + .el-checkbox__label {
   color: #5778ff;
 }
-
 
 .feature-name {
   font-size: 18px;
@@ -529,7 +651,6 @@ export default {
   margin: 0;
   transition: color 0.3s ease;
 }
-
 
 .feature-description {
   font-size: 14px;
@@ -540,8 +661,7 @@ export default {
   text-align: left;
 }
 
-
-/* 功能分组容器 - 左右布局 */
+/* Feature group container - left right layout */
 .feature-groups-container {
   display: flex;
   gap: 32px;
@@ -549,9 +669,9 @@ export default {
   position: relative;
 }
 
-/* 分组之间的分隔线 */
+/* Separator line between groups */
 .feature-groups-container::before {
-  content: '';
+  content: "";
   position: absolute;
   left: 50%;
   top: 0;
@@ -563,7 +683,7 @@ export default {
   transform: translateX(-50%);
 }
 
-/* 分组样式 */
+/* Group styles */
 .feature-group {
   flex: 1;
   min-width: 0;

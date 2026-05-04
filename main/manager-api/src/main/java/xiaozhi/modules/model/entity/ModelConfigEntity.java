@@ -13,53 +13,54 @@ import lombok.Data;
 
 @Data
 @TableName(value = "ai_model_config", autoResultMap = true)
-@Schema(description = "模型配置表")
+@Schema(description = "Model Configuration Table")
 public class ModelConfigEntity {
 
-    @Schema(description = "主键")
+    @Schema(description = "Primary Key")
     private String id;
 
-    @Schema(description = "模型类型(Memory/ASR/VAD/LLM/TTS)")
+    @Schema(description = "Model Type(Memory/ASR/VAD/LLM/TTS)")
     private String modelType;
 
-    @Schema(description = "模型编码(如AliLLM、DoubaoTTS)")
+    @Schema(description = "Model Code(Example: AliLLM, DoubaoTTS)")
     private String modelCode;
 
-    @Schema(description = "模型名称")
+    @Schema(description = "Model Name")
     private String modelName;
 
-    @Schema(description = "是否默认配置(0否 1是)")
+    @Schema(description = "Is Default Configuration (0 No, 1 Yes)")
     private Integer isDefault;
 
-    @Schema(description = "是否启用")
+    @Schema(description = "Is Enabled")
     private Integer isEnabled;
 
     @TableField(typeHandler = JacksonTypeHandler.class)
-    @Schema(description = "模型配置(JSON格式)")
+    @Schema(description = "Model Configuration (JSON format)")
     private JSONObject configJson;
 
-    @Schema(description = "官方文档链接")
+    @Schema(description = "Official Documentation Link")
     private String docLink;
 
-    @Schema(description = "备注")
+    @Schema(description = "Remarks")
     private String remark;
 
-    @Schema(description = "排序")
+    @Schema(description = "Sort Order")
     private Integer sort;
 
-    @Schema(description = "更新者")
+    @Schema(description = "Updater")
     @TableField(fill = FieldFill.UPDATE)
     private Long updater;
 
-    @Schema(description = "更新时间")
+    @Schema(description = "Update Date")
     @TableField(fill = FieldFill.UPDATE)
     private Date updateDate;
 
-    @Schema(description = "创建者")
+    @Schema(description = "Creator")
     @TableField(fill = FieldFill.INSERT)
     private Long creator;
 
-    @Schema(description = "创建时间")
+    @Schema(description = "Creation Date")
     @TableField(fill = FieldFill.INSERT)
     private Date createDate;
 }
+ 

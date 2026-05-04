@@ -9,9 +9,9 @@ import org.springframework.beans.BeanUtils;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * 转换工具类
- * Copyright (c) 人人开源 All rights reserved.
- * Website: https://www.renren.io
+ * Conversion tool class
+ * Copyright (c) RuoYi All rights reserved.
+ * Website: https://www.ruoyi.io
  */
 @Slf4j
 public class ConvertUtils {
@@ -49,3 +49,4 @@ public class ConvertUtils {
         return targetList;
     }
 }
+ 

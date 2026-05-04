@@ -3,27 +3,56 @@
     <HeaderBar />
 
     <div class="operation-bar">
-      <h2 class="page-title">{{ $t('serverSideManager.pageTitle') }}</h2>
+      <h2 class="page-title">{{ $t("serverSideManager.pageTitle") }}</h2>
     </div>
 
     <div class="main-wrapper">
       <div class="content-panel">
         <div class="content-area">
           <el-card class="params-card" shadow="never">
-            <el-table ref="paramsTable" :data="paramsList" class="transparent-table" v-loading="loading"
-              :element-loading-text="$t('serverSideManager.loading')" element-loading-spinner="el-icon-loading"
-              element-loading-background="rgba(255, 255, 255, 0.7)" :header-cell-class-name="headerCellClassName">
-              <el-table-column :label="$t('modelConfig.select')" align="center" width="120">
+            <el-table
+              ref="paramsTable"
+              :data="paramsList"
+              class="transparent-table"
+              v-loading="loading"
+              :element-loading-text="$t('serverSideManager.loading')"
+              element-loading-spinner="el-icon-loading"
+              element-loading-background="rgba(255, 255, 255, 0.7)"
+              :header-cell-class-name="headerCellClassName"
+            >
+              <el-table-column
+                :label="$t('modelConfig.select')"
+                align="center"
+                width="120"
+              >
                 <template slot-scope="scope">
                   <el-checkbox v-model="scope.row.selected"></el-checkbox>
                 </template>
               </el-table-column>
-              <el-table-column :label="$t('serverSideManager.wsAddress')" prop="address" align="center"></el-table-column>
-              <el-table-column :label="$t('serverSideManager.operation')" prop="operator" align="center" show-overflow-tooltip>
+              <el-table-column
+                :label="$t('serverSideManager.wsAddress')"
+                prop="address"
+                align="center"
+              ></el-table-column>
+              <el-table-column
+                :label="$t('serverSideManager.operation')"
+                prop="operator"
+                align="center"
+                show-overflow-tooltip
+              >
                 <template slot-scope="scope">
-                  <el-button size="medium" type="text" @click="emitAction(scope.row, actionMap.restart)">{{ $t('serverSideManager.restart') }}</el-button>
-                  <el-button size="medium" type="text"
-                    @click="emitAction(scope.row, actionMap.update_config)">{{ $t('serverSideManager.updateConfig') }}</el-button>
+                  <el-button
+                    size="medium"
+                    type="text"
+                    @click="emitAction(scope.row, actionMap.restart)"
+                    >{{ $t("serverSideManager.restart") }}</el-button
+                  >
+                  <el-button
+                    size="medium"
+                    type="text"
+                    @click="emitAction(scope.row, actionMap.update_config)"
+                    >{{ $t("serverSideManager.updateConfig") }}</el-button
+                  >
                 </template>
               </el-table-column>
             </el-table>
@@ -31,7 +60,6 @@
         </div>
       </div>
     </div>
-
 
     <el-footer>
       <version-footer />
@@ -44,7 +72,7 @@ import Api from "@/apis/api";
 import HeaderBar from "@/components/HeaderBar.vue";
 import ParamDialog from "@/components/ParamDialog.vue";
 import VersionFooter from "@/components/VersionFooter.vue";
-import i18n from '@/i18n';
+import i18n from "@/i18n";
 
 export default {
   components: { HeaderBar, ParamDialog, VersionFooter },
@@ -57,14 +85,22 @@ export default {
       pageSizeOptions: [10, 20, 50, 100],
       total: 0,
       dialogVisible: false,
-      dialogTitle: '',
+      dialogTitle: "",
       isAllSelected: false,
-      sensitive_keys: ["api_key", "personal_access_token", "access_token", "token", "secret", "access_key_secret", "secret_key"],
+      sensitive_keys: [
+        "api_key",
+        "personal_access_token",
+        "access_token",
+        "token",
+        "secret",
+        "access_key_secret",
+        "secret_key",
+      ],
       paramForm: {
         id: null,
         paramCode: "",
         paramValue: "",
-        remark: ""
+        remark: "",
       },
     };
   },
@@ -72,7 +108,7 @@ export default {
     this.fetchParams();
   },
   mounted() {
-    this.dialogTitle = this.$t('paramManagement.addParam');
+    this.dialogTitle = this.$t("paramManagement.addParam");
   },
 
   computed: {
@@ -97,19 +133,19 @@ export default {
     actionMap() {
       return {
         restart: {
-          value: 'restart',
-          title: this.$t('serverSideManager.restartServer'),
-          message: this.$t('serverSideManager.confirmRestart'),
-          confirmText: this.$t('serverSideManager.restart'),
+          value: "restart",
+          title: this.$t("serverSideManager.restartServer"),
+          message: this.$t("serverSideManager.confirmRestart"),
+          confirmText: this.$t("serverSideManager.restart"),
         },
         update_config: {
-          value: 'update_config',
-          title: this.$t('serverSideManager.updateConfigTitle'),
-          message: this.$t('serverSideManager.confirmUpdateConfig'),
-          confirmText: this.$t('serverSideManager.updateConfig'),
-        }
+          value: "update_config",
+          title: this.$t("serverSideManager.updateConfigTitle"),
+          message: this.$t("serverSideManager.confirmUpdateConfig"),
+          confirmText: this.$t("serverSideManager.updateConfig"),
+        },
       };
-    }
+    },
   },
   methods: {
     handlePageSizeChange(val) {
@@ -119,56 +155,61 @@ export default {
     },
     fetchParams() {
       this.loading = true;
-      Api.admin.getWsServerList(
-        {},
-        ({ data }) => {
-          this.loading = false;
-          if (data.code === 0) {
-            this.paramsList = data.data.map(item => ({ address: item }));
-            this.total = data.data.length;
-          } else {
-            this.$message.error({
-              message: data.msg || this.$t('serverSideManager.getServerListFailed'),
-              showClose: true
-            });
-          }
+      Api.admin.getWsServerList({}, ({ data }) => {
+        this.loading = false;
+        if (data.code === 0) {
+          this.paramsList = data.data.map((item) => ({ address: item }));
+          this.total = data.data.length;
+        } else {
+          this.$message.error({
+            message:
+              data.msg || this.$t("serverSideManager.getServerListFailed"),
+            showClose: true,
+          });
         }
-      );
+      });
     },
     emitAction(rowItem, actionItem) {
       if (actionItem === undefined || rowItem.address === undefined) {
         return;
       }
-      // 弹开询问框
+      // Open inquiry box
       this.$confirm(actionItem.message, actionItem.title, {
-        confirmButtonText: actionItem.confirmText, // 确认按钮文本
-        cancelButtonText: this.$t('common.cancel') // 取消按钮文本
+        confirmButtonText: actionItem.confirmText, // Confirm button text
+        cancelButtonText: this.$t("common.cancel"), // Cancel button text
       }).then(() => {
-        // 用户点击了确认按钮
-        Api.admin.sendWsServerAction({
-          targetWs: rowItem.address,
-          action: actionItem.value
-        }, ({ data }) => {
-          if (data.code !== 0) {
-            this.$message.error({
-              message: data.msg || this.$t('serverSideManager.operationFailed'),
-              showClose: true
+        // User clicked the confirm button
+        Api.admin.sendWsServerAction(
+          {
+            targetWs: rowItem.address,
+            action: actionItem.value,
+          },
+          ({ data }) => {
+            if (data.code !== 0) {
+              this.$message.error({
+                message:
+                  data.msg || this.$t("serverSideManager.operationFailed"),
+                showClose: true,
+              });
+              return;
+            }
+            this.$message.success({
+              message:
+                actionItem.value === "restart"
+                  ? this.$t("serverSideManager.restartSuccess")
+                  : this.$t("serverSideManager.updateConfigSuccess"),
+              showClose: true,
             });
-            return;
-          }
-          this.$message.success({
-            message: actionItem.value === 'restart' ? this.$t('serverSideManager.restartSuccess') : this.$t('serverSideManager.updateConfigSuccess'),
-            showClose: true
-          })
-        })
-      })
+          },
+        );
+      });
     },
     headerCellClassName({ columnIndex }) {
       if (columnIndex === 0) {
         return "custom-selection-header";
       }
       return "";
-    }
+    },
   },
 };
 </script>
@@ -189,7 +230,7 @@ export default {
 }
 
 .main-wrapper {
-  // 顶部 63px 底部 35px 查询58px
+  // Top 63px Bottom 35px Query 58px
   height: calc(100vh - 63px - 35px - 58px);
   margin: 0 22px;
   border-radius: 15px;
@@ -199,7 +240,6 @@ export default {
   display: flex;
   flex-direction: column;
 }
-
 .operation-bar {
   display: flex;
   justify-content: space-between;
@@ -344,7 +384,6 @@ export default {
   }
 }
 
-
 :deep(.el-checkbox__inner) {
   background-color: #ffffff !important;
   border-color: #cccccc !important;
@@ -374,7 +413,7 @@ export default {
         padding-bottom: 16px;
       }
 
-      &+tr {
+      & + tr {
         margin-top: 10px;
       }
     }

@@ -12,11 +12,19 @@ class TTSProvider(TTSProviderBase):
         super().__init__(config, delete_audio_file)
         self.url = config.get("url")
         self.text_lang = config.get("text_lang", "zh")
-        self.ref_audio_path = config.get('ref_audio') if config.get('ref_audio') else config.get("ref_audio_path")
-        self.prompt_text = config.get('ref_text') if config.get('ref_text') else config.get("prompt_text")
+        self.ref_audio_path = (
+            config.get("ref_audio")
+            if config.get("ref_audio")
+            else config.get("ref_audio_path")
+        )
+        self.prompt_text = (
+            config.get("ref_text")
+            if config.get("ref_text")
+            else config.get("prompt_text")
+        )
         self.prompt_lang = config.get("prompt_lang", "zh")
 
-        # 处理空字符串的情况
+        # Handle empty string cases
         top_k = config.get("top_k", "5")
         top_p = config.get("top_p", "1")
         temperature = config.get("temperature", "1")
@@ -39,24 +47,24 @@ class TTSProvider(TTSProviderBase):
 
         self.text_split_method = config.get("text_split_method", "cut0")
 
-        self.split_bucket = str(config.get("split_bucket", True)).lower() in (
+        self.split_bucket = str(config.get("split_bucket", "True")).lower() in (
             "true",
             "1",
             "yes",
         )
-        self.return_fragment = str(config.get("return_fragment", False)).lower() in (
-            "true",
-            "1",
-            "yes",
-        )
-
-        self.streaming_mode = str(config.get("streaming_mode", False)).lower() in (
+        self.return_fragment = str(config.get("return_fragment", "False")).lower() in (
             "true",
             "1",
             "yes",
         )
 
-        self.parallel_infer = str(config.get("parallel_infer", True)).lower() in (
+        self.streaming_mode = str(config.get("streaming_mode", "False")).lower() in (
+            "true",
+            "1",
+            "yes",
+        )
+
+        self.parallel_infer = str(config.get("parallel_infer", "True")).lower() in (
             "true",
             "1",
             "yes",
@@ -89,7 +97,6 @@ class TTSProvider(TTSProviderBase):
             "parallel_infer": self.parallel_infer,
             "repetition_penalty": self.repetition_penalty,
         }
-
         resp = requests.post(self.url, json=request_json)
         if resp.status_code == 200:
             if output_file:
@@ -98,6 +105,8 @@ class TTSProvider(TTSProviderBase):
             else:
                 return resp.content
         else:
-            error_msg = f"GPT_SoVITS_V2 TTS请求失败: {resp.status_code} - {resp.text}"
+            error_msg = (
+                f"GPT_SoVITS_V2 TTS request failed: {resp.status_code} - {resp.text}"
+            )
             logger.bind(tag=TAG).error(error_msg)
             raise Exception(error_msg)

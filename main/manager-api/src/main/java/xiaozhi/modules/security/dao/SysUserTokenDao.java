@@ -9,8 +9,8 @@ import xiaozhi.common.dao.BaseDao;
 import xiaozhi.modules.security.entity.SysUserTokenEntity;
 
 /**
- * 系统用户Token
- * Copyright (c) 人人开源 All rights reserved.
+ * System UserToken
+ * Copyright (c) Everyone Open Source All rights reserved.
  * Website: https://www.renren.io
  */
 @Mapper
@@ -22,3 +22,4 @@ public interface SysUserTokenDao extends BaseDao<SysUserTokenEntity> {
 
     void logout(@Param("userId") Long userId, @Param("expireDate") Date expireDate);
 }
+ 

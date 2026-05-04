@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import xiaozhi.modules.timbre.entity.TimbreEntity;
 
 /**
- * 音色持久层定义
+ * Sound color persistence layer definition
  * 
  * @author zjy
  * @since 2025-3-21
@@ -15,3 +15,4 @@ import xiaozhi.modules.timbre.entity.TimbreEntity;
 @Mapper
 public interface TimbreDao extends BaseMapper<TimbreEntity> {
 }
+ 

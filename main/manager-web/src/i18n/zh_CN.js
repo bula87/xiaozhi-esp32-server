@@ -91,7 +91,7 @@ export default {
   // 表格列标题
   'mcpToolCall.table.component': '组件',
   'mcpToolCall.table.property': '属性',
-  'mcpToolCall.table.value': '值',
+  'mcpToolCall.table.value': 'Value',
 
   'mcpToolCall.prop.volume': '音量',
   'mcpToolCall.prop.brightness': '亮度',
@@ -140,8 +140,8 @@ export default {
   'mcpToolCall.help.setDownloadUrl': '设置设备资源文件的下载地址。',
 
   // 其他文本
-  'mcpToolCall.text.strong': '强',
-  'mcpToolCall.text.medium': '中',
+  'mcpToolCall.text.strong': 'Strong',
+  'mcpToolCall.text.medium': 'Medium',
   'mcpToolCall.text.weak': '弱',
   'mcpToolCall.text.dark': '深色',
   'mcpToolCall.text.light': '浅色',

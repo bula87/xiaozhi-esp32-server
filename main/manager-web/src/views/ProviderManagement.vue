@@ -3,23 +3,44 @@
     <HeaderBar />
 
     <div class="operation-bar">
-      <h2 class="page-title">{{ $t('header.providerManagement') }}</h2>
+      <h2 class="page-title">{{ $t("header.providerManagement") }}</h2>
       <div class="right-operations">
-        <el-dropdown trigger="click" @command="handleSelectModelType" @visible-change="handleDropdownVisibleChange">
+        <el-dropdown
+          trigger="click"
+          @command="handleSelectModelType"
+          @visible-change="handleDropdownVisibleChange"
+        >
           <el-button class="category-btn">
-            {{ $t('providerManagement.categoryFilter') }} {{ selectedModelTypeLabel }}<i class="el-icon-arrow-down el-icon--right"
-              :class="{ 'rotate-down': DropdownVisible }"></i>
+            {{ $t("providerManagement.categoryFilter") }}
+            {{ selectedModelTypeLabel
+            }}<i
+              class="el-icon-arrow-down el-icon--right"
+              :class="{ 'rotate-down': DropdownVisible }"
+            ></i>
           </el-button>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item command="">{{ $t('common.all') }}</el-dropdown-item>
-            <el-dropdown-item v-for="item in translatedModelTypes" :key="item.value" :command="item.value">
+            <el-dropdown-item command="">{{
+              $t("common.all")
+            }}</el-dropdown-item>
+            <el-dropdown-item
+              v-for="item in translatedModelTypes"
+              :key="item.value"
+              :command="item.value"
+            >
               {{ item.label }}
             </el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
-        <el-input :placeholder="$t('providerManagement.searchPlaceholder')" v-model="searchName" class="search-input" @keyup.enter.native="handleSearch"
-          clearable />
-        <el-button class="btn-search" @click="handleSearch">{{ $t('common.search') }}</el-button>
+        <el-input
+          :placeholder="$t('providerManagement.searchPlaceholder')"
+          v-model="searchName"
+          class="search-input"
+          @keyup.enter.native="handleSearch"
+          clearable
+        />
+        <el-button class="btn-search" @click="handleSearch">{{
+          $t("common.search")
+        }}</el-button>
       </div>
     </div>
 
@@ -27,26 +48,58 @@
       <div class="content-panel">
         <div class="content-area">
           <el-card class="provider-card" shadow="never">
-            <el-table ref="providersTable" :data="filteredProvidersList" class="transparent-table" v-loading="loading"
-              element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading"
-              element-loading-background="rgba(255, 255, 255, 0.7)" :header-cell-class-name="headerCellClassName">
-              <el-table-column :label="$t('modelConfig.select')" align="center" width="120">
+            <el-table
+              ref="providersTable"
+              :data="filteredProvidersList"
+              class="transparent-table"
+              v-loading="loading"
+              element-loading-text="Loading..."
+              element-loading-spinner="el-icon-loading"
+              element-loading-background="rgba(255, 255, 255, 0.7)"
+              :header-cell-class-name="headerCellClassName"
+            >
+              <el-table-column
+                :label="$t('modelConfig.select')"
+                align="center"
+                width="120"
+              >
                 <template slot-scope="scope">
                   <el-checkbox v-model="scope.row.selected"></el-checkbox>
                 </template>
               </el-table-column>
 
-              <el-table-column :label="$t('providerManagement.category')" prop="modelType" align="center" width="200">
+              <el-table-column
+                :label="$t('providerManagement.category')"
+                prop="modelType"
+                align="center"
+                width="200"
+              >
                 <template slot="header" slot-scope="scope">
-                  <el-dropdown trigger="click" @command="handleSelectModelType"
-                    @visible-change="isDropdownOpen = $event">
-                    <span class="dropdown-trigger" :class="{ 'active': isDropdownOpen }">
-                      {{ $t('providerManagement.category') }}{{ selectedModelTypeLabel }} <i class="dropdown-arrow"
-                        :class="{ 'is-active': isDropdownOpen }"></i>
+                  <el-dropdown
+                    trigger="click"
+                    @command="handleSelectModelType"
+                    @visible-change="isDropdownOpen = $event"
+                  >
+                    <span
+                      class="dropdown-trigger"
+                      :class="{ active: isDropdownOpen }"
+                    >
+                      {{ $t("providerManagement.category")
+                      }}{{ selectedModelTypeLabel }}
+                      <i
+                        class="dropdown-arrow"
+                        :class="{ 'is-active': isDropdownOpen }"
+                      ></i>
                     </span>
                     <el-dropdown-menu slot="dropdown">
-                      <el-dropdown-item command="">{{ $t('common.all') }}</el-dropdown-item>
-                      <el-dropdown-item v-for="item in translatedModelTypes" :key="item.value" :command="item.value">
+                      <el-dropdown-item command="">{{
+                        $t("common.all")
+                      }}</el-dropdown-item>
+                      <el-dropdown-item
+                        v-for="item in translatedModelTypes"
+                        :key="item.value"
+                        :command="item.value"
+                      >
                         {{ item.label }}
                       </el-dropdown-item>
                     </el-dropdown-menu>
@@ -58,57 +111,142 @@
                   </el-tag>
                 </template>
               </el-table-column>
-              <el-table-column :label="$t('providerManagement.providerCode')" prop="providerCode" align="center" width="150"></el-table-column>
-              <el-table-column :label="$t('common.name')" prop="name" align="center"></el-table-column>
-              <el-table-column :label="$t('providerManagement.fieldConfig')" align="center">
+              <el-table-column
+                :label="$t('providerManagement.providerCode')"
+                prop="providerCode"
+                align="center"
+                width="150"
+              ></el-table-column>
+              <el-table-column
+                :label="$t('common.name')"
+                prop="name"
+                align="center"
+              ></el-table-column>
+              <el-table-column
+                :label="$t('providerManagement.fieldConfig')"
+                align="center"
+              >
                 <template slot-scope="scope">
                   <el-popover placement="top-start" width="400" trigger="hover">
-                    <div v-for="field in scope.row.fields" :key="field.key" class="field-item">
+                    <div
+                      v-for="field in scope.row.fields"
+                      :key="field.key"
+                      class="field-item"
+                    >
                       <span class="field-label">{{ field.label }}:</span>
                       <span class="field-type">{{ field.type }}</span>
-                      <span v-if="isSensitiveField(field.key)" class="sensitive-tag">{{ $t('common.sensitive') }}</span>
+                      <span
+                        v-if="isSensitiveField(field.key)"
+                        class="sensitive-tag"
+                        >{{ $t("common.sensitive") }}</span
+                      >
                     </div>
-                    <el-button slot="reference" size="mini" type="text">{{ $t('providerManagement.viewFields') }}</el-button>
+                    <el-button slot="reference" size="mini" type="text">{{
+                      $t("providerManagement.viewFields")
+                    }}</el-button>
                   </el-popover>
                 </template>
               </el-table-column>
-              <el-table-column :label="$t('common.sort')" prop="sort" align="center" width="80"></el-table-column>
-              <el-table-column :label="$t('common.action')" align="center" width="180">
+              <el-table-column
+                :label="$t('common.sort')"
+                prop="sort"
+                align="center"
+                width="80"
+              ></el-table-column>
+              <el-table-column
+                :label="$t('common.action')"
+                align="center"
+                width="180"
+              >
                 <template slot-scope="scope">
-                  <el-button size="mini" type="text" @click="editProvider(scope.row)">{{ $t('common.edit') }}</el-button>
-                  <el-button size="mini" type="text" @click="deleteProvider(scope.row)">{{ $t('common.delete') }}</el-button>
+                  <el-button
+                    size="mini"
+                    type="text"
+                    @click="editProvider(scope.row)"
+                    >{{ $t("common.edit") }}</el-button
+                  >
+                  <el-button
+                    size="mini"
+                    type="text"
+                    @click="deleteProvider(scope.row)"
+                    >{{ $t("common.delete") }}</el-button
+                  >
                 </template>
               </el-table-column>
             </el-table>
 
             <div class="table_bottom">
               <div class="ctrl_btn">
-                <el-button size="mini" type="primary" class="select-all-btn" @click="handleSelectAll">
-                  {{ isAllSelected ? $t('common.deselectAll') : $t('common.selectAll') }}
+                <el-button
+                  size="mini"
+                  type="primary"
+                  class="select-all-btn"
+                  @click="handleSelectAll"
+                >
+                  {{
+                    isAllSelected
+                      ? $t("common.deselectAll")
+                      : $t("common.selectAll")
+                  }}
                 </el-button>
-                <el-button size="mini" type="success" @click="showAddDialog">{{ $t('common.add') }}</el-button>
-                <el-button size="mini" type="danger" icon="el-icon-delete" @click="deleteSelectedProviders">{{ $t('common.delete') }}
+                <el-button size="mini" type="success" @click="showAddDialog">{{
+                  $t("common.add")
+                }}</el-button>
+                <el-button
+                  size="mini"
+                  type="danger"
+                  icon="el-icon-delete"
+                  @click="deleteSelectedProviders"
+                  >{{ $t("common.delete") }}
                 </el-button>
               </div>
               <div class="custom-pagination">
-                <el-select v-model="pageSize" @change="handlePageSizeChange" class="page-size-select">
-                  <el-option v-for="item in pageSizeOptions" :key="item" :label="$t('common.perPage', { number: item })" :value="item">
+                <el-select
+                  v-model="pageSize"
+                  @change="handlePageSizeChange"
+                  class="page-size-select"
+                >
+                  <el-option
+                    v-for="item in pageSizeOptions"
+                    :key="item"
+                    :label="$t('common.perPage', { number: item })"
+                    :value="item"
+                  >
                   </el-option>
                 </el-select>
-                <button class="pagination-btn" :disabled="currentPage === 1" @click="goFirst">
-                  {{ $t('common.firstPage') }}
+                <button
+                  class="pagination-btn"
+                  :disabled="currentPage === 1"
+                  @click="goFirst"
+                >
+                  {{ $t("common.firstPage") }}
                 </button>
-                <button class="pagination-btn" :disabled="currentPage === 1" @click="goPrev">
-                  {{ $t('common.prevPage') }}
+                <button
+                  class="pagination-btn"
+                  :disabled="currentPage === 1"
+                  @click="goPrev"
+                >
+                  {{ $t("common.prevPage") }}
                 </button>
-                <button v-for="page in visiblePages" :key="page" class="pagination-btn"
-                  :class="{ active: page === currentPage }" @click="goToPage(page)">
+                <button
+                  v-for="page in visiblePages"
+                  :key="page"
+                  class="pagination-btn"
+                  :class="{ active: page === currentPage }"
+                  @click="goToPage(page)"
+                >
                   {{ page }}
                 </button>
-                <button class="pagination-btn" :disabled="currentPage === pageCount" @click="goNext">
-                  {{ $t('common.nextPage') }}
+                <button
+                  class="pagination-btn"
+                  :disabled="currentPage === pageCount"
+                  @click="goNext"
+                >
+                  {{ $t("common.nextPage") }}
                 </button>
-                <span class="total-text">{{ $t('common.totalRecords', { number: total }) }}</span>
+                <span class="total-text">{{
+                  $t("common.totalRecords", { number: total })
+                }}</span>
               </div>
             </div>
           </el-card>
@@ -116,9 +254,15 @@
       </div>
     </div>
 
-    <!-- 新增/编辑供应器对话框 -->
-    <provider-dialog :title="dialogTitle" :visible.sync="dialogVisible" :form="providerForm" :model-types="modelTypes"
-      @submit="handleSubmit" @cancel="dialogVisible = false" />
+    <!-- Add/Edit Provider Dialog Box -->
+    <provider-dialog
+      :title="dialogTitle"
+      :visible.sync="dialogVisible"
+      :form="providerForm"
+      :model-types="modelTypes"
+      @submit="handleSubmit"
+      @cancel="dialogVisible = false"
+    />
 
     <el-footer>
       <version-footer />
@@ -140,15 +284,15 @@ export default {
       searchModelType: "",
       providersList: [],
       modelTypes: [
-        { value: "ASR", labelKey: 'providerManagement.modelType.ASR' },
-        { value: "TTS", labelKey: 'providerManagement.modelType.TTS' },
-        { value: "LLM", labelKey: 'providerManagement.modelType.LLM' },
-        { value: "VLLM", labelKey: 'providerManagement.modelType.VLLM' },
-        { value: "Intent", labelKey: 'providerManagement.modelType.Intent' },
-        { value: "Memory", labelKey: 'providerManagement.modelType.Memory' },
-        { value: "VAD", labelKey: 'providerManagement.modelType.VAD' },
-        { value: "Plugin", labelKey: 'providerManagement.modelType.Plugin' },
-        { value: "RAG", labelKey: 'providerManagement.modelType.RAG' }
+        { value: "ASR", labelKey: "providerManagement.modelType.ASR" },
+        { value: "TTS", labelKey: "providerManagement.modelType.TTS" },
+        { value: "LLM", labelKey: "providerManagement.modelType.LLM" },
+        { value: "VLLM", labelKey: "providerManagement.modelType.VLLM" },
+        { value: "Intent", labelKey: "providerManagement.modelType.Intent" },
+        { value: "Memory", labelKey: "providerManagement.modelType.Memory" },
+        { value: "VAD", labelKey: "providerManagement.modelType.VAD" },
+        { value: "Plugin", labelKey: "providerManagement.modelType.Plugin" },
+        { value: "RAG", labelKey: "providerManagement.modelType.RAG" },
       ],
       currentPage: 1,
       loading: false,
@@ -156,17 +300,25 @@ export default {
       pageSizeOptions: [10, 20, 50, 100],
       total: 0,
       dialogVisible: false,
-      dialogTitle: "新增供应器",
+      dialogTitle: "Add Provider",
       isAllSelected: false,
       isDropdownOpen: false,
-      sensitive_keys: ["api_key", "personal_access_token", "access_token", "token", "secret", "access_key_secret", "secret_key"],
+      sensitive_keys: [
+        "api_key",
+        "personal_access_token",
+        "access_token",
+        "token",
+        "secret",
+        "access_key_secret",
+        "secret_key",
+      ],
       providerForm: {
         id: null,
         modelType: "",
         providerCode: "",
         name: "",
         fields: [],
-        sort: 0
+        sort: 0,
       },
       DropdownVisible: false,
     };
@@ -176,14 +328,17 @@ export default {
   },
   computed: {
     translatedModelTypes() {
-      return this.modelTypes.map(type => ({
+      return this.modelTypes.map((type) => ({
         value: type.value,
-        label: this.$t(type.labelKey)
+        label: this.$t(type.labelKey),
       }));
     },
     selectedModelTypeLabel() {
-      if (!this.searchModelType) return `（${this.$t('providerManagement.all')}）`;
-      const selectedType = this.modelTypes.find(item => item.value === this.searchModelType);
+      if (!this.searchModelType)
+        return `（${this.$t("providerManagement.all")}）`;
+      const selectedType = this.modelTypes.find(
+        (item) => item.value === this.searchModelType,
+      );
       return selectedType ? `（${this.$t(selectedType.labelKey)}）` : "";
     },
     pageCount() {
@@ -215,10 +370,10 @@ export default {
 
       // list.sort((a, b) => a.sort - b.sort);
 
-      // // 分页处理
+      // // Pagination handling
       // const start = (this.currentPage - 1) * this.pageSize;
       // return list.slice(start, start + this.pageSize);
-    }
+    },
   },
   methods: {
     fetchProviders() {
@@ -229,25 +384,25 @@ export default {
           page: this.currentPage,
           limit: this.pageSize,
           name: this.searchName,
-          modelType: this.searchModelType
+          modelType: this.searchModelType,
         },
         ({ data }) => {
           this.loading = false;
           if (data.code === 0) {
-            this.providersList = data.data.list.map(item => {
+            this.providersList = data.data.list.map((item) => {
               return {
                 ...item,
                 selected: false,
-                fields: JSON.parse(item.fields)
+                fields: JSON.parse(item.fields),
               };
             });
             this.total = data.data.total;
           } else {
             this.$message.error({
-              message: data.msg || '获取参数列表失败'
+              message: data.msg || "Failed to get parameter list",
             });
           }
-        }
+        },
       );
     },
     handleSearch() {
@@ -261,53 +416,52 @@ export default {
     },
     handleSelectAll() {
       this.isAllSelected = !this.isAllSelected;
-      this.providersList.forEach(row => {
+      this.providersList.forEach((row) => {
         row.selected = this.isAllSelected;
       });
     },
     showAddDialog() {
-      this.dialogTitle = this.$t('common.addProvider');
+      this.dialogTitle = this.$t("common.addProvider");
       this.providerForm = {
         id: null,
         modelType: "",
         providerCode: "",
         name: "",
         fields: [],
-        sort: 0
+        sort: 0,
       };
       this.dialogVisible = true;
     },
     editProvider(row) {
-      this.dialogTitle = this.$t('common.editProvider');
+      this.dialogTitle = this.$t("common.editProvider");
       this.providerForm = {
         ...row,
-        fields: JSON.parse(JSON.stringify(row.fields))
+        fields: JSON.parse(JSON.stringify(row.fields)),
       };
       this.dialogVisible = true;
     },
     handleSubmit({ form, done }) {
       this.loading = true;
       if (form.id) {
-        // 编辑
+        // Edit
         Api.model.updateModelProvider(form, ({ data }) => {
-
           if (data.code === 0) {
-            this.fetchProviders(); // 刷新表格
+            this.fetchProviders(); // Refresh table
             this.$message.success({
-            message: this.$t('common.updateSuccess'),
-            showClose: true
-          });
+              message: this.$t("common.updateSuccess"),
+              showClose: true,
+            });
           }
         });
       } else {
-        // 新增
+        // Add new
         Api.model.addModelProvider(form, ({ data }) => {
           if (data.code === 0) {
-            this.fetchProviders(); // 刷新表格
+            this.fetchProviders(); // Refresh table
             this.$message.success({
-            message: this.$t('common.addSuccess'),
-            showClose: true
-          });
+              message: this.$t("common.addSuccess"),
+              showClose: true,
+            });
             this.total += 1;
           }
         });
@@ -317,11 +471,11 @@ export default {
       done && done();
     },
     deleteSelectedProviders() {
-      const selectedRows = this.providersList.filter(row => row.selected);
+      const selectedRows = this.providersList.filter((row) => row.selected);
       if (selectedRows.length === 0) {
         this.$message.warning({
-          message: this.$t('providerManagement.selectToDelete'),
-          showClose: true
+          message: this.$t("providerManagement.selectToDelete"),
+          showClose: true,
         });
         return;
       }
@@ -331,58 +485,63 @@ export default {
       const providers = Array.isArray(row) ? row : [row];
       const providerCount = providers.length;
 
-      this.$confirm(this.$t('providerManagement.confirmDelete', { count: providerCount }), this.$t('common.warning'), {
-        confirmButtonText: this.$t('common.confirm'),
-        cancelButtonText: this.$t('common.cancel'),
-        type: 'warning',
-      }).then(() => {
-        const ids = providers.map(provider => provider.id);
-        Api.model.deleteModelProviderByIds(ids, ({ data }) => {
-          if (data.code === 0) {
+      this.$confirm(
+        this.$t("providerManagement.confirmDelete", { count: providerCount }),
+        this.$t("common.warning"),
+        {
+          confirmButtonText: this.$t("common.confirm"),
+          cancelButtonText: this.$t("common.cancel"),
+          type: "warning",
+        },
+      )
+        .then(() => {
+          const ids = providers.map((provider) => provider.id);
+          Api.model.deleteModelProviderByIds(ids, ({ data }) => {
+            if (data.code === 0) {
+              this.isAllSelected = false;
+              this.fetchProviders(); // Refresh table
 
-            this.isAllSelected = false;
-            this.fetchProviders(); // 刷新表格
-
-            this.$message.success({
-              message: this.$t('common.deleteSuccess'),
-              showClose: true
-            });
-          } else {
-            this.$message.error({
-              message: data.msg || this.$t('common.deleteFailure'),
-              showClose: true
-            });
-          }
+              this.$message.success({
+                message: this.$t("common.deleteSuccess"),
+                showClose: true,
+              });
+            } else {
+              this.$message.error({
+                message: data.msg || this.$t("common.deleteFailure"),
+                showClose: true,
+              });
+            }
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: this.$t("common.deleteCancelled"),
+            showClose: true,
+            duration: 1000,
+          });
         });
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: this.$t('common.deleteCancelled'),
-          showClose: true,
-          duration: 1000
-        });
-      });
     },
     getModelTypeTag(type) {
       const typeMap = {
-        'ASR': 'success',
-        'TTS': 'warning',
-        'LLM': 'danger',
-        'Intent': 'info',
-        'Memory': '',
-        'VAD': 'primary',
-        'RAG': 'warning'
+        ASR: "success",
+        TTS: "warning",
+        LLM: "danger",
+        Intent: "info",
+        Memory: "",
+        VAD: "primary",
+        RAG: "warning",
       };
-      return typeMap[type] || '';
+      return typeMap[type] || "";
     },
     getModelTypeLabel(type) {
-      const typeItem = this.modelTypes.find(item => item.value === type);
+      const typeItem = this.modelTypes.find((item) => item.value === type);
       return typeItem ? this.$t(typeItem.labelKey) : type;
     },
     isSensitiveField(fieldKey) {
-      if (typeof fieldKey !== 'string') return false;
-      return this.sensitive_keys.some(key =>
-        fieldKey.toLowerCase().includes(key.toLowerCase())
+      if (typeof fieldKey !== "string") return false;
+      return this.sensitive_keys.some((key) =>
+        fieldKey.toLowerCase().includes(key.toLowerCase()),
       );
     },
     handlePageSizeChange(val) {
@@ -400,12 +559,14 @@ export default {
       return "custom-selection-cell";
     },
     updateSelectionHeaderText() {
-      // 确保表格已渲染
+      // Ensure the table is rendered
       this.$nextTick(() => {
         if (this.$refs.providersTable && this.$refs.providersTable.$el) {
-          const headerCheckbox = this.$refs.providersTable.$el.querySelector('.custom-selection-header .el-checkbox .el-checkbox__label');
+          const headerCheckbox = this.$refs.providersTable.$el.querySelector(
+            ".custom-selection-header .el-checkbox .el-checkbox__label",
+          );
           if (headerCheckbox) {
-            headerCheckbox.textContent = this.$t('modelConfig.select');
+            headerCheckbox.textContent = this.$t("modelConfig.select");
           }
         }
       });
@@ -428,7 +589,6 @@ export default {
     },
     goNext() {
       if (this.currentPage < this.pageCount) {
-        console.log("this.currentPage", this.currentPage);
         this.currentPage++;
         this.fetchProviders();
       }
@@ -460,7 +620,7 @@ export default {
 }
 
 .main-wrapper {
-  // 顶部 63px 底部 35px 查询72px
+  /* Top 63px Bottom 35px Query72px */
   height: calc(100vh - 63px - 35px - 72px);
   margin: 0 22px;
   border-radius: 15px;
@@ -470,7 +630,6 @@ export default {
   display: flex;
   flex-direction: column;
 }
-
 .operation-bar {
   display: flex;
   justify-content: space-between;
@@ -615,7 +774,9 @@ export default {
     }
   }
 
-  .pagination-btn:not(:first-child):not(:nth-child(3)):not(:nth-child(2)):not(:nth-last-child(2)) {
+  .pagination-btn:not(:first-child):not(:nth-child(3)):not(:nth-child(2)):not(
+      :nth-last-child(2)
+    ) {
     min-width: 28px;
     height: 32px;
     padding: 0;
@@ -685,7 +846,6 @@ export default {
   }
 }
 
-
 :deep(.el-checkbox__inner) {
   background-color: #ffffff !important;
   border-color: #cccccc !important;
@@ -715,7 +875,7 @@ export default {
         padding-bottom: 16px;
       }
 
-      &+tr {
+      & + tr {
         margin-top: 10px;
       }
     }
@@ -792,7 +952,7 @@ export default {
 }
 
 .el-table {
-  // --table-max-height: calc(100vh - 40vh);
+  /* --table-max-height: calc(100vh - 40vh); */
   max-height: var(--table-max-height);
 
   .el-table__body-wrapper {
@@ -851,12 +1011,12 @@ export default {
   align-items: center;
 
   &:hover {
-    color: #409EFF;
+    color: #409eff;
   }
 }
 
 .dropdown-trigger.active {
-  color: #409EFF;
+  color: #409eff;
 }
 
 .dropdown-arrow {
@@ -873,7 +1033,7 @@ export default {
 
   &.is-active {
     transform: rotate(180deg);
-    border-top-color: #409EFF;
+    border-top-color: #409eff;
   }
 }
 
@@ -894,15 +1054,15 @@ export default {
   align-items: center;
 
   &:hover {
-    color: #409EFF;
+    color: #409eff;
   }
 }
 
 .dropdown-trigger.active {
-  color: #409EFF;
+  color: #409eff;
 }
 
-/* 确保选择列标题样式正确 */
+/* Ensure the selection column header style is correct */
 .custom-selection-header {
   position: relative;
 }
@@ -912,7 +1072,6 @@ export default {
   align-items: center;
   justify-content: center;
 }
-
 :deep(.custom-selection-header .el-checkbox__label) {
   position: relative;
   white-space: nowrap;

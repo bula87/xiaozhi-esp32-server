@@ -11,18 +11,18 @@ import xiaozhi.modules.agent.vo.AgentInfoVO;
 @Mapper
 public interface AgentDao extends BaseDao<AgentEntity> {
     /**
-     * 获取智能体的设备数量
+     * Get the number of devices for an agent.
      * 
-     * @param agentId 智能体ID
-     * @return 设备数量
+     * @param agentId Agent ID
+     * @return Device count
      */
     Integer getDeviceCountByAgentId(@Param("agentId") String agentId);
 
     /**
-     * 根据设备MAC地址查询对应设备的默认智能体信息
+     * Query default agent information corresponding to the device based on MAC address.
      *
-     * @param macAddress 设备MAC地址
-     * @return 默认智能体信息
+     * @param macAddress Device MAC address
+     * @return Default agent information
      */
     @Select(" SELECT a.* FROM ai_device d " +
             " LEFT JOIN ai_agent a ON d.agent_id = a.id " +
@@ -31,9 +31,10 @@ public interface AgentDao extends BaseDao<AgentEntity> {
     AgentEntity getDefaultAgentByMacAddress(@Param("macAddress") String macAddress);
 
     /**
-     * 根据id查询agent信息，包括插件信息
+     * Query agent information by id, including plugin information.
      *
-     * @param agentId 智能体ID
+     * @param agentId Agent ID
      */
     AgentInfoVO selectAgentInfoById(@Param("agentId") String agentId);
 }
+ 

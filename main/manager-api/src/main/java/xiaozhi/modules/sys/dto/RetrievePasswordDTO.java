@@ -7,28 +7,29 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * 找回密码DTO
+ * Password retrieval DTO
  */
 @Data
-@Schema(description = "找回密码")
+@Schema(description = "Password Retrieval")
 public class RetrievePasswordDTO implements Serializable {
 
-    @Schema(description = "手机号码")
+    @Schema(description = "Phone Number")
     @NotBlank(message = "{sysuser.password.require}")
     private String phone;
 
-    @Schema(description = "验证码")
+    @Schema(description = "Verification Code")
     @NotBlank(message = "{sysuser.password.require}")
     private String code;
 
-    @Schema(description = "新密码")
+    @Schema(description = "New Password")
     @NotBlank(message = "{sysuser.password.require}")
     private String password;
 
-    @Schema(description = "图形验证码ID")
+    @Schema(description = "Captcha ID")
     @NotBlank(message = "{sysuser.uuid.require}")
     private String captchaId;
 
 
 
 }
+ 

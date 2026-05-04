@@ -1,5 +1,4 @@
 import openai
-import json
 from config.logger import setup_logging
 from core.utils.util import check_model_key
 from core.providers.vllm.base import VLLMProviderBase
@@ -26,11 +25,10 @@ class VLLMProvider(VLLMProviderBase):
         for param, (default, converter) in param_defaults.items():
             value = config.get(param)
             try:
-                setattr(
-                    self,
-                    param,
-                    converter(value) if value not in (None, "") else default,
+                processed_value = (
+                    converter(value) if value not in (None, "") else default
                 )
+                setattr(self, param, processed_value)
             except (ValueError, TypeError):
                 setattr(self, param, default)
 
@@ -40,7 +38,7 @@ class VLLMProvider(VLLMProviderBase):
         self.client = openai.OpenAI(api_key=self.api_key, base_url=self.base_url)
 
     def response(self, question, base64_image):
-        question = question + "(请使用中文回复)"
+        question = question + "(Please use Chinese reply)"
         try:
             messages = [
                 {

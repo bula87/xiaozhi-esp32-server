@@ -18,38 +18,39 @@ import xiaozhi.modules.config.dto.CorrectWordsDTO;
 import xiaozhi.modules.config.service.ConfigService;
 
 /**
- * xiaozhi-server 配置获取
+ * xiaozhi-server configuration acquisition
  *
  * @since 1.0.0
  */
 @RestController
 @RequestMapping("config")
-@Tag(name = "参数管理")
+@Tag(name = "Parameter Management")
 @AllArgsConstructor
 public class ConfigController {
     private final ConfigService configService;
 
     @PostMapping("server-base")
-    @Operation(summary = "服务端获取配置接口")
+    @Operation(summary = "Server-side get configuration interface")
     public Result<Object> getConfig() {
         Object config = configService.getConfig(true);
         return new Result<Object>().ok(config);
     }
 
     @PostMapping("agent-models")
-    @Operation(summary = "获取智能体模型")
+    @Operation(summary = "Get intelligent agent model")
     public Result<Object> getAgentModels(@Valid @RequestBody AgentModelsDTO dto) {
-        // 效验数据
+        // Validate data
         ValidatorUtils.validateEntity(dto);
         Object models = configService.getAgentModels(dto.getMacAddress(), dto.getSelectedModule());
         return new Result<Object>().ok(models);
     }
 
     @PostMapping("correct-words")
-    @Operation(summary = "获取智能体替换词")
+    @Operation(summary = "Get intelligent agent replacement words")
     public Result<Object> getCorrectWords(@Valid @RequestBody CorrectWordsDTO dto) {
         ValidatorUtils.validateEntity(dto);
         List<String> list = configService.getCorrectWords(dto.getMacAddress());
         return new Result<Object>().ok(list);
     }
 }
+ 

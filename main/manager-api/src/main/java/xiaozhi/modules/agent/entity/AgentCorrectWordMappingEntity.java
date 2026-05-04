@@ -11,28 +11,29 @@ import lombok.Data;
 
 @Data
 @TableName("ai_agent_correct_word_mapping")
-@Schema(description = "智能体替换词文件关联")
+@Schema(description = "AI Agent Correct Word Mapping")
 public class AgentCorrectWordMappingEntity {
 
     @TableId(type = IdType.ASSIGN_UUID)
-    @Schema(description = "主键")
+    @Schema(description = "Primary Key")
     private String id;
 
-    @Schema(description = "智能体ID")
+    @Schema(description = "Agent ID")
     private String agentId;
 
-    @Schema(description = "替换词文件ID")
+    @Schema(description = "Correct Word File ID")
     private String fileId;
 
-    @Schema(description = "创建者")
+    @Schema(description = "Creator")
     private Long creator;
 
-    @Schema(description = "创建时间")
+    @Schema(description = "Created At")
     private Date createdAt;
 
-    @Schema(description = "更新者")
+    @Schema(description = "Updater")
     private Long updater;
 
-    @Schema(description = "更新时间")
+    @Schema(description = "Updated At")
     private Date updatedAt;
 }
+ 

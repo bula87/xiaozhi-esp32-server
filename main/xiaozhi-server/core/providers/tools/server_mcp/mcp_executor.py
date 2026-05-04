@@ -1,4 +1,4 @@
-"""服务端MCP工具执行器"""
+"""Server side MCP tool executor"""
 
 from typing import Dict, Any, Optional
 from ..base import ToolType, ToolDefinition, ToolExecutor
@@ -7,7 +7,7 @@ from .mcp_manager import ServerMCPManager
 
 
 class ServerMCPExecutor(ToolExecutor):
-    """服务端MCP工具执行器"""
+    """Server side MCP tool executor"""
 
     def __init__(self, conn):
         self.conn = conn
@@ -15,7 +15,7 @@ class ServerMCPExecutor(ToolExecutor):
         self._initialized = False
 
     async def initialize(self):
-        """初始化MCP管理器"""
+        """Initialize MCP Manager"""
         if not self._initialized:
             self.mcp_manager = ServerMCPManager(self.conn)
             self._initialized = True
@@ -24,21 +24,20 @@ class ServerMCPExecutor(ToolExecutor):
     async def execute(
         self, conn, tool_name: str, arguments: Dict[str, Any]
     ) -> ActionResponse:
-        """执行服务端MCP工具"""
+        """Execute server MCP tool"""
         if not self._initialized or not self.mcp_manager:
             return ActionResponse(
                 action=Action.ERROR,
-                response="MCP管理器未初始化",
+                response="MCP manager not initialized",
             )
 
         try:
-            # 移除mcp_前缀（如果有）
+            # Remove mcp_ prefix (if any)
             actual_tool_name = tool_name
             if tool_name.startswith("mcp_"):
                 actual_tool_name = tool_name[4:]
 
             result = await self.mcp_manager.execute_tool(actual_tool_name, arguments)
-
             return ActionResponse(action=Action.REQLLM, result=str(result))
 
         except ValueError as e:
@@ -53,7 +52,7 @@ class ServerMCPExecutor(ToolExecutor):
             )
 
     def get_tools(self) -> Dict[str, ToolDefinition]:
-        """获取所有服务端MCP工具"""
+        """Get all server-side MCP tools"""
         if not self._initialized or not self.mcp_manager:
             return {}
 
@@ -72,11 +71,10 @@ class ServerMCPExecutor(ToolExecutor):
         return tools
 
     def has_tool(self, tool_name: str) -> bool:
-        """检查是否有指定的服务端MCP工具"""
+        """Check if there is a specified server MCP tool"""
         if not self._initialized or not self.mcp_manager:
             return False
 
-        # 移除mcp_前缀（如果有）
         actual_tool_name = tool_name
         if tool_name.startswith("mcp_"):
             actual_tool_name = tool_name[4:]
@@ -84,6 +82,10 @@ class ServerMCPExecutor(ToolExecutor):
         return self.mcp_manager.is_mcp_tool(actual_tool_name)
 
     async def cleanup(self):
-        """清理MCP连接"""
+        """Clean MCP connection"""
         if self.mcp_manager:
             await self.mcp_manager.cleanup_all()
+
+    def is_mcp_tool(self, tool_name: str) -> bool:
+        """Check if the tool is an MCP tool"""
+        return self.mcp_manager.is_mcp_tool(tool_name)

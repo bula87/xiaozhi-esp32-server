@@ -13,70 +13,70 @@ import xiaozhi.modules.knowledge.dto.document.RetrievalDTO;
 import java.util.function.Consumer;
 
 /**
- * 知识库API适配器抽象基类
- * 定义通用的知识库操作接口，支持多种后端API实现
+ * Knowledge Base Adapter abstract base class
+ * Define a generic knowledge base operation interface, supporting multiple backend API implementations
  */
 public abstract class KnowledgeBaseAdapter {
 
         /**
-         * 获取适配器类型标识
+         * Get adapter type identifier
          * 
-         * @return 适配器类型（如：ragflow, milvus, pinecone等）
+         * @return Adapter type (e.g., ragflow, milvus, pinecone etc.)
          */
         public abstract String getAdapterType();
 
         /**
-         * 初始化适配器配置
+         * Initialize adapter configuration
          * 
-         * @param config 配置参数
+         * @param config Configuration parameters
          */
         public abstract void initialize(Map<String, Object> config);
 
         /**
-         * 验证配置是否有效
+         * Validate if the configuration is valid
          * 
-         * @param config 配置参数
-         * @return 验证结果
+         * @param config Configuration parameters
+         * @return Validation result
          */
         public abstract boolean validateConfig(Map<String, Object> config);
 
         /**
-         * 分页查询文档列表
+         * Paginated query document list
          * 
-         * @param datasetId   知识库ID
-         * @param queryParams 查询参数
-         * @param page        页码
-         * @param limit       每页数量
-         * @return 分页数据
+         * @param datasetId   Knowledge base ID
+         * @param queryParams Query parameters
+         * @param page        Page number
+         * @param limit       Number of items per page
+         * @return Paginated data
          */
         public abstract PageData<KnowledgeFilesDTO> getDocumentList(String datasetId,
                         DocumentDTO.ListReq req);
 
         /**
-         * 根据文档ID获取文档详情
+         * Get document details by document ID
          * 
-         * @param datasetId  知识库ID
-         * @param documentId 文档ID
-         * @return 文档详情 (强类型 InfoVO)
+         * @param datasetId  Knowledge base ID
+         * @param documentId Document ID
+         * @return Document details (strongly typed InfoVO)
          */
         public abstract DocumentDTO.InfoVO getDocumentById(String datasetId, String documentId);
 
         /**
-         * 上传文档到知识库
+         * Upload document to knowledge base
          * 
-         * @param req 上传请求参数
-         * @return 上传的文档信息
+         * @param req Upload request parameters
+         * @return Uploaded document information
          */
         public abstract KnowledgeFilesDTO uploadDocument(DocumentDTO.UploadReq req);
 
         /**
-         * 根据状态分页查询文档列表
+         * Paginated query document list by status
          * 
-         * @param datasetId 知识库ID
-         * @param status    文档解析状态
-         * @param page      页码
-         * @param limit     每页数量
-         * @return 分页数据
+         * @param datasetId Knowledge base ID
+         * @param status    Document parsing status
+         * @param page      Page number
+         * @param limit     Number of items per page
+         * @return Paginated data
          */
         public abstract PageData<KnowledgeFilesDTO> getDocumentListByStatus(String datasetId,
                         Integer status,
@@ -84,141 +84,142 @@ public abstract class KnowledgeBaseAdapter {
                         Integer limit);
 
         /**
-         * 删除文档 (支持批量删除)
+         * Delete document (supports batch deletion)
          * 
-         * @param datasetId 知识库ID
-         * @param req       包含文档ID列表的请求对象
+         * @param datasetId Knowledge base ID
+         * @param req       Request object containing list of document IDs
          */
         public abstract void deleteDocument(String datasetId, DocumentDTO.BatchIdReq req);
 
         /**
-         * 解析文档（切块）
+         * Parse documents (chunking)
          * 
-         * @param datasetId   知识库ID
-         * @param documentIds 文档ID列表
-         * @return 解析结果
+         * @param datasetId   Knowledge base ID
+         * @param documentIds List of document IDs
+         * @return Parsing result
          */
         public abstract boolean parseDocuments(String datasetId, List<String> documentIds);
 
         /**
-         * 列出指定文档的切片
+         * List chunks of a specified document
          * 
-         * @param datasetId  知识库ID
-         * @param documentId 文档ID
-         * @param req        列表请求参数 (分页、关键词等)
-         * @return 切片列表VO
+         * @param datasetId  Knowledge base ID
+         * @param documentId Document ID
+         * @param req        Listing request parameters (pagination, keywords etc.)
+         * @return Chunk list VO
          */
         public abstract ChunkDTO.ListVO listChunks(String datasetId,
                         String documentId,
                         ChunkDTO.ListReq req);
 
         /**
-         * 召回测试 - 从知识库中检索相关切片
+         * Retrieval test - Retrieve relevant chunks from the knowledge base
          * 
-         * @param req 检索测试请求参数
-         * @return 召回测试结果
+         * @param req Retrieval test request parameters
+         * @return Retrieval test result
          */
         public abstract RetrievalDTO.ResultVO retrievalTest(
                         RetrievalDTO.TestReq req);
 
         /**
-         * 测试连接
+         * Test connection
          * 
-         * @return 连接测试结果
+         * @return Connection test result
          */
         public abstract boolean testConnection();
 
         /**
-         * 获取适配器状态信息
+         * Get adapter status information
          * 
-         * @return 状态信息
+         * @return Status information
          */
         public abstract Map<String, Object> getStatus();
 
         /**
-         * 获取支持的配置参数
+         * Get supported configuration parameters
          * 
-         * @return 配置参数说明
+         * @return Configuration parameter descriptions
          */
         public abstract Map<String, Object> getSupportedConfig();
 
         /**
-         * 获取默认配置
+         * Get default configuration
          * 
-         * @return 默认配置
+         * @return Default configuration
          */
         public abstract Map<String, Object> getDefaultConfig();
 
         /**
-         * 创建数据集
+         * Create dataset
          * 
-         * @param req 创建参数
-         * @return 数据集详情
+         * @param req Creation parameters
+         * @return Dataset details
          */
         public abstract DatasetDTO.InfoVO createDataset(DatasetDTO.CreateReq req);
 
         /**
-         * 更新数据集
+         * Update dataset
          * 
-         * @param datasetId 数据集ID
-         * @param req       更新参数
-         * @return 数据集详情
+         * @param datasetId Dataset ID
+         * @param req       Update parameters
+         * @return Dataset details
          */
         public abstract DatasetDTO.InfoVO updateDataset(String datasetId, DatasetDTO.UpdateReq req);
 
         /**
-         * 删除数据集
+         * Delete dataset
          * 
-         * @param req 删除请求参数（包含ID列表）
-         * @return 批量操作结果
+         * @param req Deletion request parameters (containing ID list)
+         * @return Batch operation result
          */
         public abstract DatasetDTO.BatchOperationVO deleteDataset(DatasetDTO.BatchIdReq req);
 
         /**
-         * 获取数据集的文档数量
+         * Get the number of documents in a dataset
          *
-         * @param datasetId 数据集ID
-         * @return 文档数量
+         * @param datasetId Dataset ID
+         * @return Number of documents
          */
         public abstract Integer getDocumentCount(String datasetId);
 
         /**
-         * 获取数据集完整信息（名称、简介、文档数量等）
-         * 用于检测 RAGFlow 端是否已删除、同步名称/简介变更
+         * Get full information of a dataset (name, summary, number of documents etc.)
+         * Used to detect if RAGFlow end has been deleted or synchronized name/summary change
          *
-         * @param datasetId 数据集ID
-         * @return 数据集详情，若 RAGFlow 端不存在则返回 null
+         * @param datasetId Dataset ID
+         * @return Dataset details, returns null if RAGFlow end does not exist
          */
         public abstract DatasetDTO.InfoVO getDatasetInfo(String datasetId);
 
         /**
-         * 发送流式请求 (SSE)
+         * Send streaming request (SSE)
          * 
-         * @param endpoint API端点
-         * @param body     请求体
-         * @param onData   数据回调
+         * @param endpoint API endpoint
+         * @param body     Request body
+         * @param onData   Data callback
          */
         public abstract void postStream(String endpoint, Object body, Consumer<String> onData);
 
         /**
-         * SearchBot 提问
+         * SearchBot Ask
          *
-         * @param config RAG配置
-         * @param body   请求体
-         * @param onData 数据回调
-         * @return 响应对象
+         * @param config RAG configuration
+         * @param body   Request body
+         * @param onData Data callback
+         * @return Response object
          */
         public abstract Object postSearchBotAsk(Map<String, Object> config, Object body,
                         Consumer<String> onData);
 
         /**
-         * AgentBot 对话
+         * AgentBot Completion
          *
-         * @param config  RAG配置
+         * @param config  RAG configuration
          * @param agentId Agent ID
-         * @param body    请求体
-         * @param onData  数据回调
+         * @param body    Request body
+         * @param onData  Data callback
          */
         public abstract void postAgentBotCompletion(Map<String, Object> config, String agentId, Object body,
                         Consumer<String> onData);
 }
+ 

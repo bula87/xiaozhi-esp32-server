@@ -9,13 +9,13 @@
     custom-class="tts-advanced-drawer"
   >
     <div class="drawer-header" slot="title">
-      <span class="drawer-title">{{ $t('roleConfig.advancedSettings') }}</span>
+      <span class="drawer-title">{{ $t("roleConfig.advancedSettings") }}</span>
       <button class="drawer-close-btn" @click="handleClose">×</button>
     </div>
 
     <div class="drawer-content">
       <el-form label-position="top">
-        <!-- 音量 -->
+        <!-- Volume -->
         <el-form-item :label="$t('roleConfig.ttsVolume')">
           <div class="slider-container">
             <el-slider
@@ -26,11 +26,11 @@
               :format-tooltip="formatTooltip"
               class="tts-slider"
             />
-            <span class="slider-hint">{{ $t('roleConfig.volumeHint') }}</span>
+            <span class="slider-hint">{{ $t("roleConfig.volumeHint") }}</span>
           </div>
         </el-form-item>
 
-        <!-- 语速 -->
+        <!-- Speech speed -->
         <el-form-item :label="$t('roleConfig.ttsRate')">
           <div class="slider-container">
             <el-slider
@@ -41,11 +41,11 @@
               :format-tooltip="formatTooltip"
               class="tts-slider"
             />
-            <span class="slider-hint">{{ $t('roleConfig.speedHint') }}</span>
+            <span class="slider-hint">{{ $t("roleConfig.speedHint") }}</span>
           </div>
         </el-form-item>
 
-        <!-- 音调 -->
+        <!-- Pitch -->
         <el-form-item :label="$t('roleConfig.ttsPitch')">
           <div class="slider-container">
             <el-slider
@@ -56,16 +56,20 @@
               :format-tooltip="formatTooltip"
               class="tts-slider"
             />
-            <span class="slider-hint">{{ $t('roleConfig.pitchHint') }}</span>
-        </div>
+            <span class="slider-hint">{{ $t("roleConfig.pitchHint") }}</span>
+          </div>
         </el-form-item>
-
       </el-form>
-      <!-- 关联替换词 -->
+      <!-- Associated replacement words -->
       <div>
         <h4 class="replacement-label">
-          {{ $t('roleConfig.replacementWordLabel') }}
-          <el-tooltip popper-class="tts-tooltip" :content="$t('roleConfig.replacementWordTip')" effect="light" placement="top">
+          {{ $t("roleConfig.replacementWordLabel") }}
+          <el-tooltip
+            popper-class="tts-tooltip"
+            :content="$t('roleConfig.replacementWordTip')"
+            effect="light"
+            placement="top"
+          >
             <i class="el-icon-question"></i>
           </el-tooltip>
         </h4>
@@ -86,33 +90,35 @@
     </div>
 
     <div class="drawer-footer">
-      <el-button @click="handleCancel">{{ $t('button.cancel') }}</el-button>
-      <el-button type="primary" @click="handleSave">{{ $t('button.save') }}</el-button>
+      <el-button @click="handleCancel">{{ $t("button.cancel") }}</el-button>
+      <el-button type="primary" @click="handleSave">{{
+        $t("button.save")
+      }}</el-button>
     </div>
   </el-drawer>
 </template>
 
 <script>
-import correctWord from '@/apis/module/correctWord';
+import correctWord from "@/apis/module/correctWord";
 
 export default {
-  name: 'TtsAdvancedSettings',
+  name: "TtsAdvancedSettings",
   props: {
     visible: {
       type: Boolean,
-      default: false
+      default: false,
     },
     settings: {
       type: Object,
       default: () => ({
         volume: 0,
         speed: 0,
-        pitch: 0
-      })
+        pitch: 0,
+      }),
     },
     checkedReplacementWordIds: {
       type: Array,
-      default: () => []
+      default: () => [],
     },
   },
   data() {
@@ -123,7 +129,7 @@ export default {
         pitch: 0,
       },
       replacementWordIds: [],
-      replacementWordList: []
+      replacementWordList: [],
     };
   },
   computed: {
@@ -132,31 +138,34 @@ export default {
         return this.visible;
       },
       set(val) {
-        this.$emit('update:visible', val);
-      }
-    }
+        this.$emit("update:visible", val);
+      },
+    },
   },
   watch: {
     visible(newVal) {
       if (newVal) {
-        // 当抽屉打开时，复制当前设置到本地
+        // When the drawer opens, copy the current settings locally
         this.localSettings = { ...this.settings };
         this.replacementWordIds = [...this.checkedReplacementWordIds];
         this.fetchReplacementWordList();
       }
-    }
+    },
   },
   methods: {
     handleClose() {
-      this.$emit('update:visible', false);
+      this.$emit("update:visible", false);
     },
     handleCancel() {
-      // 取消时不保存，直接关闭
+      // Do not save on cancel, just close
       this.handleClose();
     },
     handleSave() {
-      // 保存设置并关闭
-      this.$emit('save', { ...this.localSettings, replacementWordIds: this.replacementWordIds });
+      // Save settings and close
+      this.$emit("save", {
+        ...this.localSettings,
+        replacementWordIds: this.replacementWordIds,
+      });
       this.handleClose();
     },
     formatTooltip(val) {
@@ -170,10 +179,10 @@ export default {
       });
     },
     getTagName(id) {
-      const item = this.replacementWordList.find(item => item.id === id);
-      return item ? item.fileName : '';
-    }
-  }
+      const item = this.replacementWordList.find((item) => item.id === id);
+      return item ? item.fileName : "";
+    },
+  },
 };
 </script>
 
