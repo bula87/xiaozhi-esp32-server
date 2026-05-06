@@ -1,0 +1,238 @@
+// Element UI controls inside Aurora layout shell only
+@import "./aurora-theme.scss";
+
+.aurora-shell {
+  color: $text-main;
+
+  .el-input__inner,
+  .el-textarea__inner {
+    background-color: $bg-panel !important;
+    border-color: $border-color !important;
+    color: $text-main !important;
+    font-family: $font-mono;
+    border-radius: 8px !important;
+  }
+
+  .el-input__inner:focus,
+  .el-textarea__inner:focus {
+    border-color: var(--ui-focus-border) !important;
+    box-shadow: var(--ui-focus-shadow);
+  }
+
+  .el-input__inner::placeholder,
+  .el-textarea__inner::placeholder {
+    color: $text-muted !important;
+  }
+
+  .el-input.is-disabled .el-input__inner {
+    background: $bg-panel-hover !important;
+    color: $text-muted !important;
+  }
+
+  .el-button--default {
+    background: $bg-panel-hover !important;
+    border-color: $border-color !important;
+    color: $aurora-text-secondary !important;
+  }
+
+  .el-button--default:hover {
+    border-color: $accent-cyan !important;
+    color: $accent-cyan !important;
+  }
+
+  .el-button--primary {
+    background: var(--ui-btn-primary-bg) !important;
+    border: none !important;
+    color: var(--ui-btn-primary-text) !important;
+    font-family: $font-mono;
+    font-weight: 600;
+  }
+
+  .el-button--primary:hover,
+  .el-button--primary:focus {
+    filter: brightness(1.08);
+  }
+
+  .el-button--success {
+    background: var(--ui-success-btn-bg) !important;
+    border: 1px solid var(--ui-success-btn-border) !important;
+    color: $accent-green !important;
+  }
+
+  .el-button--danger {
+    background: var(--ui-danger-btn-bg) !important;
+    border: 1px solid var(--ui-danger-btn-border) !important;
+    color: var(--ui-danger-text) !important;
+  }
+
+  .el-button--text {
+    color: $accent-purple !important;
+  }
+
+  .el-card {
+    background-color: $bg-panel !important;
+    border: 1px solid $border-color !important;
+    color: $text-main !important;
+    border-radius: $aurora-radius-md !important;
+  }
+
+  .el-card__header {
+    border-bottom: 1px solid $border-color !important;
+    color: $text-main !important;
+    font-family: $font-mono;
+  }
+
+  .el-table,
+  .el-table__expanded-cell {
+    background: transparent !important;
+    color: $text-main !important;
+  }
+
+  /* Table headers — override Element theme-chalk (often wins with plain `th`) */
+  .el-table .el-table__header-wrapper thead th.el-table__cell,
+  .el-table .el-table__header thead th.el-table__cell,
+  .el-table th.el-table__cell {
+    background-color: var(--ui-table-header-bg) !important;
+    background-image: none !important;
+    color: $aurora-text-secondary !important;
+    border-bottom: 1px solid $border-color !important;
+    font-family: $font-mono;
+  }
+
+  /* Full-bleed / “glass” tables used on Params + Model pages */
+  .el-table.transparent-table .el-table__header-wrapper thead th.el-table__cell,
+  .el-table.transparent-table .el-table__header thead th.el-table__cell,
+  .el-table.transparent-table th.el-table__cell {
+    background-color: transparent !important;
+    color: $aurora-text-secondary !important;
+  }
+
+  .el-table.transparent-table .el-table__fixed-header-wrapper thead th.el-table__cell,
+  .el-table.transparent-table .el-table__fixed-right-patch {
+    background-color: transparent !important;
+  }
+
+  .el-table th.el-table__cell.gutter {
+    background-color: var(--ui-table-header-bg) !important;
+    border-bottom: 1px solid $border-color !important;
+  }
+
+  .el-table.transparent-table th.el-table__cell.gutter {
+    background-color: transparent !important;
+  }
+
+  .el-table__body tr {
+    background-color: transparent !important;
+  }
+
+  .el-table td.el-table__cell {
+    border-bottom: 1px solid var(--ui-table-row-border) !important;
+    background: transparent !important;
+    color: $text-main !important;
+  }
+
+  .el-table__body tr:hover > td {
+    background: var(--ui-table-row-hover) !important;
+  }
+
+  .el-menu.nav-panel,
+  .nav-panel.el-menu {
+    background-color: transparent !important;
+    border-right: none !important;
+  }
+
+  .el-table::before {
+    display: none;
+  }
+
+  .el-table__empty-text {
+    color: $text-muted !important;
+  }
+
+  .el-pagination button,
+  .el-pagination .el-select .el-input .el-input__inner,
+  .el-pagination__editor.el-input .el-input__inner {
+    background: $bg-panel-hover !important;
+    border-color: $border-color !important;
+    color: $aurora-text-secondary !important;
+  }
+
+  .el-pagination.is-background .el-pager li:not(.disabled) {
+    background: $bg-panel-hover !important;
+    color: $aurora-text-secondary !important;
+  }
+
+  .el-pagination.is-background .el-pager li:not(.disabled).active {
+    background: var(--ui-pagination-active-bg) !important;
+    color: $accent-cyan !important;
+  }
+
+  .el-loading-mask {
+    background: var(--ui-loading-mask-bg) !important;
+  }
+
+  .el-loading-spinner .path {
+    stroke: $accent-cyan !important;
+  }
+
+  .el-loading-text {
+    color: $accent-cyan !important;
+    font-family: $font-mono;
+  }
+
+  .el-checkbox__inner {
+    background: $bg-panel !important;
+    border-color: $border-color !important;
+  }
+
+  .el-checkbox__input.is-checked .el-checkbox__inner {
+    background-color: var(--ui-checkbox-checked-bg) !important;
+    border-color: $accent-cyan !important;
+  }
+
+  .el-switch__core {
+    background: $bg-panel-hover !important;
+    border-color: $border-color !important;
+  }
+
+  .el-switch.is-checked .el-switch__core {
+    background-color: $accent-cyan !important;
+    border-color: $accent-cyan !important;
+  }
+
+  .copyright,
+  .copyright .footer-content,
+  .copyright span {
+    color: $text-muted !important;
+  }
+
+  .copyright .beian-text {
+    color: $aurora-text-secondary !important;
+  }
+
+  .el-footer {
+    background: transparent !important;
+    border: none !important;
+  }
+
+  .pagination-btn {
+    background: $bg-panel-hover !important;
+    border: 1px solid $border-color !important;
+    color: $aurora-text-secondary !important;
+  }
+
+  .pagination-btn:hover:not(:disabled) {
+    border-color: var(--ui-focus-border) !important;
+    color: $accent-cyan !important;
+  }
+
+  .pagination-btn.active {
+    background: var(--ui-pagination-active-bg) !important;
+    border: 1px solid var(--ui-pagination-active-border) !important;
+    color: $accent-cyan !important;
+  }
+
+  .pagination-btn:disabled {
+    opacity: 0.45;
+  }
+}

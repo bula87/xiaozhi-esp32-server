@@ -1,300 +1,188 @@
 <template>
-  <div class="welcome">
-    <HeaderBar />
-
+  <div class="page-container">
     <div class="operation-bar">
-      <h2 class="page-title">{{ $t("modelConfig." + activeTab) }}</h2>
-      <div class="action-group">
-        <div class="search-group">
+      <h2 class="page-title">{{ layoutTitle }}</h2>
+      <div class="right-operations">
+        <template v-if="activeTab !== 'overview'">
           <el-input
-            :placeholder="$t('modelConfig.searchPlaceholder')"
             v-model="search"
+            :placeholder="$t('modelConfig.searchPlaceholder')"
             class="search-input"
             clearable
             @keyup.enter.native="handleSearch"
-            style="width: 240px"
           />
           <el-button class="btn-search" @click="handleSearch">
-            {{ $t("modelConfig.search") }}
+            {{ $t("common.search") }}
           </el-button>
-        </div>
+        </template>
       </div>
     </div>
 
-    <!-- Main Content -->
     <div class="main-wrapper">
       <div class="content-panel">
-        <!-- Left Navigation -->
-        <el-menu
-          :default-active="activeTab"
-          class="nav-panel"
-          @select="handleMenuSelect"
-          style="background-size: cover; background-position: center"
-        >
-          <el-menu-item index="vad">
-            <span class="menu-text">{{ $t("modelConfig.vad") }}</span>
-          </el-menu-item>
-          <el-menu-item index="asr">
-            <span class="menu-text">{{ $t("modelConfig.asr") }}</span>
-          </el-menu-item>
-          <el-menu-item index="llm">
-            <span class="menu-text">{{ $t("modelConfig.llm") }}</span>
-          </el-menu-item>
-          <el-menu-item index="vllm">
-            <span class="menu-text">{{ $t("modelConfig.vllm") }}</span>
-          </el-menu-item>
-          <el-menu-item index="intent">
-            <span class="menu-text">{{ $t("modelConfig.intent") }}</span>
-          </el-menu-item>
-          <el-menu-item index="tts">
-            <span class="menu-text">{{ $t("modelConfig.tts") }}</span>
-          </el-menu-item>
-          <el-menu-item index="memory">
-            <span class="menu-text">{{ $t("modelConfig.memory") }}</span>
-          </el-menu-item>
-          <el-menu-item index="rag">
-            <span class="menu-text">{{ $t("modelConfig.rag") }}</span>
-          </el-menu-item>
-        </el-menu>
-
-        <!-- Right content -->
         <div class="content-area">
-          <el-card class="model-card" shadow="never">
+          
+          <div 
+            v-if="activeTab === 'overview'" 
+            class="model-overview" 
+            v-loading="overviewLoading"
+            :element-loading-text="$t('common.loading')"
+            element-loading-spinner="el-icon-loading"
+            element-loading-background="rgba(11, 15, 25, 0.8)"
+          >
+            <p class="overview-lead">{{ $t("modelConfig.overviewLead") }}</p>
+            <div class="overview-grid">
+              <button
+                v-for="row in overviewRows"
+                :key="row.key"
+                type="button"
+                class="overview-tile"
+                @click="goOverviewCategory(row.key)"
+              >
+                <div class="overview-tile-title">{{ $t(modelTabI18n[row.key]) }}</div>
+                <div class="overview-tile-model">{{ row.label }}</div>
+              </button>
+            </div>
+          </div>
+
+          <el-card v-else class="template-card" shadow="never">
             <el-table
               ref="modelTable"
-              style="width: 100%"
-              v-loading="loading"
-              :element-loading-text="$t('modelConfig.loading')"
-              element-loading-spinner="el-icon-loading"
-              element-loading-background="rgba(255, 255, 255, 0.7)"
-              :header-cell-style="{ background: 'transparent' }"
               :data="modelList"
+              v-loading="loading"
               class="transparent-table"
-              header-row-class-name="table-header"
-              :header-cell-class-name="headerCellClassName"
+              height="100%"
+              :element-loading-text="$t('common.loading')"
+              element-loading-spinner="el-icon-loading"
+              element-loading-background="rgba(11, 15, 25, 0.8)"
               @selection-change="handleSelectionChange"
             >
-              <el-table-column
-                type="selection"
-                width="55"
-                align="center"
-                :cell-class-name="selectionCellClassName"
-              ></el-table-column>
-              <el-table-column
-                :label="$t('modelConfig.modelId')"
-                prop="id"
-                align="center"
-              ></el-table-column>
-              <el-table-column
-                :label="$t('modelConfig.modelName')"
-                prop="modelName"
-                align="center"
-              ></el-table-column>
+              <el-table-column type="selection" width="55" align="center" />
+              <el-table-column :label="$t('modelConfig.modelId')" prop="id" align="center" />
+              <el-table-column :label="$t('modelConfig.modelName')" prop="modelName" align="center" />
+              
               <el-table-column :label="$t('modelConfig.provider')" align="center">
                 <template slot-scope="scope">
-                  {{ scope.row.configJson.type || $t("modelConfig.unknown") }}
+                  <span class="provider-text">{{ scope.row.configJson.type || $t("modelConfig.unknown") }}</span>
                 </template>
               </el-table-column>
+
               <el-table-column :label="$t('modelConfig.isEnabled')" align="center">
                 <template slot-scope="scope">
-                  <el-tooltip
-                    v-if="scope.row.isDefault === 1 && scope.row.isEnabled === 1"
-                    :content="$t('modelConfig.defaultModelCannotDisable')"
-                    placement="top"
-                    effect="light"
-                  >
-                    <el-switch
-                      v-model="scope.row.isEnabled"
-                      class="custom-switch"
-                      :active-value="1"
-                      :inactive-value="0"
-                      disabled
-                      @change="handleStatusChange(scope.row)"
-                    />
-                  </el-tooltip>
                   <el-switch
-                    v-else
                     v-model="scope.row.isEnabled"
-                    class="custom-switch"
+                    class="aurora-switch"
                     :active-value="1"
                     :inactive-value="0"
+                    :disabled="scope.row.isDefault === 1"
                     @change="handleStatusChange(scope.row)"
                   />
                 </template>
               </el-table-column>
+
               <el-table-column :label="$t('modelConfig.isDefault')" align="center">
                 <template slot-scope="scope">
                   <el-switch
                     v-model="scope.row.isDefault"
-                    class="custom-switch"
+                    class="aurora-switch"
                     :active-value="1"
                     :inactive-value="0"
                     @change="handleDefaultChange(scope.row)"
                   />
                 </template>
               </el-table-column>
-              <el-table-column
-                v-if="activeTab === 'tts'"
-                :label="$t('modelConfig.voiceManagement')"
-                align="center"
-              >
+
+              <el-table-column :label="$t('modelConfig.action')" align="center" width="240px">
                 <template slot-scope="scope">
-                  <el-button
-                    type="text"
-                    size="mini"
-                    @click="openTtsDialog(scope.row)"
-                    class="voice-management-btn"
-                  >
-                    {{ $t("modelConfig.voiceManagement") }}
-                  </el-button>
-                </template>
-              </el-table-column>
-              <el-table-column
-                :label="$t('modelConfig.action')"
-                align="center"
-                width="210px"
-              >
-                <template slot-scope="scope">
-                  <el-button
-                    type="text"
-                    size="mini"
-                    @click="editModel(scope.row)"
-                    class="edit-btn"
-                  >
-                    {{ $t("modelConfig.edit") }}
-                  </el-button>
-                  <el-button
-                    type="text"
-                    size="mini"
-                    @click="duplicateModel(scope.row)"
-                    class="edit-btn"
-                  >
-                    {{ $t("modelConfig.duplicate") }}
-                  </el-button>
-                  <el-button
-                    type="text"
-                    size="mini"
-                    @click="deleteModel(scope.row)"
-                    class="delete-btn"
-                  >
-                    {{ $t("modelConfig.delete") }}
-                  </el-button>
+                  <el-button type="text" size="mini" @click="editModel(scope.row)">{{ $t("modelConfig.edit") }}</el-button>
+                  <el-button type="text" size="mini" @click="duplicateModel(scope.row)">{{ $t("modelConfig.duplicate") }}</el-button>
+                  <el-button type="text" size="mini" class="delete-btn" @click="deleteModel(scope.row)">{{ $t("modelConfig.delete") }}</el-button>
                 </template>
               </el-table-column>
             </el-table>
-            <div class="table-footer">
-              <div class="batch-actions">
-                <el-button size="mini" type="primary" @click="selectAll">
-                  {{
-                    isAllSelected
-                      ? $t("modelConfig.deselectAll")
-                      : $t("modelConfig.selectAll")
-                  }}
+
+            <div class="table_bottom">
+              <div class="ctrl_btn">
+                <el-button type="primary" size="mini" @click="selectAll">
+                  {{ isAllSelected ? $t("modelConfig.deselectAll") : $t("modelConfig.selectAll") }}
                 </el-button>
-                <el-button type="success" size="mini" @click="addModel" class="add-btn">
-                  {{ $t("modelConfig.add") }}
-                </el-button>
-                <el-button
-                  size="mini"
-                  type="danger"
-                  icon="el-icon-delete"
-                  @click="batchDelete"
-                >
-                  {{ $t("modelConfig.delete") }}
+                <el-button type="success" size="mini" @click="addModel">{{ $t("modelConfig.add") }}</el-button>
+                <el-button type="danger" size="mini" :disabled="selectedModels.length === 0" @click="batchDelete">
+                   {{ $t("modelConfig.delete") }}
                 </el-button>
               </div>
+
               <div class="custom-pagination">
-                <el-select
-                  v-model="pageSize"
-                  @change="handlePageSizeChange"
-                  class="page-size-select"
-                >
-                  <el-option
-                    v-for="item in pageSizeOptions"
-                    :key="item"
-                    :label="$t('modelConfig.itemsPerPage', { items: item })"
-                    :value="item"
-                  >
-                  </el-option>
-                </el-select>
-
-                <button
-                  class="pagination-btn"
-                  :disabled="currentPage === 1"
-                  @click="goFirst"
-                >
-                  {{ $t("modelConfig.firstPage") }}
-                </button>
-                <button
-                  class="pagination-btn"
-                  :disabled="currentPage === 1"
-                  @click="goPrev"
-                >
-                  {{ $t("modelConfig.prevPage") }}
-                </button>
-
-                <button
-                  v-for="page in visiblePages"
-                  :key="page"
-                  class="pagination-btn"
-                  :class="{ active: page === currentPage }"
-                  @click="goToPage(page)"
-                >
-                  {{ page }}
-                </button>
-
-                <button
-                  class="pagination-btn"
-                  :disabled="currentPage === pageCount"
-                  @click="goNext"
-                >
-                  {{ $t("modelConfig.nextPage") }}
-                </button>
-                <span class="total-text">{{
-                  $t("modelConfig.totalRecords", { total })
-                }}</span>
+                <el-pagination
+                  background
+                  layout="total, sizes, prev, pager, next"
+                  :current-page.sync="currentPage"
+                  :page-size.sync="pageSize"
+                  :total="total"
+                  :page-sizes="pageSizeOptions"
+                  @size-change="handlePageSizeChange"
+                  @current-change="loadData"
+                />
               </div>
             </div>
           </el-card>
         </div>
       </div>
-
-      <ModelEditDialog
-        :modelType="activeTab"
-        :visible.sync="editDialogVisible"
-        :modelData="editModelData"
-        @save="handleModelSave"
-      />
-      <TtsModel
-        :visible.sync="ttsDialogVisible"
-        :ttsModelId="selectedTtsModelId"
-        :modelConfig="selectedModelConfig"
-      />
-      <AddModelDialog
-        :modelType="activeTab"
-        :visible.sync="addDialogVisible"
-        @confirm="handleAddConfirm"
-      />
     </div>
-    <el-footer>
-      <version-footer />
-    </el-footer>
+
+    <ModelEditDialog :visible.sync="editDialogVisible" :modelData="editModelData" @save="handleModelSave" />
+    <AddModelDialog :visible.sync="addDialogVisible" :modelType="dialogModelType" @confirm="handleAddConfirm" />
+    <TtsModel :visible.sync="ttsDialogVisible" :ttsModelId="selectedTtsModelId" :modelConfig="selectedModelConfig" />
+    
+    <div class="footer-container">
+       <version-footer />
+    </div>
   </div>
 </template>
 
 <script>
 import Api from "@/apis/api";
 import AddModelDialog from "@/components/AddModelDialog.vue";
-import HeaderBar from "@/components/HeaderBar.vue";
 import ModelEditDialog from "@/components/ModelEditDialog.vue";
 import TtsModel from "@/components/TtsModel.vue";
 import VersionFooter from "@/components/VersionFooter.vue";
+
+const MODEL_TAB_KEYS = [
+  "overview",
+  "vad",
+  "asr",
+  "llm",
+  "vllm",
+  "intent",
+  "tts",
+  "memory",
+  "rag",
+];
+
+const MODEL_TAB_I18N = {
+  overview: "modelConfig.overview",
+  vad: "modelConfig.vad",
+  asr: "modelConfig.asr",
+  llm: "modelConfig.llm",
+  vllm: "modelConfig.vllm",
+  intent: "modelConfig.intent",
+  tts: "modelConfig.tts",
+  memory: "modelConfig.memory",
+  rag: "modelConfig.rag",
+};
+
+const MODEL_CATEGORY_KEYS = MODEL_TAB_KEYS.filter((k) => k !== "overview");
+
 export default {
-  components: { HeaderBar, ModelEditDialog, TtsModel, AddModelDialog, VersionFooter },
+  name: 'ModelConfig', // Added the name property
+  components: { ModelEditDialog, TtsModel, AddModelDialog, VersionFooter },
   data() {
     return {
       addDialogVisible: false,
-      activeTab: "llm",
+      activeTab: "overview",
+      modelTabI18n: MODEL_TAB_I18N,
+      overviewRows: [],
+      overviewLoading: false,
       search: "",
       editDialogVisible: false,
       editModelData: {},
@@ -311,138 +199,82 @@ export default {
       selectedModelConfig: {},
     };
   },
-
-  created() {
-    this.loadData();
-  },
-
-  mounted() {
-    // Ensure the header translation text is displayed correctly after the component mounts
-    setTimeout(() => {
-      this.updateSelectionHeaderText();
-    }, 100);
-  },
-
-  updated() {
-    // Reset the header translation text after the component updates
-    this.updateSelectionHeaderText();
+  watch: {
+    $route: {
+      handler(to) {
+        if (to.path === "/model-config") {
+          this.applyRouteTab();
+        }
+      },
+      immediate: true,
+    },
   },
   computed: {
-    modelTypeText() {
-      return (
-        this.$t("modelConfig." + this.activeTab) || this.$t("modelConfig.modelConfig")
-      );
+    layoutTitle() {
+      if (this.activeTab === "overview") return this.$t("modelConfig.overview");
+      return this.$t("modelConfig." + this.activeTab);
     },
-    pageCount() {
-      return Math.ceil(this.total / this.pageSize);
-    },
-    visiblePages() {
-      const pages = [];
-      const maxVisible = 3;
-      let start = Math.max(1, this.currentPage - 1);
-      let end = Math.min(this.pageCount, start + maxVisible - 1);
-
-      if (end - start + 1 < maxVisible) {
-        start = Math.max(1, end - maxVisible + 1);
-      }
-
-      for (let i = start; i <= end; i++) {
-        pages.push(i);
-      }
-      return pages;
+    dialogModelType() {
+      return this.activeTab === "overview" ? "llm" : this.activeTab;
     },
   },
-
   methods: {
-    // Update selection list header translation text
-    updateSelectionHeaderText() {
-      const thElement = document.querySelector(`.el-table__header th:nth-child(1) .cell`);
-      if (thElement) {
-        thElement.setAttribute("data-content", this.$t("modelConfig.select"));
-      }
-    },
     handlePageSizeChange(val) {
       this.pageSize = val;
       this.currentPage = 1;
       this.loadData();
     },
-    openTtsDialog(row) {
-      this.selectedTtsModelId = row.id;
-      this.selectedModelConfig = row;
-      this.ttsDialogVisible = true;
+    applyRouteTab() {
+      const tab = this.$route.query.tab || "overview";
+      this.activeTab = tab;
+      if (tab === "overview") this.loadOverviewDefaults();
+      else this.loadData();
     },
-    headerCellClassName({ column, columnIndex }) {
-      if (columnIndex === 0) {
-        return "custom-selection-header";
-      }
-      return "";
+    loadOverviewDefaults() {
+      this.overviewLoading = true;
+      const tasks = MODEL_CATEGORY_KEYS.map(modelType => 
+        new Promise(resolve => {
+          Api.model.getModelList({ modelType, page: 1, limit: 200 }, ({ data }) => {
+            const list = data.data?.list || [];
+            const pick = list.find(m => m.isDefault === 1) || list[0];
+            resolve({ key: modelType, label: pick ? pick.modelName : "—" });
+          }, () => resolve({ key: modelType, label: "—" }));
+        })
+      );
+      Promise.all(tasks).then(rows => {
+        this.overviewRows = rows;
+        this.overviewLoading = false;
+      });
     },
-    selectionCellClassName({ row, column, rowIndex, columnIndex }) {
-      // Only set data-content for header rows
-      if (rowIndex === undefined) {
-        // Use setTimeout to ensure DOM is rendered
-        setTimeout(() => {
-          const thElement = document.querySelector(
-            `.el-table__header th:nth-child(1) .cell`
-          );
-          if (thElement) {
-            thElement.setAttribute("data-content", this.$t("modelConfig.select"));
-          }
-        }, 0);
-      }
-      return "";
-    },
-    handleMenuSelect(index) {
-      this.activeTab = index;
-      this.currentPage = 1; // Reset to the first page
-      this.pageSize = 10; // Optional: reset the number of items per page
-      this.loadData();
+    loadData() {
+      if (this.activeTab === "overview") return;
+      this.loading = true;
+      Api.model.getModelList({
+        modelType: this.activeTab,
+        modelName: this.search,
+        page: this.currentPage,
+        limit: this.pageSize,
+      }, ({ data }) => {
+        this.loading = false;
+        if (data.code === 0) {
+          this.modelList = data.data.list;
+          this.total = data.data.total;
+        }
+      });
     },
     handleSearch() {
       this.currentPage = 1;
       this.loadData();
     },
-    // Batch Delete
-    batchDelete() {
-      if (this.selectedModels.length === 0) {
-        this.$message.warning(this.$t("modelConfig.selectModelsFirst"));
-        return;
+    selectAll() {
+      this.isAllSelected = !this.isAllSelected;
+      if (this.$refs.modelTable) {
+        this.$refs.modelTable.toggleAllSelection();
       }
-
-      this.$confirm(this.$t("modelConfig.confirmBatchDelete"), this.$t("message.info"), {
-        confirmButtonText: this.$t("common.confirm"),
-        cancelButtonText: this.$t("common.cancel"),
-        type: "warning",
-      })
-        .then(() => {
-          const deletePromises = this.selectedModels.map(
-            (model) =>
-              new Promise((resolve) => {
-                Api.model.deleteModel(model.id, ({ data }) => resolve(data.code === 0));
-              })
-          );
-
-          Promise.all(deletePromises).then((results) => {
-            if (results.every(Boolean)) {
-              this.$message.success({
-                message: this.$t("modelConfig.batchDeleteSuccess"),
-                showClose: true,
-              });
-              this.loadData();
-            } else {
-              this.$message.error({
-                message: this.$t("modelConfig.partialDeleteFailed"),
-                showClose: true,
-              });
-            }
-          });
-        })
-        .catch(() => {
-          this.$message.info(this.$t("modelConfig.deleteCancelled"));
-        });
     },
-    addModel() {
-      this.addDialogVisible = true;
+    handleSelectionChange(val) {
+      this.selectedModels = val;
+      this.isAllSelected = val.length > 0 && val.length === this.modelList.length;
     },
     editModel(model) {
       this.editModelData = JSON.parse(JSON.stringify(model));
@@ -453,721 +285,43 @@ export default {
       this.editModelData.duplicateMode = true;
       this.editDialogVisible = true;
     },
-    // Delete single model
     deleteModel(model) {
-      this.$confirm(this.$t("modelConfig.confirmDelete"), this.$t("message.info"), {
-        confirmButtonText: this.$t("common.confirm"),
-        cancelButtonText: this.$t("common.cancel"),
-        type: "warning",
-      })
-        .then(() => {
-          Api.model.deleteModel(model.id, ({ data }) => {
-            if (data.code === 0) {
-              this.$message.success({
-                message: this.$t("modelConfig.deleteSuccess"),
-                showClose: true,
-              });
-              this.loadData();
-            } else {
-              this.$message.error({
-                message: data.msg || this.$t("modelConfig.deleteFailed"),
-                showClose: true,
-              });
-            }
-          });
-        })
-        .catch(() => {
-          this.$message.info(this.$t("modelConfig.deleteCancelled"));
-        });
-    },
-    handleCurrentChange(page) {
-      this.currentPage = page;
-      this.$refs.modelTable.clearSelection();
-    },
-    handleModelSave({ provideCode, formData, done }) {
-      const modelType = this.activeTab;
-      const id = formData.id;
-
-      if (this.editModelData.duplicateMode) {
-        formData.id = "";
-        Api.model.addModel({ modelType, provideCode, formData }, ({ data }) => {
-          if (data.code === 0) {
-            this.$message.success(this.$t("modelConfig.duplicateSuccess"));
-            this.loadData();
-            this.editDialogVisible = false;
-          } else {
-            this.$message.error(data.msg || this.$t("modelConfig.duplicateFailed"));
-          }
-          done && done(); // Call done callback to close loading status
-        });
-      } else {
-        Api.model.updateModel({ modelType, provideCode, id, formData }, ({ data }) => {
-          if (data.code === 0) {
-            this.$message.success(this.$t("modelConfig.saveSuccess"));
-            this.loadData();
-            this.editDialogVisible = false;
-          } else {
-            this.$message.error(data.msg || this.$t("modelConfig.saveFailed"));
-          }
-          done && done(); // Call done callback to close loading status
-        });
-      }
-    },
-    selectAll() {
-      if (this.isAllSelected) {
-        this.$refs.modelTable.clearSelection();
-      } else {
-        this.$refs.modelTable.toggleAllSelection();
-      }
-    },
-    handleSelectionChange(val) {
-      this.selectedModels = val;
-      this.isAllSelected = val.length === this.modelList.length;
-      if (val.length === 0) {
-        this.isAllSelected = false;
-      }
-    },
-
-    // Add new model configuration
-    handleAddConfirm(newModel) {
-      const params = {
-        modelType: this.activeTab,
-        provideCode: newModel.provideCode,
-        formData: {
-          ...newModel,
-          isDefault: newModel.isDefault ? 1 : 0,
-          isEnabled: newModel.isEnabled ? 1 : 0,
-          configJson: newModel.configJson,
-        },
-      };
-
-      Api.model.addModel(params, ({ data }) => {
-        if (data.code === 0) {
-          this.$message.success({
-            message: this.$t("modelConfig.addSuccess"),
-            showClose: true,
-          });
-          this.loadData();
-        } else {
-          this.$message.error({
-            message: data.msg || this.$t("modelConfig.addFailed"),
-            showClose: true,
-          });
-        }
+      this.$confirm(this.$t("modelConfig.confirmDelete"), "Warning", { type: "warning" }).then(() => {
+        Api.model.deleteModel(model.id, () => this.loadData());
       });
     },
-
-    // Pagination
-    goFirst() {
-      this.currentPage = 1;
-      this.loadData();
-    },
-    goPrev() {
-      if (this.currentPage > 1) {
-        this.currentPage--;
-        this.loadData();
-      }
-    },
-    goNext() {
-      if (this.currentPage < this.pageCount) {
-        this.currentPage++;
-        this.loadData();
-      }
-    },
-    goToPage(page) {
-      this.currentPage = page;
-      this.loadData();
-    },
-
-    // Get model configuration list
-    loadData() {
-      this.loading = true; // Start loading
-      const params = {
-        modelType: this.activeTab,
-        modelName: this.search,
-        page: this.currentPage,
-        limit: this.pageSize,
-      };
-
-      Api.model.getModelList(params, ({ data }) => {
-        this.loading = false; // End loading
-        if (data.code === 0) {
-          this.modelList = data.data.list;
-          this.total = data.data.total;
-        } else {
-          this.$message.error(data.msg || this.$t("modelConfig.fetchModelsFailed"));
-        }
+    batchDelete() {
+      this.$confirm(this.$t("modelConfig.confirmBatchDelete"), "Warning", { type: "warning" }).then(() => {
+        const promises = this.selectedModels.map(m => new Promise(res => Api.model.deleteModel(m.id, res)));
+        Promise.all(promises).then(() => this.loadData());
       });
     },
-    // Handle enable/disable status change
+    addModel() { this.addDialogVisible = true; },
     handleStatusChange(model) {
-      const newStatus = model.isEnabled ? 1 : 0;
-      const originalStatus = model.isEnabled;
-
-      model.isEnabled = !model.isEnabled;
-
-      Api.model.updateModelStatus(model.id, newStatus, ({ data }) => {
-        if (data.code === 0) {
-          this.$message.success(
-            newStatus === 1
-              ? this.$t("modelConfig.enableSuccess")
-              : this.$t("modelConfig.disableSuccess")
-          );
-          // Keep new status
-          model.isEnabled = newStatus;
-          // Refresh table data
-          this.loadData();
-        } else {
-          // Restore original status when operation fails
-          model.isEnabled = originalStatus;
-          this.$message.error(data.msg || this.$t("modelConfig.operationFailed"));
-        }
-      });
+      const status = model.isEnabled ? 1 : 0;
+      Api.model.updateModelStatus(model.id, status, () => this.loadData());
     },
     handleDefaultChange(model) {
-      Api.model.setDefaultModel(model.id, ({ data }) => {
-        if (data.code === 0) {
-          this.$message.success(this.$t("modelConfig.setDefaultSuccess"));
-          this.loadData();
-        }
-      });
+      Api.model.setDefaultModel(model.id, () => this.loadData());
     },
-  },
+    goOverviewCategory(key) {
+      this.$router.push({ path: "/model-config", query: { tab: key } });
+    },
+    // Adding placeholder for the save event emitted by dialogs
+    handleModelSave() {
+        this.loadData();
+        this.editDialogVisible = false;
+    },
+    handleAddConfirm() {
+        this.loadData();
+        this.addDialogVisible = false;
+    }
+  }
 };
 </script>
-
 <style lang="scss" scoped>
-.el-switch {
-  height: 23px;
-}
+@import "../styles/aurora-theme.scss";
 
-::v-deep .el-table tr {
-  background: transparent;
-}
-
-.welcome {
-  min-width: 900px;
-  min-height: 506px;
-  height: 100vh;
-  display: flex;
-  position: relative;
-  flex-direction: column;
-  background-size: cover;
-  background: linear-gradient(to bottom right, #dce8ff, #e4eeff, #e6cbfd) center;
-  -webkit-background-size: cover;
-  -o-background-size: cover;
-}
-
-.main-wrapper {
-  // Top 63px Bottom 35px Query 72px
-  height: calc(100vh - 63px - 35px - 72px);
-  margin: 0 22px;
-  border-radius: 15px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
-  position: relative;
-  background: rgba(237, 242, 255, 0.5);
-}
-
-.operation-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px 24px;
-}
-
-.page-title {
-  font-size: 24px;
-  margin: 0;
-}
-
-.content-panel {
-  flex: 1;
-  display: flex;
-  overflow: hidden;
-  height: 100%;
-  border-radius: 15px;
-  background: transparent;
-}
-
-.nav-panel {
-  min-width: 242px;
-  height: 100%;
-  border-right: 1px solid #ebeef5;
-  background: linear-gradient(
-      120deg,
-      rgba(107, 140, 255, 0.3) 0%,
-      rgba(169, 102, 255, 0.3) 25%,
-      transparent 60%
-    ),
-    url("../assets/model/model.png") no-repeat center / cover;
-  padding: 16px 0;
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-}
-
-.nav-panel .el-menu-item {
-  height: 50px;
-  background: #e9f0ff;
-  line-height: 50px;
-  border-radius: 4px 0 0 4px !important;
-  transition: all 0.3s;
-  display: flex !important;
-  justify-content: flex-end;
-  padding-right: 12px !important;
-  width: fit-content;
-  margin: 8px 0 8px auto;
-  min-width: unset;
-}
-
-.nav-panel .el-menu-item.is-active {
-  background: #5778ff;
-  position: relative;
-  padding-left: 40px !important;
-}
-
-.nav-panel .el-menu-item.is-active::before {
-  content: "";
-  position: absolute;
-  left: 15px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 13px;
-  height: 13px;
-  background: #fff;
-  border-radius: 50%;
-  box-shadow: 0 0 4px rgba(64, 158, 255, 0.5);
-}
-
-.menu-text {
-  font-size: 14px;
-  color: #606266;
-  text-align: right;
-  width: 100%;
-  padding-right: 8px;
-}
-
-.content-area {
-  flex: 1;
-  padding: 24px 24px 0;
-  height: 100%;
-  min-width: 600px;
-  overflow: hidden;
-  background-color: white;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
-}
-
-.action-group {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.search-group {
-  display: flex;
-  gap: 10px;
-}
-
-.search-input {
-  width: 240px;
-}
-
-.btn-search {
-  background: linear-gradient(135deg, #6b8cff, #a966ff);
-  border: none;
-  color: white;
-}
-
-.btn-search:hover {
-  opacity: 0.9;
-  transform: translateY(-1px);
-}
-
-::v-deep .search-input .el-input__inner {
-  border-radius: 4px;
-  border: 1px solid #dcdfe6;
-  background-color: white;
-  transition: border-color 0.2s;
-}
-
-::v-deep .page-size-select {
-  width: 100px;
-  margin-right: 8px;
-}
-
-::v-deep .page-size-select .el-input__inner {
-  height: 32px;
-  line-height: 32px;
-  border-radius: 4px;
-  border: 1px solid #e4e7ed;
-  background: #dee7ff;
-  color: #606266;
-  font-size: 14px;
-}
-
-::v-deep .page-size-select .el-input__suffix {
-  right: 6px;
-  width: 15px;
-  height: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  top: 6px;
-  border-radius: 4px;
-}
-
-::v-deep .page-size-select .el-input__suffix-inner {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-}
-
-::v-deep .page-size-select .el-icon-arrow-up:before {
-  content: "";
-  display: inline-block;
-  border-left: 6px solid transparent;
-  border-right: 6px solid transparent;
-  border-top: 9px solid #606266;
-  position: relative;
-  transform: rotate(0deg);
-  transition: transform 0.3s;
-}
-
-::v-deep .search-input .el-input__inner:focus {
-  border-color: #6b8cff;
-  outline: none;
-}
-
-// .data-table {
-//   border-radius: 6px;
-//   overflow: hidden;
-//   background-color: transparent !important;
-// }
-
-// .data-table ::v-deep .el-table__row {
-//   background-color: transparent !important;
-// }
-
-.table-header th {
-  background-color: transparent !important;
-  color: #606266;
-  font-weight: 600;
-}
-
-.table-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  // padding: 16px 0;
-  width: 100%;
-  flex-shrink: 0;
-  min-height: 60px;
-  background: white;
-}
-
-.batch-actions {
-  display: flex;
-  gap: 8px;
-}
-
-.batch-actions .el-button {
-  min-width: 72px;
-  height: 32px;
-  padding: 7px 12px 7px 10px;
-  font-size: 12px;
-  border-radius: 4px;
-  line-height: 1;
-  font-weight: 500;
-  border: none;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-}
-
-.batch-actions .el-button:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-}
-
-.batch-actions .el-button--primary {
-  background: #5f70f3 !important;
-  color: white;
-}
-
-.batch-actions .el-button--success {
-  background: #5bc98c;
-  color: white;
-}
-
-.batch-actions .el-button--danger {
-  background: #fd5b63;
-  color: white;
-}
-
-.batch-actions .el-button:first-child {
-  background: linear-gradient(135deg, #409eff, #6b8cff);
-  border: none;
-  color: white;
-}
-
-.batch-actions .el-button:first-child:hover {
-  background: linear-gradient(135deg, #3a8ee6, #5a7cff);
-}
-
-.el-table th ::v-deep .el-table__cell {
-  overflow: hidden;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  user-select: none;
-  background-color: transparent !important;
-}
-
-::v-deep .el-table .custom-selection-header .cell .el-checkbox__inner {
-  display: none !important;
-}
-
-::v-deep .el-table .custom-selection-header .cell::before {
-  content: attr(data-content);
-  display: block;
-  text-align: center;
-  line-height: 32px;
-  /* Set an appropriate line height to ensure the text is displayed completely */
-  color: black;
-  margin-top: 0;
-  /* Remove top margins that may cause offset */
-  height: 32px;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 100%;
-}
-
-.custom-selection-header .cell {
-  position: relative;
-}
-
-/* Remove top margins that may cause offset */
-
-::v-deep .el-table__body .el-checkbox__inner {
-  display: inline-block !important;
-  background: #ffffff;
-}
-
-::v-deep .el-table thead th:not(:first-child) .cell {
-  color: #303133 !important;
-}
-
-::v-deep .nav-panel .el-menu-item.is-active .menu-text {
-  color: #fff !important;
-}
-
-
-.el-button img {
-  height: 1em;
-  vertical-align: middle;
-  padding-right: 2px;
-  padding-bottom: 2px;
-}
-
-::v-deep .el-checkbox__inner {
-  border-color: #cfcfcf !important;
-  transition: all 0.2s ease-in-out;
-}
-
-::v-deep .el-checkbox__input.is-checked .el-checkbox__inner {
-  background-color: #5f70f3;
-  border-color: #5f70f3;
-}
-
-.voice-management-btn {
-  background: #9db3ea;
-  color: white;
-  min-width: 68px;
-  line-height: 14px;
-  white-space: nowrap;
-  transition: all 0.3s;
-  border-radius: 10px;
-}
-
-.voice-management-btn:hover {
-  background: #8aa2e0;
-  /* The color darkens when hovering */
-  transform: scale(1.05);
-}
-
-::v-deep .el-table .el-table-column--selection .cell {
-  padding-left: 15px !important;
-}
-
-::v-deep .el-table .el-table__fixed-right .cell {
-  padding-right: 15px !important;
-}
-
-.edit-btn,
-.delete-btn {
-  margin: 0 8px;
-  color: #7079aa !important;
-}
-
-::v-deep .el-table .cell {
-  padding-left: 10px;
-  padding-right: 10px;
-}
-
-/* Pagination */
-.custom-pagination {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-
-  /* Navigation button style (Home, Previous Page, Next Page) */
-  .pagination-btn:first-child,
-  .pagination-btn:nth-child(2),
-  .pagination-btn:nth-child(3),
-  .pagination-btn:nth-last-child(2) {
-    min-width: 60px;
-    height: 32px;
-    padding: 0 12px;
-    border-radius: 4px;
-    border: 1px solid #e4e7ed;
-    background: #dee7ff;
-    color: #606266;
-    font-size: 14px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-
-    &:hover {
-      background: #d7dce6;
-    }
-
-    &:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-  }
-
-  /* Number button style */
-  .pagination-btn:not(:first-child):not(:nth-child(2)):not(:nth-child(3)):not(:nth-last-child(2)) {
-    min-width: 28px;
-    height: 32px;
-    padding: 0;
-    border-radius: 4px;
-    border: 1px solid transparent;
-    background: transparent;
-    color: #606266;
-    font-size: 14px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-
-    &:hover {
-      background: rgba(245, 247, 250, 0.3);
-    }
-  }
-
-  .pagination-btn.active {
-    background: #5f70f3 !important;
-    color: #ffffff !important;
-    border-color: #5f70f3 !important;
-
-    &:hover {
-      background: #6d7cf5 !important;
-    }
-  }
-
-  .total-text {
-    color: #909399;
-    font-size: 14px;
-    margin-left: 10px;
-  }
-}
-
-.model-card {
-  background: white;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  border: none;
-  box-shadow: none;
-  overflow: hidden;
-}
-
-.model-card ::v-deep .el-card__body {
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  overflow: hidden;
-}
-:deep(.transparent-table) {
-    background: white;
-    flex: 1;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-
-    .el-table__body-wrapper {
-        flex: 1;
-        overflow-y: auto;
-        max-height: none !important;
-    }
-
-    .el-table__header-wrapper {
-        flex-shrink: 0;
-    }
-
-    .el-table__header th {
-        background: white !important;
-        color: black;
-        font-weight: 600;
-        height: 40px;
-        padding: 8px 0;
-        font-size: 14px;
-        border-bottom: 1px solid #e4e7ed;
-    }
-
-    .el-table__body tr {
-        background-color: white;
-
-        td {
-            border-top: 1px solid rgba(0, 0, 0, 0.04);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.04);
-            padding: 8px 0;
-            height: 40px;
-            color: #606266;
-            font-size: 14px;
-        }
-    }
-
-    .el-table__row:hover>td {
-        background-color: #f5f7fa !important;
-    }
-
-    &::before {
-        display: none;
-    }
-}
-
-
-::v-deep .el-loading-mask {
-  background-color: rgba(255, 255, 255, 0.6) !important;
-  backdrop-filter: blur(2px);
-}
-
-::v-deep .el-loading-spinner .circular {
-  width: 28px;
-  height: 28px;
-}
-
-::v-deep .el-loading-spinner .path {
-  stroke: #6b8cff;
-}
-
-::v-deep .el-loading-text {
-  color: #6b8cff !important;
-  font-size: 14px;
-  margin-top: 8px;
-}
+/* --- Unique styles for ModelConfig --- */
+.provider-text { color: $accent-purple; }
 </style>

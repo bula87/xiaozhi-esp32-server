@@ -1,13 +1,18 @@
 <template>
-  <div class="welcome">
-    <HeaderBar />
-
+  <div class="page-container">
     <div class="operation-bar">
       <h2 class="page-title">{{ $t('device.management') }}</h2>
       <div class="right-operations">
-        <el-input :placeholder="$t('device.searchPlaceholder')" v-model="searchKeyword" class="search-input"
-          @keyup.enter.native="handleSearch" clearable />
-        <el-button class="btn-search" @click="handleSearch">{{ $t('device.search') }}</el-button>
+        <el-input 
+          :placeholder="$t('device.searchPlaceholder')" 
+          v-model="searchKeyword" 
+          class="search-input"
+          @keyup.enter.native="handleSearch" 
+          clearable 
+        />
+        <el-button class="btn-search" @click="handleSearch">
+          {{ $t('device.search') }}
+        </el-button>
       </div>
     </div>
 
@@ -15,57 +20,95 @@
       <div class="content-panel">
         <div class="content-area">
           <el-card class="device-card" shadow="never">
-            <el-table ref="deviceTable" :data="paginatedDeviceList" class="transparent-table"
-              :header-cell-class-name="headerCellClassName" v-loading="loading"
-              :element-loading-text="$t('deviceManagement.loading')" element-loading-spinner="el-icon-loading"
-              element-loading-background="rgba(255, 255, 255, 0.7)">
-              <el-table-column :label="$t('modelConfig.select')" align="center" width="120">
+            <el-table 
+              ref="deviceTable" 
+              :data="paginatedDeviceList" 
+              class="transparent-table"
+              :header-cell-class-name="headerCellClassName" 
+              v-loading="loading"
+              height="100%"
+              :element-loading-text="$t('common.loading')" 
+              element-loading-spinner="el-icon-loading"
+              element-loading-background="rgba(11, 15, 25, 0.8)"
+              :header-cell-class-name="headerCellClassName" >
+            >
+              <el-table-column align="center" width="80">
+                <template slot="header">
+                  <span class="selection-header-text">{{ $t('modelConfig.select') }}</span>
+                </template>
                 <template slot-scope="scope">
                   <el-checkbox v-model="scope.row.selected"></el-checkbox>
                 </template>
               </el-table-column>
+
               <el-table-column :label="$t('device.model')" prop="model" align="center">
                 <template slot-scope="scope">
-                  {{ getFirmwareTypeName(scope.row.model) }}
+                  <span class="model-text">{{ getFirmwareTypeName(scope.row.model) }}</span>
                 </template>
               </el-table-column>
-              <el-table-column :label="$t('device.firmwareVersion')" prop="firmwareVersion"
-                align="center"></el-table-column>
-              <el-table-column :label="$t('device.macAddress')" prop="macAddress" align="center"></el-table-column>
-              <el-table-column :label="$t('device.bindTime')" prop="bindTime" align="center"></el-table-column>
-              <el-table-column :label="$t('device.lastConversation')" prop="lastConversation"
-                align="center"></el-table-column>
-              <el-table-column v-if="mqttServiceAvailable" :label="$t('device.deviceStatus')" prop="deviceStatus" align="center">
+
+              <el-table-column :label="$t('device.firmwareVersion')" prop="firmwareVersion" align="center" width="120" />
+              <el-table-column :label="$t('device.macAddress')" prop="macAddress" align="center" width="160" />
+
+              <el-table-column :label="$t('device.bindTime')" prop="bindTime" align="center" width="170">
                 <template slot-scope="scope">
-                  <el-tag v-if="scope.row.deviceStatus === 'online'" type="success">{{ $t('device.online') }}</el-tag>
-                  <el-tag v-else type="danger">{{ $t('device.offline') }}</el-tag>
+                  <span class="time-text">{{ scope.row.bindTime }}</span>
                 </template>
               </el-table-column>
-              <el-table-column :label="$t('device.remark')" align="center">
+              <el-table-column :label="$t('device.lastConversation')" prop="lastConversation" align="center" width="170">
+                <template slot-scope="scope">
+                  <span class="time-text">{{ scope.row.lastConversation }}</span>
+                </template>
+              </el-table-column>
+
+              <el-table-column v-if="mqttServiceAvailable" :label="$t('device.deviceStatus')" prop="deviceStatus" align="center" width="100">
+                <template slot-scope="scope">
+                  <el-tag v-if="scope.row.deviceStatus === 'online'" type="success" size="mini" effect="dark" class="aurora-tag">
+                    {{ $t('device.online') }}
+                  </el-tag>
+                  <el-tag v-else type="danger" size="mini" effect="dark" class="aurora-tag">
+                    {{ $t('device.offline') }}
+                  </el-tag>
+                </template>
+              </el-table-column>
+
+              <el-table-column :label="$t('device.remark')" align="center" min-width="150">
                 <template #default="{ row }">
-                  <el-input v-show="row.isEdit" v-model="row.remark" size="mini" maxlength="64" show-word-limit
-                    @blur="onRemarkBlur(row)" @keyup.enter.native="onRemarkEnter(row)" />
+                  <el-input 
+                    v-show="row.isEdit" 
+                    v-model="row.remark" 
+                    size="mini" 
+                    maxlength="64" 
+                    show-word-limit
+                    @blur="onRemarkBlur(row)" 
+                    @keyup.enter.native="onRemarkEnter(row)" 
+                  />
                   <span v-show="!row.isEdit" class="remark-view">
-                    <i class="el-icon-edit" @click="row.isEdit = true" style="cursor: pointer;"></i>
-                    <span @click="row.isEdit = true">
+                    <i class="el-icon-edit" @click="row.isEdit = true" style="cursor: pointer; margin-right: 5px;"></i>
+                    <span @click="row.isEdit = true" class="remark-text">
                       {{ row.remark || '-' }}
                     </span>
                   </span>
                 </template>
               </el-table-column>
-              <el-table-column :label="$t('device.autoUpdate')" align="center">
+
+              <el-table-column :label="$t('device.autoUpdate')" align="center" width="100">
                 <template slot-scope="scope">
-                  <el-switch v-model="scope.row.otaSwitch" size="mini" active-color="#13ce66" inactive-color="#ff4949"
-                    @change="handleOtaSwitchChange(scope.row)"></el-switch>
+                  <el-switch 
+                    v-model="scope.row.otaSwitch" 
+                    class="aurora-switch"
+                    @change="handleOtaSwitchChange(scope.row)"
+                  ></el-switch>
                 </template>
               </el-table-column>
-              <el-table-column :label="$t('device.operation')" align="center">
+
+              <el-table-column :label="$t('device.operation')" align="center" width="200">
                 <template slot-scope="scope">
-                  <el-button size="mini" type="text" @click="handleUnbind(scope.row.device_id)">
-                    {{ $t('device.unbind') }}
-                  </el-button>
                   <el-button v-if="isGenerate(scope.row)" size="mini" type="text" @click="handleGenertor(scope.row)">
                     {{ $t('device.deviceThemeGeneration') }}
+                  </el-button>
+                  <el-button size="mini" type="text" class="delete-btn" @click="handleUnbind(scope.row.device_id)">
+                    {{ $t('device.unbind') }}
                   </el-button>
                 </template>
               </el-table-column>
@@ -73,41 +116,31 @@
 
             <div class="table_bottom">
               <div class="ctrl_btn">
-                <el-button size="mini" type="primary" class="select-all-btn" @click="handleSelectAll">
+                <el-button size="mini" type="primary" @click="handleSelectAll">
                   {{ isCurrentPageAllSelected ? $t('common.deselectAll') : $t('common.selectAll') }}
                 </el-button>
-                <el-button type="success" size="mini" class="add-device-btn" @click="handleAddDevice">
+                <el-button type="success" size="mini" @click="handleAddDevice">
                   {{ $t('device.bindWithCode') }}
                 </el-button>
-                <el-button type="success" size="mini" class="add-device-btn" @click="handleManualAddDevice">
+                <el-button type="success" size="mini" @click="handleManualAddDevice">
                   {{ $t('device.manualAdd') }}
                 </el-button>
                 <el-button size="mini" type="danger" icon="el-icon-delete" @click="deleteSelected">
                   {{ $t('device.unbind') }}
                 </el-button>
               </div>
+
               <div class="custom-pagination">
-                <el-select v-model="pageSize" @change="handlePageSizeChange" class="page-size-select">
-                  <el-option v-for="item in pageSizeOptions" :key="item"
-                    :label="$t('dictManagement.itemsPerPage').replace('{items}', item)" :value="item">
-                  </el-option>
-                </el-select>
-                <button class="pagination-btn" :disabled="currentPage === 1" @click="goFirst">
-                  {{ $t('dictManagement.firstPage') }}
-                </button>
-                <button class="pagination-btn" :disabled="currentPage === 1" @click="goPrev">
-                  {{ $t('dictManagement.prevPage') }}
-                </button>
-                <button v-for="page in visiblePages" :key="page" class="pagination-btn"
-                  :class="{ active: page === currentPage }" @click="goToPage(page)">
-                  {{ page }}
-                </button>
-                <button class="pagination-btn" :disabled="currentPage === pageCount" @click="goNext">
-                  {{ $t('dictManagement.nextPage') }}
-                </button>
-                <span class="total-text">
-                  {{ $t('dictManagement.totalRecords').replace('{total}', deviceList.length) }}
-                </span>
+                <el-pagination
+                  background
+                  layout="total, sizes, prev, pager, next"
+                  :current-page.sync="currentPage"
+                  :page-size.sync="pageSize"
+                  :total="filteredDeviceList.length"
+                  :page-sizes="pageSizeOptions"
+                  @size-change="handlePageSizeChange"
+                  @current-change="goToPage"
+                />
               </div>
             </div>
           </el-card>
@@ -115,26 +148,32 @@
       </div>
     </div>
 
-    <AddDeviceDialog :visible.sync="addDeviceDialogVisible" :agent-id="currentAgentId"
-      @refresh="fetchBindDevices(currentAgentId)" />
-    <ManualAddDeviceDialog :visible.sync="manualAddDeviceDialogVisible" :agent-id="currentAgentId"
-      @refresh="fetchBindDevices(currentAgentId)" />
-    <el-footer>
+    <AddDeviceDialog 
+      :visible.sync="addDeviceDialogVisible" 
+      :agent-id="currentAgentId"
+      @refresh="fetchBindDevices(currentAgentId)" 
+    />
+    <ManualAddDeviceDialog 
+      :visible.sync="manualAddDeviceDialogVisible" 
+      :agent-id="currentAgentId"
+      @refresh="fetchBindDevices(currentAgentId)" 
+    />
+    
+    <div class="footer-container">
       <version-footer />
-    </el-footer>
+    </div>
   </div>
 </template>
 
 <script>
 import Api from '@/apis/api';
 import AddDeviceDialog from "@/components/AddDeviceDialog.vue";
-import HeaderBar from "@/components/HeaderBar.vue";
 import ManualAddDeviceDialog from "@/components/ManualAddDeviceDialog.vue";
 import VersionFooter from "@/components/VersionFooter.vue";
 
 export default {
+  name: 'DeviceManagement',
   components: {
-    HeaderBar,
     AddDeviceDialog,
     ManualAddDeviceDialog,
     VersionFooter
@@ -152,9 +191,8 @@ export default {
       pageSizeOptions: [10, 20, 50, 100],
       deviceList: [],
       loading: false,
-      userApi: null,
       firmwareTypes: [],
-      mqttServiceAvailable: false, // Whether MQTT service is available
+      mqttServiceAvailable: false,
     };
   },
   computed: {
@@ -166,53 +204,32 @@ export default {
         (device.macAddress && device.macAddress.toLowerCase().includes(keyword))
       );
     },
-
     paginatedDeviceList() {
       const start = (this.currentPage - 1) * this.pageSize;
-      const end = start + this.pageSize;
-      return this.filteredDeviceList.slice(start, end);
+      return this.filteredDeviceList.slice(start, start + this.pageSize);
     },
     pageCount() {
       return Math.ceil(this.filteredDeviceList.length / this.pageSize);
     },
-    // Calculate if all items on the current page are selected
     isCurrentPageAllSelected() {
       return this.paginatedDeviceList.length > 0 &&
         this.paginatedDeviceList.every(device => device.selected);
-    },
-    visiblePages() {
-      const pages = [];
-      const maxVisible = 3;
-      let start = Math.max(1, this.currentPage - 1);
-      let end = Math.min(this.pageCount, start + maxVisible - 1);
-
-      if (end - start + 1 < maxVisible) {
-        start = Math.max(1, end - maxVisible + 1);
-      }
-
-      for (let i = start; i <= end; i++) {
-        pages.push(i);
-      }
-      return pages;
-    },
+    }
   },
   mounted() {
     const agentId = this.$route.query.agentId;
-    if (agentId) {
-      this.fetchBindDevices(agentId);
-    }
+    if (agentId) this.fetchBindDevices(agentId);
   },
   created() {
-    this.getFirmwareTypes()
+    this.getFirmwareTypes();
   },
   methods: {
     async getFirmwareTypes() {
       try {
-        const res = await Api.dict.getDictDataByType('FIRMWARE_TYPE')
-        this.firmwareTypes = res.data
+        const res = await Api.dict.getDictDataByType('FIRMWARE_TYPE');
+        this.firmwareTypes = res.data;
       } catch (error) {
-        console.error(this.$t('device.getFirmwareTypeFailed') + ':', error)
-        this.$message.error(error.message || this.$t('device.getFirmwareTypeFailed'))
+        this.$message.error(error.message || this.$t('device.getFirmwareTypeFailed'));
       }
     },
     handlePageSizeChange(val) {
@@ -223,77 +240,41 @@ export default {
       this.activeSearchKeyword = this.searchKeyword;
       this.currentPage = 1;
     },
-
     handleSelectAll() {
       const shouldSelectAll = !this.isCurrentPageAllSelected;
-      this.paginatedDeviceList.forEach(row => {
-        row.selected = shouldSelectAll;
-      });
+      this.paginatedDeviceList.forEach(row => row.selected = shouldSelectAll);
     },
-
     deleteSelected() {
       const selectedDevices = this.paginatedDeviceList.filter(device => device.selected);
-      if (selectedDevices.length === 0) {
-        this.$message.warning({
-          message: this.$t('device.selectAtLeastOne'),
-          showClose: true
-        });
-        return;
-      }
+      if (selectedDevices.length === 0) return this.$message.warning(this.$t('device.selectAtLeastOne'));
 
       this.$confirm(this.$t('device.confirmBatchUnbind').replace('{count}', selectedDevices.length), this.$t('message.warning'), {
-        confirmButtonText: this.$t('button.ok'),
-        cancelButtonText: this.$t('button.cancel'),
         type: 'warning'
       }).then(() => {
-        const deviceIds = selectedDevices.map(device => device.device_id);
-        this.batchUnbindDevices(deviceIds);
+        this.batchUnbindDevices(selectedDevices.map(d => d.device_id));
       });
     },
     batchUnbindDevices(deviceIds) {
-      const promises = deviceIds.map(id => {
-        return new Promise((resolve, reject) => {
-          Api.device.unbindDevice(id, ({ data }) => {
-            if (data.code === 0) {
-              resolve();
-            } else {
-              reject(data.msg || this.$t('device.bindFailed'));
-            }
-          });
+      const promises = deviceIds.map(id => new Promise((resolve, reject) => {
+        Api.device.unbindDevice(id, ({ data }) => {
+          if (data.code === 0) resolve();
+          else reject(data.msg || this.$t('device.bindFailed'));
         });
-      });
+      }));
       Promise.all(promises)
         .then(() => {
-          this.$message.success({
-            message: this.$t('device.batchUnbindSuccess').replace('{count}', deviceIds.length),
-            showClose: true
-          });
+          this.$message.success(this.$t('device.batchUnbindSuccess').replace('{count}', deviceIds.length));
           this.fetchBindDevices(this.currentAgentId);
         })
-        .catch(error => {
-          this.$message.error({
-            message: error || this.$t('device.batchUnbindError'),
-            showClose: true
-          });
-        });
+        .catch(error => this.$message.error(error || this.$t('device.batchUnbindError')));
     },
-    handleAddDevice() {
-      this.addDeviceDialogVisible = true;
-    },
-    handleManualAddDevice() {
-      this.manualAddDeviceDialogVisible = true;
-    },
+    handleAddDevice() { this.addDeviceDialogVisible = true; },
+    handleManualAddDevice() { this.manualAddDeviceDialogVisible = true; },
     submitRemark(row) {
       if (row._submitting) return;
-
       const text = (row.remark || '').trim();
-      if (text.length > 64) {
-        this.$message.warning(this.$t('device.remarkTooLong'));
-        return;
-      }
-      if (text === row._originalRemark) {
-        return;
-      }
+      if (text.length > 64) return this.$message.warning(this.$t('device.remarkTooLong'));
+      if (text === row._originalRemark) return;
 
       row._submitting = true;
       this.updateDeviceInfo(row.device_id, { alias: text }, (ok, resp) => {
@@ -307,548 +288,131 @@ export default {
         row._submitting = false;
       });
     },
-    // Remark input box: submit on blur
     onRemarkBlur(row) {
       row.isEdit = false;
-      setTimeout(() => {
-        this.submitRemark(row);
-      }, 100); // Delay 100ms to avoid enter+blur triggering at the same time
+      setTimeout(() => this.submitRemark(row), 100);
     },
-    // Remark input box: submit on Enter
     onRemarkEnter(row) {
       row.isEdit = false;
       this.submitRemark(row);
     },
     handleUnbind(device_id) {
-      this.$confirm(this.$t('device.confirmUnbind'), this.$t('message.warning'), {
-        confirmButtonText: this.$t('button.ok'),
-        cancelButtonText: this.$t('button.cancel'),
-        type: 'warning'
-      }).then(() => {
+      this.$confirm(this.$t('device.confirmUnbind'), this.$t('message.warning'), { type: 'warning' }).then(() => {
         Api.device.unbindDevice(device_id, ({ data }) => {
           if (data.code === 0) {
-            this.$message.success({
-              message: this.$t('device.unbindSuccess'),
-              showClose: true
-            });
+            this.$message.success(this.$t('device.unbindSuccess'));
             this.fetchBindDevices(this.$route.query.agentId);
           } else {
-            this.$message.error({
-              message: data.msg || this.$t('device.unbindFailed'),
-              showClose: true
-            });
+            this.$message.error(data.msg || this.$t('device.unbindFailed'));
           }
         });
       });
     },
     handleGenertor(row) {
-      const pathname = window.location.pathname;
-      const basePath = pathname.split('/').slice(0, -1).join('/');
+      const basePath = window.location.pathname.split('/').slice(0, -1).join('/');
       const url = `${window.location.origin}${basePath}/generator/?deviceId=${row.device_id}`;
       sessionStorage.setItem('devicePath', window.location.href);
       window.location.href = url;
     },
-    goFirst() {
-      this.currentPage = 1;
-    },
-    goPrev() {
-      if (this.currentPage > 1) this.currentPage--;
-    },
-    goNext() {
-      if (this.currentPage < this.pageCount) this.currentPage++;
-    },
     goToPage(page) {
       this.currentPage = page;
     },
-
     fetchBindDevices(agentId) {
       this.loading = true;
       Api.device.getAgentBindDevices(agentId, ({ data }) => {
         this.loading = false;
         if (data.code === 0) {
-          this.deviceList = data.data.map(device => {
-            return {
-              device_id: device.id,
-              model: device.board,
-              firmwareVersion: device.appVersion,
-              macAddress: device.macAddress,
-              bindTime: device.createDate,
-              lastConversation: device.lastConnectedAt,
-              remark: device.alias,
-              _originalRemark: device.alias,
-              isEdit: false,
-              _submitting: false,
-              otaSwitch: device.autoUpdate === 1,
-              rawBindTime: new Date(device.createDate).getTime(),
-              selected: false,
-              // Initially set to offline status
-              deviceStatus: 'offline'
-            };
-          })
-            .sort((a, b) => a.rawBindTime - b.rawBindTime);
+          this.deviceList = data.data.map(device => ({
+            device_id: device.id,
+            model: device.board,
+            firmwareVersion: device.appVersion,
+            macAddress: device.macAddress,
+            bindTime: device.createDate,
+            lastConversation: device.lastConnectedAt,
+            remark: device.alias,
+            _originalRemark: device.alias,
+            isEdit: false,
+            _submitting: false,
+            otaSwitch: device.autoUpdate === 1,
+            rawBindTime: new Date(device.createDate).getTime(),
+            selected: false,
+            deviceStatus: 'offline'
+          })).sort((a, b) => a.rawBindTime - b.rawBindTime);
           this.activeSearchKeyword = "";
           this.searchKeyword = "";
-
-          // After obtaining the device list, immediately get device status
           this.fetchDeviceStatus(agentId);
         } else {
           this.$message.error(data.msg || this.$t('device.getListFailed'));
         }
       });
     },
-
-    // Get device status
     fetchDeviceStatus(agentId) {
-      // Enable table loading state to handle the issue where hover event on the row cannot be removed due to dynamic header loading
       this.loading = true;
       Api.device.getDeviceStatus(agentId, ({ data }) => {
         this.loading = false;
         if (data.code === 0) {
           try {
-            // Parse the device status JSON returned by the backend
             const statusData = JSON.parse(data.data);
-
-            // Use the parsed data directly as the device status mapping (no need for devices field wrapping)
             if (statusData && typeof statusData === 'object') {
-              // Successfully obtained device status
               this.mqttServiceAvailable = true;
-              // Update device status
               this.updateDeviceStatusFromResponse(statusData);
             } else {
-              // Data format incorrect, MQTT service unavailable
               this.mqttServiceAvailable = false;
             }
-          } catch (error) {
-            // JSON parsing failed, MQTT service unavailable
+          } catch (e) {
             this.mqttServiceAvailable = false;
           }
         } else {
-          // API call failed, MQTT service unavailable
           this.mqttServiceAvailable = false;
         }
       });
     },
-
-    // Update device status based on API response
     updateDeviceStatusFromResponse(deviceStatusMap) {
       this.deviceList.forEach(device => {
-        // Construct MQTT client ID for the device
         const macAddress = device.macAddress ? device.macAddress.replace(/:/g, '_') : 'unknown';
         const groupId = device.model ? device.model.replace(/:/g, '_') : 'GID_default';
         const mqttClientId = `${groupId}@@@${macAddress}@@@${macAddress}`;
 
-        // Get device status from status mapping
         if (deviceStatusMap[mqttClientId]) {
           const statusInfo = deviceStatusMap[mqttClientId];
-
-          let isOnline = false;
-          if (statusInfo.isAlive === true) {
-            isOnline = true;
-          } else if (statusInfo.isAlive === false) {
-            isOnline = false;
-          } else if (statusInfo.isAlive === null && statusInfo.exists === true) {
-            isOnline = true;
-          } else {
-            isOnline = false;
-          }
-
-          device.deviceStatus = isOnline ? 'online' : 'offline';
+          device.deviceStatus = (statusInfo.isAlive === true || (statusInfo.isAlive === null && statusInfo.exists === true)) ? 'online' : 'offline';
         } else {
-          // If no corresponding status information is found, default to offline
           device.deviceStatus = 'offline';
         }
       });
     },
     headerCellClassName({ columnIndex }) {
-      if (columnIndex === 0) {
-        return "custom-selection-header";
-      }
-      return "";
+      return columnIndex === 0 ? "custom-selection-header" : "";
     },
     getFirmwareTypeName(type) {
-      const firmwareType = this.firmwareTypes.find(item => item.key === type)
-      return firmwareType ? firmwareType.name : type
+      const firmwareType = this.firmwareTypes.find(item => item.key === type);
+      return firmwareType ? firmwareType.name : type;
     },
     updateDeviceInfo(device_id, payload, callback) {
       return Api.device.updateDeviceInfo(device_id, payload, ({ data }) => {
         callback(data.code === 0, data);
-      })
+      });
     },
     handleOtaSwitchChange(row) {
       this.updateDeviceInfo(row.device_id, { autoUpdate: row.otaSwitch ? 1 : 0 }, (result, { msg }) => {
         if (result) {
           this.$message.success(row.otaSwitch ? this.$t('device.autoUpdateEnabled') : this.$t('device.autoUpdateDisabled'));
-          return;
+        } else {
+          row.otaSwitch = !row.otaSwitch;
+          this.$message.error(msg || this.$t('message.error'));
         }
-        row.otaSwitch = !row.otaSwitch
-        this.$message.error(msg || this.$t('message.error'))
-      })
+      });
     },
-    // Determine if emoji, theme, and font bin files can be generated
     isGenerate(row) {
       const version = row.firmwareVersion.replace(/\./g, '');
       return Number(version) >= 200;
-    },
+    }
   }
 };
 </script>
+<style lang="scss" scoped>
+@import "../styles/aurora-theme.scss";
 
-<style scoped>
-.welcome {
-  min-width: 900px;
-  min-height: 506px;
-  height: 100vh;
-  display: flex;
-  position: relative;
-  flex-direction: column;
-  background: linear-gradient(to bottom right, #dce8ff, #e4eeff, #e6cbfd);
-  background-size: cover;
-  -webkit-background-size: cover;
-  -o-background-size: cover;
-}
-
-.main-wrapper {
-  height: calc(100vh - 63px - 35px - 72px);
-  margin: 0 22px;
-  border-radius: 15px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
-  position: relative;
-  background: rgba(237, 242, 255, 0.5);
-  display: flex;
-  flex-direction: column;
-}
-
-.operation-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px 24px;
-}
-
-.page-title {
-  font-size: 24px;
-  margin: 0;
-  color: #2c3e50;
-}
-
-.right-operations {
-  display: flex;
-  gap: 10px;
-  margin-left: auto;
-}
-
-.search-input {
-  width: 280px;
-  border-radius: 4px;
-}
-
-.btn-search {
-  background: linear-gradient(135deg, #6b8cff, #a966ff);
-  border: none;
-  color: white;
-}
-
-::v-deep .search-input .el-input__inner {
-  border-radius: 4px;
-  border: 1px solid #DCDFE6;
-  background-color: white;
-  transition: border-color 0.2s;
-}
-
-::v-deep .page-size-select {
-  width: 100px;
-  margin-right: 8px;
-}
-
-::v-deep .page-size-select .el-input__inner {
-  height: 32px;
-  line-height: 32px;
-  border-radius: 4px;
-  border: 1px solid #e4e7ed;
-  background: #dee7ff;
-  color: #606266;
-  font-size: 14px;
-}
-
-::v-deep .page-size-select .el-input__suffix {
-  right: 6px;
-  width: 15px;
-  height: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  top: 6px;
-  border-radius: 4px;
-}
-
-::v-deep .page-size-select .el-input__suffix-inner {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-}
-
-::v-deep .page-size-select .el-icon-arrow-up:before {
-  content: "";
-  display: inline-block;
-  border-left: 6px solid transparent;
-  border-right: 6px solid transparent;
-  border-top: 9px solid #606266;
-  position: relative;
-  transform: rotate(0deg);
-  transition: transform 0.3s;
-}
-
-::v-deep .search-input .el-input__inner:focus {
-  border-color: #6b8cff;
-  outline: none;
-}
-
-.content-panel {
-  flex: 1;
-  display: flex;
-  overflow: hidden;
-  height: 100%;
-  border-radius: 15px;
-  background: transparent;
-  border: 1px solid #fff;
-}
-
-.content-area {
-  flex: 1;
-  height: 100%;
-  min-width: 600px;
-  overflow: auto;
-  background-color: white;
-  display: flex;
-  flex-direction: column;
-}
-
-.device-card {
-  background: white;
-  border: none;
-  box-shadow: none;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  overflow: hidden;
-}
-
-::v-deep .el-card__body {
-  padding: 15px;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  overflow: hidden;
-}
-
-.table_bottom {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 10px;
-  /* padding-bottom: 10px; */
-}
-
-
-.ctrl_btn {
-  display: flex;
-  gap: 8px;
-  padding-left: 26px;
-}
-
-.ctrl_btn .el-button {
-  min-width: 72px;
-  height: 32px;
-  padding: 7px 12px 7px 10px;
-  font-size: 12px;
-  border-radius: 4px;
-  line-height: 1;
-  font-weight: 500;
-  border: none;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-}
-
-.ctrl_btn .el-button:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-}
-
-.ctrl_btn .el-button--primary {
-  background: #5f70f3;
-  color: white;
-}
-
-.ctrl_btn .el-button--success {
-  background: #5bc98c;
-  color: white;
-}
-
-.ctrl_btn .el-button--danger {
-  background: #fd5b63;
-  color: white;
-}
-
-.custom-pagination {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.custom-pagination .el-select {
-  margin-right: 8px;
-}
-
-.custom-pagination .pagination-btn:first-child,
-.custom-pagination .pagination-btn:nth-child(2),
-.custom-pagination .pagination-btn:nth-last-child(2),
-.custom-pagination .pagination-btn:nth-child(3) {
-  min-width: 60px;
-  height: 32px;
-  padding: 0 12px;
-  border-radius: 4px;
-  border: 1px solid #e4e7ed;
-  background: #dee7ff;
-  color: #606266;
-  font-size: 14px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.custom-pagination .pagination-btn:first-child:hover,
-.custom-pagination .pagination-btn:nth-child(2):hover,
-.custom-pagination .pagination-btn:nth-last-child(2):hover,
-.custom-pagination .pagination-btn:nth-child(3):hover {
-  background: #d7dce6;
-}
-
-.custom-pagination .pagination-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.custom-pagination .pagination-btn:not(:first-child):not(:nth-child(3)):not(:nth-child(2)):not(:nth-last-child(2)) {
-  min-width: 28px;
-  height: 32px;
-  padding: 0;
-  border-radius: 4px;
-  border: 1px solid transparent;
-  background: transparent;
-  color: #606266;
-  font-size: 14px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.custom-pagination .pagination-btn:not(:first-child):not(:nth-child(3)):not(:nth-child(2)):not(:nth-last-child(2)):hover {
-  background: rgba(245, 247, 250, 0.3);
-}
-
-.custom-pagination .pagination-btn.active {
-  background: #5f70f3 !important;
-  color: #ffffff !important;
-  border-color: #5f70f3 !important;
-}
-
-.custom-pagination .pagination-btn.active:hover {
-  background: #6d7cf5 !important;
-}
-
-.custom-pagination .total-text {
-  color: #909399;
-  font-size: 14px;
-  margin-left: 10px;
-}
-
-:deep(.transparent-table) {
-  background: white;
-  border: none;
-}
-
-:deep(.transparent-table .el-table__header th) {
-  background: white !important;
-  color: black;
-  border-right: none !important;
-}
-
-:deep(.transparent-table .el-table__body tr td) {
-  border-top: 1px solid rgba(0, 0, 0, 0.04);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
-  border-right: none !important;
-}
-
-:deep(.transparent-table .el-table__header tr th:first-child .cell),
-:deep(.transparent-table .el-table__body tr td:first-child .cell) {
-  padding-left: 10px;
-}
-
-:deep(.el-icon-edit) {
-  color: #7079aa;
-  cursor: pointer;
-}
-
-:deep(.el-icon-edit:hover) {
-  color: #5a64b5;
-}
-
-:deep(.custom-selection-header .el-checkbox) {
-  display: none !important;
-}
-
-
-:deep(.el-table .el-button--text) {
-  color: #7079aa;
-}
-
-:deep(.el-table .el-button--text:hover) {
-  color: #5a64b5;
-}
-
-:deep(.transparent-table) {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  /* max-height: calc(100vh - 40vh); */
-}
-
-:deep(.el-table__body-wrapper) {
-  flex: 1;
-  overflow-y: auto;
-  max-height: none !important;
-}
-
-:deep(.el-table__header-wrapper) {
-  flex-shrink: 0;
-}
-
-@media (min-width: 1144px) {
-  .table_bottom {
-    margin-top: 40px;
-  }
-
-  :deep(.transparent-table) .el-table__body tr td {
-    padding-top: 16px;
-    padding-bottom: 16px;
-  }
-}
-
-:deep(.el-checkbox__inner) {
-  background-color: #ffffff !important;
-  border-color: #cccccc !important;
-}
-
-:deep(.el-checkbox__inner:hover) {
-  border-color: #cccccc !important;
-}
-
-:deep(.el-checkbox__input.is-checked .el-checkbox__inner) {
-  background-color: #5f70f3 !important;
-  border-color: #5f70f3 !important;
-}
-
-::v-deep .el-table--border::after,
-::v-deep .el-table--group::after,
-::v-deep .el-table::before {
-  display: none !important;
-}
+/* --- Unique styles for DeviceManagement --- */
+.device-name-text { color: $accent-cyan; font-weight: bold; }
+</style>

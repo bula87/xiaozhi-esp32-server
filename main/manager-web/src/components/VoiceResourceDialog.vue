@@ -91,7 +91,7 @@
 import Api from "@/apis/api";
 
 export default {
-  name: "VoiceCloneDialog",
+  name: "VoiceResourceDialog",
   props: {
     visible: {
       type: Boolean,

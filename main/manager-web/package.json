@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
+    "serve:debug": "cross-env VUE_APP_DEBUG_SKIP_LOGIN=true vue-cli-service serve",
     "build": "vue-cli-service build",
     "analyze": "cross-env ANALYZE=true vue-cli-service build"
   },

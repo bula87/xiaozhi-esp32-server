@@ -1,0 +1,190 @@
+// Element UI popups / portaled surfaces (attach to body)
+@import "./aurora-theme.scss";
+
+.el-dialog {
+  background: $bg-panel !important;
+  border: 1px solid $border-color !important;
+  box-shadow: $aurora-shadow-lg !important;
+}
+
+.el-dialog__header {
+  border-bottom: 1px solid $border-color !important;
+  padding: 14px 18px !important;
+}
+
+.el-dialog__title {
+  color: $text-main !important;
+  font-family: $font-mono !important;
+  font-size: 15px !important;
+}
+
+.el-dialog__body {
+  color: $aurora-text-secondary !important;
+}
+
+.el-dialog__footer {
+  border-top: 1px solid $border-color !important;
+}
+
+.el-message-box {
+  background: $bg-panel !important;
+  border: 1px solid $border-color !important;
+}
+
+.el-message-box__title {
+  color: $text-main !important;
+  font-family: $font-mono !important;
+}
+
+.el-message-box__content {
+  color: $aurora-text-secondary !important;
+}
+
+.el-message-box__message {
+  color: $aurora-text-secondary !important;
+}
+
+.el-message {
+  background: $bg-panel !important;
+  border: 1px solid $border-color !important;
+  color: $text-main !important;
+  box-shadow: $aurora-shadow-lg !important;
+}
+
+.el-message--success,
+.el-message--warning,
+.el-message--error,
+.el-message--info {
+  background: $bg-panel !important;
+  border-color: $border-color !important;
+}
+
+.el-message__content {
+  color: $text-main !important;
+}
+
+.el-dropdown-menu {
+  background: $bg-panel !important;
+  border: 1px solid $border-color !important;
+}
+
+.el-dropdown-menu__item {
+  color: $aurora-text-secondary !important;
+}
+
+.el-dropdown-menu__item:focus,
+.el-dropdown-menu__item:not(.is-disabled):hover {
+  background: $bg-panel-hover !important;
+  color: $accent-cyan !important;
+}
+
+.el-select-dropdown {
+  background: $bg-panel !important;
+  border: 1px solid $border-color !important;
+}
+
+.el-select-dropdown__item {
+  color: $aurora-text-secondary !important;
+}
+
+.el-select-dropdown__item.hover,
+.el-select-dropdown__item:hover {
+  background: $bg-panel-hover !important;
+}
+
+.el-select-dropdown__item.selected {
+  color: $accent-cyan !important;
+  font-weight: 600;
+}
+
+.el-popper[x-placement^="bottom"] .popper__arrow::after {
+  border-bottom-color: $bg-panel !important;
+}
+
+.el-popper[x-placement^="top"] .popper__arrow::after {
+  border-top-color: $bg-panel !important;
+}
+
+.el-tooltip__popper.is-dark {
+  background: $bg-panel !important;
+  border: 1px solid $border-color !important;
+  color: $text-main !important;
+}
+
+.el-picker-panel,
+.el-date-picker,
+.el-time-panel {
+  background: $bg-panel !important;
+  border: 1px solid $border-color !important;
+  color: $text-main !important;
+}
+
+.el-picker-panel__icon-btn,
+.el-date-table th,
+.el-date-table td.available {
+  color: $aurora-text-secondary !important;
+}
+
+.el-notification {
+  background: $bg-panel !important;
+  border: 1px solid $border-color !important;
+}
+
+.el-notification__title {
+  color: $text-main !important;
+}
+
+.el-notification__content {
+  color: $aurora-text-secondary !important;
+}
+
+.el-dialog .el-input__inner,
+.el-dialog .el-textarea__inner {
+  background-color: $bg-panel !important;
+  border-color: $border-color !important;
+  color: $text-main !important;
+  border-radius: 8px !important;
+}
+
+.el-dialog .el-input__inner:focus,
+.el-dialog .el-textarea__inner:focus {
+  border-color: var(--ui-focus-border) !important;
+  box-shadow: var(--ui-focus-shadow);
+}
+
+.el-dialog .el-input__inner::placeholder,
+.el-dialog .el-textarea__inner::placeholder {
+  color: $text-muted !important;
+}
+
+.el-dialog .el-form-item__label {
+  color: $aurora-text-secondary !important;
+}
+
+.el-dialog .el-button--default {
+  background: $bg-panel-hover !important;
+  border-color: $border-color !important;
+  color: $aurora-text-secondary !important;
+}
+
+.el-dialog .el-button--default:hover,
+.el-dialog .el-button--default:focus {
+  border-color: var(--ui-focus-border) !important;
+  color: $accent-cyan !important;
+}
+
+.el-dialog .el-button--primary {
+  background: var(--ui-btn-primary-bg) !important;
+  border: none !important;
+  color: var(--ui-btn-primary-text) !important;
+  font-weight: 600;
+}
+
+.el-dialog .el-button--primary:hover,
+.el-dialog .el-button--primary:focus {
+  filter: brightness(1.08);
+}
+
+.el-dialog .el-button--text {
+  color: $accent-purple !important;
+}

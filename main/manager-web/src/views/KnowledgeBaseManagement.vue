@@ -218,6 +218,7 @@ import VersionFooter from "@/components/VersionFooter.vue";
 import KnowledgeBaseDialog from "@/components/KnowledgeBaseDialog.vue";
 
 export default {
+  name: "KnowledgeBaseManagement",
   components: { HeaderBar, VersionFooter, KnowledgeBaseDialog },
   data() {
     return {
@@ -661,45 +662,6 @@ export default {
   -webkit-background-size: cover;
   -o-background-size: cover;
   overflow: hidden;
-}
-
-.main-wrapper {
-  // Top 63px Bottom 35px Query 72px
-  height: calc(100vh - 63px - 35px - 72px);
-  margin: 0 22px;
-  border-radius: 15px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
-  position: relative;
-  background: rgba(237, 242, 255, 0.5);
-  display: flex;
-  flex-direction: column;
-}
-.operation-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px 24px;
-}
-
-.page-title {
-  font-size: 24px;
-  margin: 0;
-}
-
-.right-operations {
-  display: flex;
-  gap: 10px;
-  margin-left: auto;
-}
-
-.search-input {
-  width: 240px;
-}
-
-.btn-search {
-  background: linear-gradient(135deg, #6b8cff, #a966ff);
-  border: none;
-  color: white;
 }
 
 .content-panel {

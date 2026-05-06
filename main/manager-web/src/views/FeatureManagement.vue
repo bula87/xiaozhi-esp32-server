@@ -1,624 +1,293 @@
 <template>
-  <div class="welcome">
-    <HeaderBar />
-
+  <div class="page-container">
     <div class="operation-bar">
       <h2 class="page-title">{{ $t("header.featureManagement") }}</h2>
-      <div class="config-header">
-        <div class="header-icon">
-          <img loading="lazy" src="@/assets/home/equipment.png" alt="" />
-        </div>
-        <div class="header-actions">
-          <el-button
-            @click="!isSaving && toggleSelectAll()"
-            class="btn-select-all"
-            :disabled="isSaving"
-          >
-            {{
-              isAllSelected
-                ? $t("featureManagement.deselectAll")
-                : $t("featureManagement.selectAll")
-            }}
-          </el-button>
-          <el-button
-            type="primary"
-            class="save-btn"
-            @click="handleSave"
-            :disabled="isSaving"
-          >
-            {{
-              isSaving
-                ? $t("featureManagement.saving")
-                : $t("featureManagement.save")
-            }}
-          </el-button>
-          <el-button
-            class="reset-btn"
-            @click="handleReset"
-            :disabled="isSaving"
-          >
-            {{ $t("featureManagement.reset") }}
-          </el-button>
-        </div>
+      <div class="right-operations">
+        <el-button
+          @click="!isSaving && toggleSelectAll()"
+          class="btn-select-all"
+          size="mini"
+          :disabled="isSaving"
+        >
+          {{ isAllSelected ? $t("featureManagement.deselectAll") : $t("featureManagement.selectAll") }}
+        </el-button>
+        <el-button
+          type="success"
+          class="save-btn"
+          size="mini"
+          @click="handleSave"
+          :disabled="isSaving"
+        >
+          {{ isSaving ? $t("featureManagement.saving") : $t("featureManagement.save") }}
+        </el-button>
+        <el-button
+          class="reset-btn"
+          size="mini"
+          @click="handleReset"
+          :disabled="isSaving"
+        >
+          {{ $t("featureManagement.reset") }}
+        </el-button>
       </div>
-      <div class="divider"></div>
     </div>
 
     <div class="main-wrapper">
       <div class="content-panel">
         <div class="content-area">
           <el-card class="feature-card" shadow="never">
-            <div class="config-header">
-              <div class="header-icon">
-                <img loading="lazy" src="@/assets/home/equipment.png" alt="" />
-              </div>
-              <div class="header-actions">
-                <el-button
-                  @click="!isSaving && toggleSelectAll()"
-                  class="btn-select-all"
-                  :disabled="isSaving"
-                >
-                  {{
-                    isAllSelected
-                      ? $t("featureManagement.deselectAll")
-                      : $t("featureManagement.selectAll")
-                  }}
-                </el-button>
-                <el-button
-                  type="primary"
-                  class="save-btn"
-                  @click="handleSave"
-                  :disabled="isSaving"
-                >
-                  {{
-                    isSaving
-                      ? $t("featureManagement.saving")
-                      : $t("featureManagement.save")
-                  }}
-                </el-button>
-                <el-button
-                  class="reset-btn"
-                  @click="handleReset"
-                  :disabled="isSaving"
-                >
-                  {{ $t("featureManagement.reset") }}
-                </el-button>
-              </div>
-            </div>
-            <div class="divider"></div>
-
-            <!-- Feature Group Container - Left Right Layout -->
+            
             <div class="feature-groups-container">
-              <!-- Feature Management Group -->
-              <div
-                v-if="featureManagementFeatures.length > 0"
-                class="feature-group"
-              >
+              <div v-if="featureManagementFeatures.length > 0" class="feature-group">
                 <h3 class="group-title">
-                  {{ $t("featureManagement.group.featureManagement") }}
+                  <i class="el-icon-cpu"></i> {{ $t("featureManagement.group.featureManagement") }}
                 </h3>
                 <div class="features-grid">
                   <div
                     v-for="feature in featureManagementFeatures"
                     :key="feature.id"
                     class="feature-card-item"
-                    :class="{
-                      'feature-enabled': feature.enabled,
-                      'feature-disabled': isSaving,
-                    }"
+                    :class="{ 'feature-enabled': feature.enabled, 'is-loading': isSaving }"
                     @click="!isSaving && toggleFeature(feature)"
                   >
                     <div class="feature-header">
-                      <h3 class="feature-name">
-                        {{ $t(`feature.${feature.id}.name`) }}
-                      </h3>
-                      <el-checkbox
+                      <h3 class="feature-name">{{ $t(`feature.${feature.id}.name`) }}</h3>
+                      <el-switch
                         v-model="feature.enabled"
-                        @change="!isSaving && toggleFeature(feature)"
-                        class="feature-checkbox"
+                        class="aurora-switch"
                         :disabled="isSaving"
+                        @click.native.stop
+                        @change="toggleFeature(feature)"
                       />
                     </div>
-                    <p class="feature-description">
-                      {{ $t(`feature.${feature.id}.description`) }}
-                    </p>
+                    <p class="feature-description">{{ $t(`feature.${feature.id}.description`) }}</p>
                   </div>
                 </div>
               </div>
 
-              <!-- Voice Management Group -->
-              <div
-                v-if="voiceManagementFeatures.length > 0"
-                class="feature-group"
-              >
+              <div v-if="voiceManagementFeatures.length > 0" class="feature-group">
                 <h3 class="group-title">
-                  {{ $t("featureManagement.group.voiceManagement") }}
+                  <i class="el-icon-microphone"></i> {{ $t("featureManagement.group.voiceManagement") }}
                 </h3>
                 <div class="features-grid">
                   <div
                     v-for="feature in voiceManagementFeatures"
                     :key="feature.id"
                     class="feature-card-item"
-                    :class="{
-                      'feature-enabled': feature.enabled,
-                      'feature-disabled': isSaving,
-                    }"
+                    :class="{ 'feature-enabled': feature.enabled, 'is-loading': isSaving }"
                     @click="!isSaving && toggleFeature(feature)"
                   >
                     <div class="feature-header">
-                      <h3 class="feature-name">
-                        {{ $t(`feature.${feature.id}.name`) }}
-                      </h3>
-                      <el-checkbox
+                      <h3 class="feature-name">{{ $t(`feature.${feature.id}.name`) }}</h3>
+                      <el-switch
                         v-model="feature.enabled"
-                        @change="!isSaving && toggleFeature(feature)"
-                        class="feature-checkbox"
+                        class="aurora-switch"
                         :disabled="isSaving"
+                        @click.native.stop
+                        @change="toggleFeature(feature)"
                       />
                     </div>
-                    <p class="feature-description">
-                      {{ $t(`feature.${feature.id}.description`) }}
-                    </p>
+                    <p class="feature-description">{{ $t(`feature.${feature.id}.description`) }}</p>
                   </div>
                 </div>
               </div>
+            </div>
 
-              <div v-if="filteredFeatures.length === 0" class="empty-state">
-                <el-empty :description="$t('featureManagement.noFeatures')">
-                  <p class="empty-tip">
-                    {{ $t("featureManagement.contactAdmin") }}
-                  </p>
-                </el-empty>
-              </div>
+            <div v-if="filteredFeatures.length === 0" class="empty-state">
+              <el-empty :description="$t('featureManagement.noFeatures')" />
             </div>
           </el-card>
         </div>
       </div>
     </div>
 
-    <el-footer>
+    <div class="footer-container">
       <VersionFooter />
-    </el-footer>
+    </div>
   </div>
 </template>
 
 <script>
-import HeaderBar from "@/components/HeaderBar.vue";
 import VersionFooter from "@/components/VersionFooter.vue";
 import featureManager from "@/utils/featureManager.js";
 
 export default {
   name: "FeatureManagement",
-  components: {
-    HeaderBar,
-    VersionFooter,
-  },
+  components: { VersionFooter },
   data() {
     return {
       pendingChanges: false,
       featureManagementFeatures: [],
       voiceManagementFeatures: [],
-      isSaving: false, // Add save status lock
+      isSaving: false,
     };
   },
   computed: {
-    // All features list
     filteredFeatures() {
-      return [
-        ...this.featureManagementFeatures,
-        ...this.voiceManagementFeatures,
-      ];
+      return [...this.featureManagementFeatures, ...this.voiceManagementFeatures];
     },
-
-    // Determine if all features are selected
     isAllSelected() {
-      const allFeatures = [
-        ...this.featureManagementFeatures,
-        ...this.voiceManagementFeatures,
-      ];
-      return (
-        allFeatures.length > 0 &&
-        allFeatures.every((feature) => feature.enabled)
-      );
+      const all = this.filteredFeatures;
+      return all.length > 0 && all.every((f) => f.enabled);
     },
   },
   async created() {
-    // Wait for the feature configuration manager to initialize
     try {
       await featureManager.waitForInitialization();
       await this.loadFeatures();
       this.setupConfigChangeListener();
-    } catch (error) {
-      console.error(
-        "Feature configuration manager initialization wait failed:",
-        error,
-      );
+    } catch (e) {
       await this.loadFeatures();
-      this.setupConfigChangeListener();
     }
   },
-
   beforeDestroy() {
     this.removeConfigChangeListener();
   },
-
   methods: {
-    // Get features by ID list
-    async getFeaturesByIds(featureIds) {
-      try {
-        const featureConfig = await featureManager.getAllFeatures();
-        const result = featureIds.map((id) => {
-          const feature = featureConfig[id];
-          return {
-            id: id,
-            name: this.$t(`feature.${id}.name`),
-            description: this.$t(`feature.${id}.description`),
-            enabled: feature?.enabled || false,
-          };
-        });
-
-        return result;
-      } catch (error) {
-        console.error("Failed to get feature configuration:", error);
-        // If fetching fails, return default configuration
-        return featureIds.map((id) => ({
-          id: id,
-          name: this.$t(`feature.${id}.name`),
-          description: this.$t(`feature.${id}.description`),
-          enabled: false,
-        }));
-      }
+    async getFeaturesByIds(ids) {
+      const config = await featureManager.getAllFeatures();
+      return ids.map(id => ({
+        id,
+        enabled: config[id]?.enabled || false
+      }));
     },
-
-    // Load feature configuration
     async loadFeatures() {
-      // Save current user's selection state
-      const currentFeatureStates = {};
-      const allCurrentFeatures = [
-        ...this.featureManagementFeatures,
-        ...this.voiceManagementFeatures,
-      ];
-      allCurrentFeatures.forEach((feature) => {
-        currentFeatureStates[feature.id] = feature.enabled;
-      });
-
-      // Reload configuration
       this.featureManagementFeatures = await this.getFeaturesByIds([
-        "voiceprintRecognition",
-        "voiceClone",
-        "knowledgeBase",
-        "mcpAccessPoint",
+        "voiceprintRecognition", "voiceClone", "knowledgeBase", "mcpAccessPoint"
       ]);
-      this.voiceManagementFeatures = await this.getFeaturesByIds([
-        "vad",
-        "asr",
-      ]);
-
-      // Restore the user's selection state (if it exists)
-      const allFeatures = [
-        ...this.featureManagementFeatures,
-        ...this.voiceManagementFeatures,
-      ];
-      allFeatures.forEach((feature) => {
-        if (currentFeatureStates.hasOwnProperty(feature.id)) {
-          feature.enabled = currentFeatureStates[feature.id];
-        }
-      });
+      this.voiceManagementFeatures = await this.getFeaturesByIds(["vad", "asr"]);
     },
-    // Toggle feature state
-    async toggleFeature(feature) {
-      if (this.isSaving) {
-        return;
-      }
-
+    toggleFeature(feature) {
+      if (this.isSaving) return;
       feature.enabled = !feature.enabled;
       this.pendingChanges = true;
     },
-    // Save configuration
     async handleSave() {
-      if (!this.pendingChanges) {
-        this.$message.info({
-          message: this.$t("featureManagement.noChanges"),
-          showClose: true,
-        });
-        return;
-      }
-
-      // Set saving status, lock interface
+      if (!this.pendingChanges) return this.$message.info(this.$t("featureManagement.noChanges"));
       this.isSaving = true;
-
       try {
-        // Get the status of all current features and save
-        const featureUpdates = {};
-        const allFeatures = [
-          ...this.featureManagementFeatures,
-          ...this.voiceManagementFeatures,
-        ];
-        allFeatures.forEach((feature) => {
-          featureUpdates[feature.id] = feature.enabled;
-        });
-        await featureManager.updateFeatures(featureUpdates);
-
+        const updates = {};
+        this.filteredFeatures.forEach(f => updates[f.id] = f.enabled);
+        await featureManager.updateFeatures(updates);
         this.pendingChanges = false;
-        this.$message.success({
-          message: this.$t("featureManagement.saveSuccess"),
-          showClose: true,
-        });
-
-        setTimeout(() => {
-          this.loadFeatures();
-        }, 1000);
-      } catch (error) {
-        console.error("Save configuration failed:", error);
-        this.$message.error({
-          message: this.$t("featureManagement.saveError"),
-          showClose: true,
-        });
+        this.$message.success(this.$t("featureManagement.saveSuccess"));
+        setTimeout(() => this.loadFeatures(), 500);
+      } catch (e) {
+        this.$message.error(this.$t("featureManagement.saveError"));
       } finally {
-        // Release save state lock regardless of success or failure
         this.isSaving = false;
       }
     },
-    // Set configuration change listener
     setupConfigChangeListener() {
-      this.configChangeHandler = () => {
-        this.loadFeatures();
-      };
-      window.addEventListener(
-        "featureConfigReloaded",
-        this.configChangeHandler,
-      );
+      this.configChangeHandler = () => this.loadFeatures();
+      window.addEventListener("featureConfigReloaded", this.configChangeHandler);
     },
-
-    // Remove configuration change listener
     removeConfigChangeListener() {
-      if (this.configChangeHandler) {
-        window.removeEventListener(
-          "featureConfigReloaded",
-          this.configChangeHandler,
-        );
-      }
+      window.removeEventListener("featureConfigReloaded", this.configChangeHandler);
     },
-
-    // Reset configuration
     async handleReset() {
-      try {
-        await this.$confirm(
-          this.$t("featureManagement.resetConfirm"),
-          this.$t("featureManagement.reset"),
-          {
-            confirmButtonText: this.$t("featureManagement.confirm"),
-            cancelButtonText: this.$t("featureManagement.cancel"),
-            type: "warning",
-          },
-        );
-
+      this.$confirm(this.$t("featureManagement.resetConfirm"), "Reset", { type: 'warning' }).then(() => {
         featureManager.resetToDefault();
         this.loadFeatures();
         this.pendingChanges = false;
-
-        this.$message.success({
-          message: this.$t("featureManagement.resetSuccess"),
-          showClose: true,
-        });
-
-        setTimeout(() => {
-          this.loadFeatures();
-          this.$router.go(0);
-        }, 1000);
-      } catch (error) {
-        // User cancels operation
-      }
-    },
-    // Search function (reserved interface)
-    handleSearch() {
-      // Search function pending implementation
-    },
-    // Select all/Deselect all
-    toggleSelectAll() {
-      // If saving, prevent operation
-      if (this.isSaving) {
-        return;
-      }
-
-      const allFeatures = [
-        ...this.featureManagementFeatures,
-        ...this.voiceManagementFeatures,
-      ];
-      const newStatus = !this.isAllSelected;
-
-      allFeatures.forEach((feature) => {
-        feature.enabled = newStatus;
       });
-
-      this.pendingChanges = true;
     },
-  },
+    toggleSelectAll() {
+      if (this.isSaving) return;
+      const target = !this.isAllSelected;
+      this.filteredFeatures.forEach(f => f.enabled = target);
+      this.pendingChanges = true;
+    }
+  }
 };
 </script>
 
-<style scoped>
-.welcome {
-  min-width: 900px;
-  min-height: 506px;
-  height: 100vh;
+<style lang="scss" scoped>
+@import "../styles/aurora-theme.scss";
+
+/* --- 0. PAGE CONTAINER --- */
+.page-container {
   display: flex;
-  position: relative;
   flex-direction: column;
-  background-size: cover;
-  background: linear-gradient(to bottom right, #dce8ff, #e4eeff, #e6cbfd) center;
-  -webkit-background-size: cover;
-  -o-background-size: cover;
+  height: 100%;
+}
+
+.content-panel, .content-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
 }
 
-.operation-bar {
+/* --- 2. MODULE CARD STYLING --- */
+.feature-card {
+  background: transparent !important;
+  border: none !important;
+  flex: 1;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px 24px;
+  flex-direction: column;
+
+  :deep(.el-card__body) {
+    padding: 24px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto; /* Internal scroll only */
+  }
 }
 
-.page-title {
-  font-size: 24px;
-  margin: 0;
-}
-
-.config-header {
+.feature-groups-container {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 0 16px 0;
+  flex-direction: column;
+  gap: 32px;
 }
 
-.header-icon {
-  width: 40px;
-  height: 40px;
-  background: #5778ff;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-right: 12px;
-}
-
-.header-icon img {
-  width: 20px;
-  height: 20px;
-}
-
-.header-actions {
+.group-title {
+  font-size: 16px;
+  font-family: $font-mono;
+  color: $text-muted;
+  margin-bottom: 16px;
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-left: auto;
-}
-
-.divider {
-  height: 1px;
-  background: #e0e0e0;
-  margin-bottom: 20px;
-}
-
-.btn-select-all {
-  background: #e6ebff;
-  color: #5778ff;
-  border: 1px solid #adbdff;
-  border-radius: 18px;
-  padding: 8px 16px;
-  height: 32px;
-  font-size: 14px;
-}
-
-.btn-select-all:hover {
-  background: #d0d8ff;
-}
-
-.save-btn {
-  background: #5778ff;
-  color: white;
-  border: none;
-  border-radius: 18px;
-  padding: 8px 16px;
-  height: 32px;
-  font-size: 14px;
-}
-
-.save-btn:hover {
-  background: #4a6ae8;
-}
-
-.reset-btn {
-  background: #e6ebff;
-  color: #5778ff;
-  border: 1px solid #adbdff;
-  border-radius: 18px;
-  padding: 8px 16px;
-  height: 32px;
-}
-
-.reset-btn:hover {
-  background: #d0d8ff;
-}
-
-.main-wrapper {
-  height: calc(100vh - 63px - 35px - 58px);
-  margin: 0 22px;
-  border-radius: 15px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
-  position: relative;
-  background: rgba(237, 242, 255, 0.5);
-  display: flex;
-  flex-direction: column;
-}
-
-.content-panel {
-  flex: 1;
-  display: flex;
-  overflow: hidden;
-  height: 100%;
-  border-radius: 15px;
-  background: transparent;
-  border: 1px solid #fff;
-}
-
-.content-area {
-  flex: 1;
-  height: 100%;
-  min-width: 600px;
-  overflow: auto;
-  background-color: white;
-  display: flex;
-  flex-direction: column;
-}
-
-.feature-card {
-  background: white;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  border: none;
-  box-shadow: none;
-  overflow: hidden;
-}
-
-.feature-card ::v-deep .el-card__body {
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  overflow: hidden;
+  
+  i { color: $accent-cyan; }
 }
 
 .features-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 16px;
 }
 
+/* --- 3. FEATURE ITEM (TILE) STYLING --- */
 .feature-card-item {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid $border-color;
+  border-radius: 8px;
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.25s ease;
   display: flex;
   flex-direction: column;
-  padding: 20px;
-  border-radius: 12px;
-  border: 2px solid #e0e0e0;
-  background-color: white;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  user-select: none;
   position: relative;
-}
 
-.feature-card-item:hover {
-  border-color: #869bf0;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  transform: translateY(-2px);
-}
+  &:hover {
+    border-color: rgba(0, 240, 255, 0.4);
+    background: rgba(0, 240, 255, 0.02);
+  }
 
-.feature-card-item.feature-enabled {
-  border-color: #5778ff;
-  box-shadow: 0 4px 16px rgba(95, 112, 243, 0.2);
-  transform: translateY(-2px);
+  &.feature-enabled {
+    border-color: $accent-cyan;
+    box-shadow: 0 0 15px rgba(0, 240, 255, 0.15);
+    background: rgba(0, 240, 255, 0.05);
+
+    .feature-name { color: $accent-cyan; }
+  }
+
+  &.is-loading {
+    opacity: 0.6;
+    pointer-events: none;
+  }
 }
 
 .feature-header {
@@ -628,81 +297,40 @@ export default {
   margin-bottom: 12px;
 }
 
-.feature-checkbox ::v-deep .el-checkbox__input {
-  transform: scale(1.2);
-}
-
-.feature-checkbox ::v-deep .el-checkbox__input.is-checked .el-checkbox__inner {
-  background-color: #5778ff;
-  border-color: #5778ff;
-}
-
-.feature-checkbox
-  ::v-deep
-  .el-checkbox__input.is-checked
-  + .el-checkbox__label {
-  color: #5778ff;
-}
-
 .feature-name {
-  font-size: 18px;
-  font-weight: 600;
-  color: #333;
+  font-size: 16px;
+  font-weight: bold;
+  color: $text-main;
   margin: 0;
-  transition: color 0.3s ease;
+  font-family: $font-mono;
 }
 
 .feature-description {
-  font-size: 14px;
-  line-height: 1.6;
-  color: #666;
-  margin: 0 0 12px 0;
-  transition: color 0.3s ease;
-  text-align: left;
+  font-size: 13px;
+  color: $text-muted;
+  line-height: 1.5;
+  margin: 0;
 }
 
-/* Feature group container - left right layout */
-.feature-groups-container {
-  display: flex;
-  gap: 32px;
-  align-items: flex-start;
-  position: relative;
+/* --- 4. UI ELEMENTS --- */
+.btn-select-all, .reset-btn {
+  background: $bg-panel-hover !important;
+  border: 1px solid $border-color !important;
+  color: $text-main !important;
+  border-radius: 4px;
 }
 
-/* Separator line between groups */
-.feature-groups-container::before {
-  content: "";
-  position: absolute;
-  left: 50%;
-  top: 0;
-  bottom: 0;
-  width: 1px;
-  height: 550px;
-  background: #e0e0e0;
-  opacity: 0.5;
-  transform: translateX(-50%);
+.save-btn {
+  border-radius: 4px;
+  font-weight: bold;
 }
 
-/* Group styles */
-.feature-group {
-  flex: 1;
-  min-width: 0;
-  margin-bottom: 32px;
-}
+.footer-container { padding: 10px 0; }
 
-.group-title {
-  font-size: 18px;
-  font-weight: 600;
-  color: #303133;
-  margin-bottom: 12px;
-  padding-left: 12px;
-  border-left: 4px solid #5f70f3;
-  text-align: left;
-}
-
-.features-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 16px;
+/* Scrollbar styling for the dark theme */
+:deep(.el-card__body)::-webkit-scrollbar { width: 6px; }
+:deep(.el-card__body)::-webkit-scrollbar-thumb {
+  background: $border-color;
+  border-radius: 10px;
 }
 </style>

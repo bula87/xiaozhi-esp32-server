@@ -28,6 +28,32 @@ export default {
   'header.logout': 'Abmelden',
   'header.searchPlaceholder': 'Name, Tag oder Mac-Suche',
 
+  // Aurora-Seitenleiste
+  'sidebar.smartManagement': 'Agenten',
+  'sidebar.dashboard': 'Dashboard',
+  'sidebar.roleConfig': 'Rollenkonfiguration',
+  'sidebar.deviceManagement': 'Geräteverwaltung',
+  'sidebar.voiceClone': 'Stimmenklon',
+  'sidebar.knowledgeBase': 'Wissensdatenbank',
+  'sidebar.administration': 'Administration',
+  'sidebar.paramManagement': 'Parameterverwaltung',
+  'sidebar.userManagement': 'Benutzerverwaltung',
+  'sidebar.providerManagement': 'Anbieterverwaltung',
+  'sidebar.otaManagement': 'OTA-Verwaltung',
+  'sidebar.featureManagement': 'Funktionsverwaltung',
+  'sidebar.models': 'Modelle',
+  'sidebar.settings': 'Einstellungen',
+
+  'dashboard.agents': 'Agenten',
+  'dashboard.users': 'Benutzer',
+  'dashboard.models': 'Modelleinträge',
+  'dashboard.params': 'Parameter',
+
+  'settingsHub.title': 'Einstellungen',
+  'settingsHub.language': 'Sprache',
+  'settingsHub.appearance': 'Darstellung',
+  'settingsHub.account': 'Konto',
+
   // McpToolCallDialog component text
   'mcpToolCall.title': 'Werkzeugaufruf',
   'mcpToolCall.execute': 'Ausführen',
@@ -705,6 +731,12 @@ export default {
   'common.sensitive': 'Sensibel',
   'common.loading': 'Lädt',
 
+  // UI theme
+  'theme.appearance': 'Design',
+  'theme.dark': 'Cyber Dunkel',
+  'theme.light': 'Konsole Hell',
+  'theme.applied': 'Design aktualisiert',
+
   // Language switch
   'language.zhCN': '中文简体',
   'language.zhTW': '中文繁體',
@@ -905,6 +937,8 @@ export default {
   // Model Configuration Page Text
   'modelConfig.searchPlaceholder': 'Bitte Modellnamen zur Suche eingeben',
   'modelConfig.search': 'Suchen',
+  'modelConfig.overview': 'Modellübersicht',
+  'modelConfig.overviewLead': 'Standardmodell je Kategorie. Zeile anklicken, um die Konfiguration zu öffnen.',
   'modelConfig.vad': 'Sprachaktivitätserkennung',
   'modelConfig.asr': 'Spracherkennung',
   'modelConfig.llm': 'Großes Sprachmodell',

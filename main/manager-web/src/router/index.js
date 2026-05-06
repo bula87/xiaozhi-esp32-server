@@ -1,247 +1,197 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import { isDebugSkipLoginEnabled } from '@/utils/debug'
+import AuroraLayout from '@/components/AuroraLayout.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
-	{
-    path: '/',
-    name: 'welcome',
-		component: function () {
-      return import('../views/login.vue')
-    }
-	},
-	{
-    path: '/role-config',
-    name: 'RoleConfig',
-		component: function () {
-      return import('../views/roleConfig.vue')
-    }
-	},
-	{
-    path: '/voice-print',
-    name: 'VoicePrint',
-		component: function () {
-      return import('../views/VoicePrint.vue')
-    }
-	},
-	{
+  // --- PUBLIC ROUTES (No Layout) ---
+  {
     path: '/login',
-    name: 'login',
-		component: function () {
-      return import('../views/login.vue')
-    }
-	},
-	{
-    path: '/home',
-    name: 'home',
-		component: function () {
-      return import('../views/home.vue')
-    }
-	},
-	{
+    name: 'Login',
+    component: () => import('../views/Login.vue')
+  },
+  {
     path: '/register',
     name: 'Register',
-		component: function () {
-      return import('../views/register.vue')
-    }
-	},
-	{
+    component: () => import('../views/Register.vue')
+  },
+  {
     path: '/retrieve-password',
     name: 'RetrievePassword',
-		component: function () {
-      return import('../views/retrievePassword.vue')
-    }
-	},
-	// Device Management Page Route
-	{
-    path: '/device-management',
-    name: 'DeviceManagement',
-		component: function () {
-      return import('../views/DeviceManagement.vue')
-    }
-	},
-	// Add User Management Route
-	{
-    path: '/user-management',
-    name: 'UserManagement',
-		component: function () {
-      return import('../views/UserManagement.vue')
-    }
-	},
-	{
-    path: '/model-config',
-    name: 'ModelConfig',
-		component: function () {
-      return import('../views/ModelConfig.vue')
-    }
-	},
-	{
-    path: '/params-management',
-    name: 'ParamsManagement',
-		component: function () {
-      return import('../views/ParamsManagement.vue')
-		},
-		meta: {
-			requiresAuth: true,
-			title: "Parameter Management",
-		},
-	},
-	{
-    path: '/knowledge-base-management',
-    name: 'KnowledgeBaseManagement',
-		component: function () {
-      return import('../views/KnowledgeBaseManagement.vue')
-		},
-		meta: {
-			requiresAuth: true,
-			title: "Knowledge Base Management",
-		},
-	},
-	{
-    path: '/knowledge-file-upload',
-    name: 'KnowledgeFileUpload',
-		component: function () {
-      return import('../views/KnowledgeFileUpload.vue')
-		},
-		meta: {
-			requiresAuth: true,
-			title: "Document Upload Management",
-		},
-	},
-	{
-    path: '/server-side-management',
-    name: 'ServerSideManager',
-		component: function () {
-      return import('../views/ServerSideManager.vue')
-		},
-		meta: {
-			requiresAuth: true,
-			title: "Server Management",
-		},
-	},
-	{
-    path: '/ota-management',
-    name: 'OtaManagement',
-		component: function () {
-      return import('../views/OtaManagement.vue')
-		},
-		meta: {
-			requiresAuth: true,
-			title: "OTA Management",
-		},
-	},
-	{
-    path: '/voice-resource-management',
-    name: 'VoiceResourceManagement',
-		component: function () {
-      return import('../views/VoiceResourceManagement.vue')
-		},
-		meta: {
-			requiresAuth: true,
-			title: "Voice Resource Activation",
-		},
-	},
-	{
-		path: "/voice-clone-management",
-		name: "VoiceCloneManagement",
-		component: function () {
-			return import("../views/VoiceCloneManagement.vue");
-		},
-		meta: {
-			requiresAuth: true,
-			title: "Voice Clone Management",
-		},
-	},
-	{
-		path: "/dict-management",
-		name: "DictManagement",
-		component: function () {
-			return import("../views/DictManagement.vue");
-		},
-	},
-	{
-		path: "/provider-management",
-		name: "ProviderManagement",
-		component: function () {
-			return import("../views/ProviderManagement.vue");
-		},
-	},
-	// Add default role management route
-	{
-		path: "/agent-template-management",
-		name: "AgentTemplateManagement",
-		component: function () {
-			return import("../views/AgentTemplateManagement.vue");
-		},
-	},
-	// Add template quick configuration route
-	{
-		path: "/template-quick-config",
-		name: "TemplateQuickConfig",
-		component: function () {
-			return import("../views/TemplateQuickConfig.vue");
-		},
-	},
-	// Feature configuration page route
-	{
-		path: "/feature-management",
-		name: "FeatureManagement",
-		component: function () {
-			return import("../views/FeatureManagement.vue");
-		},
-		meta: {
-			requiresAuth: true,
-			title: "Feature Configuration",
-		},
-	},
-	// Replacement word management
-	{
-		path: "/replacement-word-management",
-		name: "ReplacementWordManagement",
-		component: function () {
-			return import("../views/ReplacementWordManagement.vue");
-		},
-		meta: {
-			requiresAuth: true,
-			title: "Replacement word management",
-		},
-	},
+    component: () => import('../views/RetrievePassword.vue')
+  },
+
+  // --- PROTECTED ROUTES (Inside AuroraLayout) ---
+  {
+    path: '/',
+    component: AuroraLayout,
+    meta: { requiresAuth: true },
+    children: [
+      {
+        path: '', 
+        redirect: 'dashboard'
+      },
+      {
+        path: 'dashboard', 
+        name: 'Dashboard',
+        component: () => import('../views/Dashboard.vue')
+      },
+      {
+        path: 'role-config',
+        name: 'RoleConfig',
+        component: () => import('../views/RoleConfig.vue')
+      },
+      {
+        path: 'voice-print',
+        name: 'VoicePrint',
+        component: () => import('../views/VoicePrint.vue')
+      },
+      {
+        path: 'device-management',
+        name: 'DeviceManagement',
+        component: () => import('../views/DeviceManagement.vue')
+      },
+      {
+        path: 'user-management',
+        name: 'UserManagement',
+        component: () => import('../views/UserManagement.vue')
+      },
+      {
+        path: 'model-config',
+        name: 'ModelConfig',
+        component: () => import('../views/ModelConfig.vue')
+      },
+      {
+        path: "settings",
+        name: "SettingsHub",
+        component: () => import("../views/SettingsHub.vue")
+      },
+      {
+        path: 'params-management',
+        name: 'ParamsManagement',
+        component: () => import('../views/ParamsManagement.vue'),
+        meta: { title: "Parameter Management" } 
+      },
+      {
+        path: 'knowledge-base-management',
+        name: 'KnowledgeBaseManagement',
+        component: () => import('../views/KnowledgeBaseManagement.vue'),
+        meta: { title: "Knowledge Base Management" }
+      },
+      {
+        path: 'knowledge-file-upload',
+        name: 'KnowledgeFileUpload',
+        component: () => import('../views/KnowledgeFileUpload.vue'),
+        meta: { title: "Document Upload Management" }
+      },
+      {
+        path: 'server-side-management',
+        name: 'ServerSideManager',
+        component: () => import('../views/ServerSideManager.vue'),
+        meta: { title: "Server Management" }
+      },
+      {
+        path: 'ota-management',
+        name: 'OtaManagement',
+        component: () => import('../views/OtaManagement.vue'),
+        meta: { title: "OTA Management" }
+      },
+      {
+        path: 'voice-resource-management',
+        name: 'VoiceResourceManagement',
+        component: () => import('../views/VoiceResourceManagement.vue'),
+        meta: { title: "Voice Resource Activation" }
+      },
+      {
+        path: "voice-clone-management",
+        name: "VoiceCloneManagement",
+        component: () => import("../views/VoiceCloneManagement.vue"),
+        meta: { title: "Voice Clone Management" }
+      },
+      {
+        path: "dict-management",
+        name: "DictManagement",
+        component: () => import("../views/DictManagement.vue")
+      },
+      {
+        path: "provider-management",
+        name: "ProviderManagement",
+        component: () => import("../views/ProviderManagement.vue")
+      },
+      {
+        path: "agent-template-management",
+        name: "AgentTemplateManagement",
+        component: () => import("../views/AgentTemplateManagement.vue")
+      },
+      {
+        path: "template-quick-config",
+        name: "TemplateQuickConfig",
+        component: () => import("../views/TemplateQuickConfig.vue")
+      },
+      {
+        path: "feature-management",
+        name: "FeatureManagement",
+        component: () => import("../views/FeatureManagement.vue"),
+        meta: { title: "Feature Configuration" }
+      },
+      {
+        path: "replacement-word-management",
+        name: "ReplacementWordManagement",
+        component: () => import("../views/ReplacementWordManagement.vue"),
+        meta: { title: "Replacement word management" }
+      }
+    ]
+  }
 ]
+
 const router = new VueRouter({
-	base: process.env.VUE_APP_PUBLIC_PATH || "/",
-	routes,
+  base: process.env.VUE_APP_PUBLIC_PATH || "/",
+  routes,
 });
 
-// Handle duplicate navigation globally, change to refresh the page
+// Handle duplicate navigation globally
 const originalPush = VueRouter.prototype.push;
 VueRouter.prototype.push = function push(location) {
-	return originalPush.call(this, location).catch((err) => {
-		if (err.name === "NavigationDuplicated") {
-			// If it is a duplicate navigation, refresh the page
-			window.location.reload();
-		} else {
-			// Other errors are thrown normally
-			throw err;
-		}
+  return originalPush.call(this, location).catch((err) => {
+    if (err.name === "NavigationDuplicated") {
+      return err; 
+    } else {
+      throw err;
+    }
   })
 }
 
-// Routes that require login to access
-const protectedRoutes = ['home', 'RoleConfig', 'DeviceManagement', 'UserManagement', 'ModelConfig', 'KnowledgeBaseManagement', 'KnowledgeFileUpload']
-
 // Route guard
 router.beforeEach((to, from, next) => {
-	// Check if it is a protected route
-	if (protectedRoutes.includes(to.name)) {
-		// Get token from localStorage
-		const token = localStorage.getItem("token");
-		if (!token) {
-			// Not logged in, redirect to login page
-			next({ name: "login", query: { redirect: to.fullPath } });
-			return;
-		}
-	}
+  const token = localStorage.getItem("token");
+
+  // 1. Handle Developer Bypass
+  if (isDebugSkipLoginEnabled) {
+    if (to.name === "Login") {
+      next({ name: "Dashboard" });
+      return;
+    }
+    next();
+    return;
+  }
+
+  // 2. Prevent logged-in users from seeing the Login page
+  if (to.name === "Login" && token) {
+    next({ name: "Dashboard" });
+    return;
+  }
+
+  // 3. Check if route requires auth
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (!token) {
+      // Unauthenticated users are sent to the newly capitalized 'Login' route
+      next({ name: "Login", query: { redirect: to.fullPath } });
+      return;
+    }
+  }
+  
   next()
 })
 

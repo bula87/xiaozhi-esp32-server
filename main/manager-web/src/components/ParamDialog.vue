@@ -126,6 +126,7 @@
 
 <script>
 export default {
+  name: 'ParamDialog',
   props: {
     title: {
       type: String,
@@ -269,8 +270,9 @@ export default {
 .custom-param-dialog {
   border-radius: 16px !important;
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15) !important;
-  border: none !important;
+  box-shadow: var(--ui-shadow-lg) !important;
+  border: 1px solid var(--ui-border) !important;
+  background: var(--ui-bg-panel) !important;
 
   .el-dialog__header {
     display: none;
@@ -279,15 +281,25 @@ export default {
   .el-dialog__body {
     padding: 0 !important;
     border-radius: 16px;
+    background: var(--ui-bg-panel) !important;
   }
 }
 </style>
 
 <style scoped lang="scss">
+@import "../styles/aurora-theme.scss";
+
 .param-dialog-wrapper {
   .dialog-container {
     padding: 24px 32px;
-    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    background: linear-gradient(
+      145deg,
+      rgba(19, 24, 36, 0.98) 0%,
+      rgba(15, 23, 42, 0.99) 50%,
+      rgba(19, 24, 36, 0.98) 100%
+    );
+    border: 1px solid $aurora-border;
+    border-radius: 14px;
   }
 
   .dialog-header {
@@ -298,11 +310,12 @@ export default {
 
   .dialog-title {
     font-size: 20px;
-    color: #1e293b;
+    color: $aurora-text-primary;
     margin: 0;
     padding: 0;
     font-weight: 600;
     letter-spacing: 0.5px;
+    font-family: $aurora-font-mono;
   }
 
   .custom-close-btn {
@@ -312,27 +325,22 @@ export default {
     width: 32px;
     height: 32px;
     border-radius: 50%;
-    border: none;
-    background: #f1f5f9;
-    color: #64748b;
+    border: 1px solid $aurora-border;
+    background: $bg-panel-hover;
+    color: $aurora-text-secondary;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 0;
     outline: none;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
 
     &:hover {
-      color: #ffffff;
-      background: #ef4444;
+      color: #fff;
+      background: rgba(239, 68, 68, 0.35);
+      border-color: rgba(248, 113, 113, 0.5);
       transform: rotate(90deg);
-      box-shadow: 0 4px 6px rgba(239, 68, 68, 0.2);
-    }
-
-    svg {
-      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
   }
 
@@ -341,7 +349,7 @@ export default {
       margin-bottom: 20px;
 
       :deep(.el-form-item__label) {
-        color: #475569;
+        color: $aurora-text-secondary;
         font-weight: 500;
         padding-right: 12px;
         text-align: right;
@@ -352,25 +360,22 @@ export default {
 
     .custom-input {
       :deep(.el-input__inner) {
-        background-color: #ffffff;
+        background-color: $bg-panel;
         border-radius: 8px;
-        border: 1px solid #e2e8f0;
+        border: 1px solid $border-color;
         height: 42px;
         padding: 0 14px;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         font-size: 14px;
-        color: #334155;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        color: $aurora-text-primary;
+        font-family: $aurora-font-mono;
 
         &:focus {
-          border-color: #3b82f6;
-          box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-          background-color: #ffffff;
+          border-color: var(--ui-focus-border);
+          box-shadow: var(--ui-focus-shadow);
         }
 
         &::placeholder {
-          color: #94a3b8;
-          font-weight: 400;
+          color: $text-muted;
         }
       }
     }
@@ -379,49 +384,43 @@ export default {
       width: 100%;
 
       :deep(.el-input__inner) {
-        background-color: #ffffff;
+        background-color: $bg-panel;
         border-radius: 8px;
-        border: 1px solid #e2e8f0;
+        border: 1px solid $border-color;
         height: 42px;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         font-size: 14px;
-        color: #334155;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        color: $aurora-text-primary;
+        font-family: $aurora-font-mono;
 
         &:focus {
-          border-color: #3b82f6;
-          box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-          background-color: #ffffff;
+          border-color: var(--ui-focus-border);
+          box-shadow: var(--ui-focus-shadow);
         }
 
         &::placeholder {
-          color: #94a3b8;
-          font-weight: 400;
+          color: $text-muted;
         }
       }
     }
 
     .custom-textarea {
       :deep(.el-textarea__inner) {
-        background-color: #ffffff;
+        background-color: $bg-panel;
         border-radius: 8px;
-        border: 1px solid #e2e8f0;
+        border: 1px solid $border-color;
         padding: 12px 14px;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         font-size: 14px;
-        color: #334155;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        color: $aurora-text-primary;
+        font-family: $aurora-font-mono;
         line-height: 1.5;
 
         &:focus {
-          border-color: #3b82f6;
-          box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-          background-color: #ffffff;
+          border-color: var(--ui-focus-border);
+          box-shadow: var(--ui-focus-shadow);
         }
 
         &::placeholder {
-          color: #94a3b8;
-          font-weight: 400;
+          color: $text-muted;
         }
       }
     }
@@ -441,24 +440,17 @@ export default {
       width: 120px;
       height: 42px;
       font-size: 14px;
-      font-weight: 500;
+      font-weight: 600;
       border-radius: 8px;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      background: #3b82f6;
-      color: white;
-      border: none;
+      font-family: $aurora-font-mono;
+      background: var(--ui-btn-primary-bg) !important;
+      color: var(--ui-btn-primary-text) !important;
+      border: none !important;
       letter-spacing: 0.5px;
-      box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
 
-      &:hover {
-        background: #2563eb;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 6px rgba(59, 130, 246, 0.3);
-      }
-
-      &:active {
-        transform: translateY(0);
-        box-shadow: 0 2px 3px rgba(59, 130, 246, 0.2);
+      &:hover,
+      &:focus {
+        filter: brightness(1.08);
       }
     }
 
@@ -468,25 +460,16 @@ export default {
       font-size: 14px;
       font-weight: 500;
       border-radius: 8px;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      background: #ffffff;
-      color: #64748b;
-      border: 1px solid #e2e8f0;
+      background: $bg-panel-hover !important;
+      color: $aurora-text-secondary !important;
+      border: 1px solid $border-color !important;
       margin-left: 16px;
       letter-spacing: 0.5px;
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 
-      &:hover {
-        background: #f8fafc;
-        color: #475569;
-        border-color: #cbd5e1;
-        transform: translateY(-1px);
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      }
-
-      &:active {
-        transform: translateY(0);
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      &:hover,
+      &:focus {
+        border-color: var(--ui-focus-border) !important;
+        color: $accent-cyan !important;
       }
     }
   }

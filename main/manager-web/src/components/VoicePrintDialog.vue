@@ -118,6 +118,7 @@
 import api from "@/apis/api";
 
 export default {
+  name: 'VoicePrintDialog',
   props: {
     title: {
       type: String,

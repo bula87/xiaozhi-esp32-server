@@ -27,6 +27,56 @@ export default {
   'header.changePassword': 'Change Password',
   'header.logout': 'Logout',
   'header.searchPlaceholder': 'Name, tag or MAC search',
+  'header.profile': 'Profile',
+  'header.logoutConfirm': 'Are you sure you want to logout?',
+
+  // Sidebar navigation (Aurora theme)
+  'sidebar.smartManagement': 'Smart Management',
+  'sidebar.dashboard': 'Dashboard',
+  'sidebar.roleConfig': 'Role Config',
+  'sidebar.deviceManagement': 'Device Management',
+  'sidebar.voiceClone': 'Voice Clone',
+  'sidebar.knowledgeBase': 'Knowledge Base',
+  'sidebar.administration': 'Administration',
+  'sidebar.paramManagement': 'Params Management',
+  'sidebar.userManagement': 'User Management',
+  'sidebar.providerManagement': 'Provider Management',
+  'sidebar.otaManagement': 'OTA Management',
+  'sidebar.featureManagement': 'Feature Management',
+  'sidebar.models': 'Models',
+  'sidebar.settings': 'Settings',
+// Navigation Groups
+'navGroups.operations': 'Operations',
+'navGroups.ai-capabilities': 'AI Capabilities',
+'navGroups.resources': 'Resources',
+'navGroups.administration': 'Administration',
+// AI Capabilities
+'sidebar.largeLanguageModel': 'Large Language Model',
+'sidebar.visualLanguageModel': 'Visual Language Model',
+'sidebar.intentRecognition': 'Intent Recognition',
+'sidebar.voiceActivityDetection': 'Voice Activity Detection',
+'sidebar.speechRecognition': 'Speech Recognition',
+'sidebar.textToSpeech': 'Text-to-Speech',
+'sidebar.rag': 'RAG',
+'sidebar.memory': 'Memory',
+// Resources
+'sidebar.defaultRoleTemplates': 'Default Role Templates',
+'sidebar.dictManagement': 'Dict Management',
+'sidebar.replacementWordManagement': 'Replacement Word Management',
+// Administration
+'sidebar.serverManagement': 'Server Management',
+'sidebar.systemFeatureManagement': 'System Feature Management',
+'sidebar.generalSettings': 'General Settings',
+
+  'dashboard.agents': 'Agents',
+  'dashboard.users': 'Users',
+  'dashboard.models': 'Model records',
+  'dashboard.params': 'Parameters',
+
+  'settingsHub.title': 'Settings',
+  'settingsHub.language': 'Language',
+  'settingsHub.appearance': 'Appearance',
+  'settingsHub.account': 'Account',
 
   // McpToolCallDialog component text
   'mcpToolCall.title': 'Tool Call',
@@ -705,6 +755,12 @@ export default {
   'common.sensitive': 'Sensitive',
   'common.loading': 'Loading',
 
+  // UI theme (Aurora console)
+  'theme.appearance': 'Theme',
+  'theme.dark': 'Cyber dark',
+  'theme.light': 'Console light',
+  'theme.applied': 'Theme updated',
+
   // Language switch
   'language.zhCN': '中文简体',
   'language.zhTW': '中文繁體',
@@ -715,7 +771,7 @@ export default {
 
   // Home page text
   'home.addAgent': 'Add Agent',
-  'home.greeting': 'Hi XiaoZhi',
+  'home.greeting': 'Hi, Aurora User',
   'home.wish': "Let's have a wonderful day!",
   'home.languageModel': 'LLM',
   'home.voiceModel': 'TTS',
@@ -732,6 +788,17 @@ export default {
   'home.deleteSuccess': 'Delete successful',
   'home.deleteFailed': 'Delete failed',
   'home.enableMemory': 'Please enable memory in the "Config Role" page first',
+  'home.dashboard': 'Dashboard',
+  'home.activeAgents': 'Active Agents',
+  'home.totalDevices': 'Total Devices',
+  'home.activeModels': 'Active Models',
+  'home.modelProviders': 'Model Providers',
+  'home.paramSync': 'Parameter Sync',
+  'home.lastSync': 'Last Sync',
+  'home.documents': 'Documents',
+  'home.devices': 'Devices',
+  'home.searchPlaceholder': 'Search devices...',
+  'home.noDevices': 'No devices found',
 
   // Parameter management page text
   'paramManagement.pageTitle': 'Parameter Management',
@@ -905,6 +972,8 @@ export default {
   // Model Configuration Page Text
   'modelConfig.searchPlaceholder': 'Please enter model name to search',
   'modelConfig.search': 'Search',
+  'modelConfig.overview': 'Models overview',
+  'modelConfig.overviewLead': 'Default model for each category. Choose a row to open its configuration.',
   'modelConfig.vad': 'Voice Activity Detection',
   'modelConfig.asr': 'Speech Recognition',
   'modelConfig.llm': 'Large Language Model',

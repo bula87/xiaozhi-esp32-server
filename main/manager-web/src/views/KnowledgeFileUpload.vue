@@ -21,10 +21,17 @@
         <div class="content-area">
           <el-card class="params-card" shadow="never">
             <div class="table-wrapper">
-              <el-table ref="fileTable" :data="fileList" class="transparent-table" v-loading="loading"
-                element-loading-text="Loading" element-loading-spinner="el-icon-loading"
-                element-loading-background="rgba(255, 255, 255, 0.7)" :header-cell-class-name="headerCellClassName"
-                @selection-change="handleSelectionChange">
+              <el-table 
+                ref="fileTable" 
+                :data="fileList" 
+                class="transparent-table" 
+                v-loading="loading"
+                :element-loading-text="$t('common.loading')"
+                element-loading-spinner="el-icon-loading"
+                element-loading-background="rgba(255, 255, 255, 0.7)" 
+                :header-cell-class-name="headerCellClassName"
+                @selection-change="handleSelectionChange"
+              >
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
                 <el-table-column :label="$t('knowledgeFileUpload.documentName')" prop="name" align="left">
                   <template slot-scope="scope">
@@ -266,6 +273,7 @@ import HeaderBar from "@/components/HeaderBar.vue";
 import VersionFooter from "@/components/VersionFooter.vue";
 
 export default {
+  name: "KnowledgeFileUpload",
   components: { HeaderBar, VersionFooter },
   data() {
     return {
@@ -1120,31 +1128,6 @@ export default {
   -webkit-background-size: cover;
   -o-background-size: cover;
   overflow: hidden;
-}
-
-.main-wrapper {
-  // Top 63px Bottom 35px Query 58px
-  height: calc(100vh - 63px - 35px - 58px);
-  margin: 0 22px;
-  border-radius: 15px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
-  position: relative;
-  background: rgba(237, 242, 255, 0.5);
-  display: flex;
-  flex-direction: column;
-}
-
-.operation-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px 24px;
-}
-
-.left-operations {
-  display: flex;
-  align-items: center;
-  gap: 16px;
 }
 
 .btn-back {

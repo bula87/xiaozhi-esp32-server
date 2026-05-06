@@ -28,6 +28,32 @@ export default {
   'header.logout': 'Sair',
   'header.searchPlaceholder': 'Nome, tag ou pesquisa no Mac',
 
+  // Barra lateral Aurora
+  'sidebar.smartManagement': 'Agentes',
+  'sidebar.dashboard': 'Painel',
+  'sidebar.roleConfig': 'Config. de papéis',
+  'sidebar.deviceManagement': 'Gerenciamento de dispositivos',
+  'sidebar.voiceClone': 'Clonagem de voz',
+  'sidebar.knowledgeBase': 'Base de conhecimento',
+  'sidebar.administration': 'Administração',
+  'sidebar.paramManagement': 'Gerenciamento de parâmetros',
+  'sidebar.userManagement': 'Gerenciamento de usuários',
+  'sidebar.providerManagement': 'Gerenciamento de provedores',
+  'sidebar.otaManagement': 'Gerenciamento OTA',
+  'sidebar.featureManagement': 'Gerenciamento de recursos',
+  'sidebar.models': 'Modelos',
+  'sidebar.settings': 'Configurações',
+
+  'dashboard.agents': 'Agentes',
+  'dashboard.users': 'Usuários',
+  'dashboard.models': 'Registros de modelos',
+  'dashboard.params': 'Parâmetros',
+
+  'settingsHub.title': 'Configurações',
+  'settingsHub.language': 'Idioma',
+  'settingsHub.appearance': 'Aparência',
+  'settingsHub.account': 'Conta',
+
   // Texto do componente McpToolCallDialog
   'mcpToolCall.title': 'Chamada de Ferramenta',
   'mcpToolCall.execute': 'Executar',
@@ -705,6 +731,12 @@ export default {
   'common.sensitive': 'Sensível',
   'common.loading': 'Carregando',
 
+  // Tema da interface
+  'theme.appearance': 'Tema',
+  'theme.dark': 'Cyber escuro',
+  'theme.light': 'Console claro',
+  'theme.applied': 'Tema atualizado',
+
   // Troca de idioma
   'language.zhCN': '中文简体',
   'language.zhTW': '中文繁體',
@@ -905,6 +937,8 @@ export default {
   // Página de configuração de modelos
   'modelConfig.searchPlaceholder': 'Por favor, insira o nome do modelo para pesquisar',
   'modelConfig.search': 'Pesquisar',
+  'modelConfig.overview': 'Visão geral dos modelos',
+  'modelConfig.overviewLead': 'Modelo padrão de cada categoria. Clique em uma linha para abrir a configuração.',
   'modelConfig.vad': 'Detecção de Atividade de Voz',
   'modelConfig.asr': 'Reconhecimento de Fala',
   'modelConfig.llm': 'Modelo de Linguagem Grande',

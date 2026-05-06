@@ -22,11 +22,11 @@ select:-webkit-autofill:focus {
 }
 
 .is-light {
-  border: 1px solid #e4e7ed !important;
-  color: #595959;
+  border: 1px solid var(--ui-border) !important;
+  color: var(--ui-text-primary);
   font-size: 14px;
-  background: #fafcfe !important;
+  background: var(--ui-bg-panel) !important;
   .popper__arrow {
-    border-top-color: #e4e7ed !important;
-   }
+    border-top-color: var(--ui-border) !important;
+  }
 }

@@ -287,6 +287,7 @@
 
 <script>
 export default {
+  name: 'ProviderDialog',
   props: {
     title: String,
     visible: Boolean,

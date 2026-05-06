@@ -1,0 +1,41 @@
+// Semantic tokens — values come from `ui-themes.css` (`html[data-ui-theme]`).
+// Add new themes by extending that file + `src/themes/registry.js`.
+
+$bg-base: var(--ui-bg-base);
+$bg-panel: var(--ui-bg-panel);
+$bg-panel-hover: var(--ui-bg-panel-hover);
+$border-color: var(--ui-border);
+$border-glow: var(--ui-border-glow);
+
+$text-main: var(--ui-text-primary);
+$text-muted: var(--ui-text-muted);
+$accent-cyan: var(--ui-accent-cyan);
+$accent-green: var(--ui-accent-green);
+$accent-purple: var(--ui-accent-purple);
+
+$font-mono: "Fira Code", "JetBrains Mono", "Courier New", monospace;
+$font-sans: "Inter", system-ui, -apple-system, sans-serif;
+
+$aurora-deep-black: var(--ui-bg-base);
+$aurora-panel-bg: var(--ui-bg-panel);
+$aurora-panel-bg-light: var(--ui-bg-panel-hover);
+$aurora-border: var(--ui-border);
+$aurora-text-primary: var(--ui-text-primary);
+$aurora-text-secondary: var(--ui-text-secondary);
+$aurora-text-muted: var(--ui-text-muted);
+$aurora-accent-cyan: var(--ui-accent-cyan);
+$aurora-font-mono: $font-mono;
+
+$aurora-sidebar-width: 240px;
+$aurora-sidebar-width-collapsed: 72px;
+$aurora-radius-md: 10px;
+$aurora-shadow-lg: var(--ui-shadow-lg);
+$aurora-glow-cyan: 0 0 18px rgba(0, 240, 255, 0.35);
+$aurora-gradient-panel: var(--ui-gradient-panel);
+$aurora-gradient-primary: var(--ui-gradient-primary);
+
+@mixin aurora-panel {
+  background: $aurora-panel-bg;
+  border: 1px solid $aurora-border;
+  border-radius: $aurora-radius-md;
+}

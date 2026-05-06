@@ -28,6 +28,32 @@ export default {
   'header.logout': 'Đăng xuất',
   'header.searchPlaceholder': 'Tên, thẻ hoặc tìm kiếm mac',
 
+  // Thanh điều hướng Aurora
+  'sidebar.smartManagement': 'Quản lý tác nhân',
+  'sidebar.dashboard': 'Bảng điều khiển',
+  'sidebar.roleConfig': 'Cấu hình vai trò',
+  'sidebar.deviceManagement': 'Quản lý thiết bị',
+  'sidebar.voiceClone': 'Nhân bản giọng nói',
+  'sidebar.knowledgeBase': 'Cơ sở tri thức',
+  'sidebar.administration': 'Quản trị',
+  'sidebar.paramManagement': 'Quản lý tham số',
+  'sidebar.userManagement': 'Quản lý người dùng',
+  'sidebar.providerManagement': 'Quản lý nhà cung cấp',
+  'sidebar.otaManagement': 'Quản lý OTA',
+  'sidebar.featureManagement': 'Quản lý tính năng',
+  'sidebar.models': 'Mô hình',
+  'sidebar.settings': 'Cài đặt',
+
+  'dashboard.agents': 'Tác nhân',
+  'dashboard.users': 'Người dùng',
+  'dashboard.models': 'Bản ghi mô hình',
+  'dashboard.params': 'Tham số',
+
+  'settingsHub.title': 'Cài đặt',
+  'settingsHub.language': 'Ngôn ngữ',
+  'settingsHub.appearance': 'Giao diện',
+  'settingsHub.account': 'Tài khoản',
+
   // McpToolCallDialog component text
   'mcpToolCall.title': 'Gọi công cụ',
   'mcpToolCall.execute': 'Thực thi',
@@ -705,6 +731,12 @@ export default {
   'common.sensitive': 'Nhạy cảm',
   'common.loading': 'Đang tải',
 
+  // UI theme
+  'theme.appearance': 'Giao diện',
+  'theme.dark': 'Tối cyber',
+  'theme.light': 'Sáng console',
+  'theme.applied': 'Đã cập nhật giao diện',
+
   // Language switch
   'language.zhCN': '中文简体',
   'language.zhTW': '中文繁體',
@@ -905,6 +937,8 @@ export default {
   // Model Configuration Page Text
   'modelConfig.searchPlaceholder': 'Vui lòng nhập tên mô hình để tìm kiếm',
   'modelConfig.search': 'Tìm kiếm',
+  'modelConfig.overview': 'Tổng quan mô hình',
+  'modelConfig.overviewLead': 'Mô hình mặc định theo từng danh mục. Nhấn một dòng để mở cấu hình tương ứng.',
   'modelConfig.vad': 'Phát hiện hoạt động giọng nói',
   'modelConfig.asr': 'Nhận dạng giọng nói',
   'modelConfig.llm': 'Mô hình ngôn ngữ lớn',

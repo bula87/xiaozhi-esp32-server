@@ -27,7 +27,7 @@
               :data="voiceCloneList"
               class="transparent-table"
               v-loading="loading"
-              element-loading-text="Loading"
+              :element-loading-text="$t('common.loading')"
               element-loading-spinner="el-icon-loading"
               element-loading-background="rgba(255, 255, 255, 0.7)"
             >
@@ -230,6 +230,7 @@ import VoiceCloneDialog from "@/components/VoiceCloneDialog.vue";
 import { formatDate } from "@/utils/format";
 
 export default {
+  name: 'VoiceCloneManagment',
   components: { HeaderBar, VersionFooter, VoiceCloneDialog },
   data() {
     return {
@@ -622,58 +623,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.welcome {
-     min-width: 900px;
-    min-height: 506px;
-    height: 100vh;
-    display: flex;
-    position: relative;
-    flex-direction: column;
-    background-size: cover;
-    background: linear-gradient(to bottom right, #dce8ff, #e4eeff, #e6cbfd) center;
-    -webkit-background-size: cover;
-    -o-background-size: cover;
-    overflow: hidden;
-}
-
-.main-wrapper {
-    // Top 63px Bottom 35px Query72px
-    height: calc(100vh - 63px - 35px - 72px);
-    margin: 0 22px;
-    border-radius: 15px;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
-    position: relative;
-    background: rgba(237, 242, 255, 0.5);
-    display: flex;
-    flex-direction: column;
-}
- .operation-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px 24px;
-}
-
-.page-title {
-    font-size: 24px;
-    margin: 0;
-}
-
-.right-operations {
-    display: flex;
-    gap: 10px;
-    margin-left: auto;
-}
-
-.search-input {
-    width: 240px;
-}
-
-.btn-search {
-    background: linear-gradient(135deg, #6b8cff, #a966ff);
-    border: none;
-    color: white;
-}
 
 .content-panel {
     flex: 1;

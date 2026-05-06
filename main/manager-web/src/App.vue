@@ -5,46 +5,6 @@
   </div>
 </template>
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
-}
-
-.copyright {
-  padding: 0 !important;
-  color: rgb(0, 0, 0);
-  font-size: 12px;
-  font-weight: 400;
-  margin-top: auto;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.el-message {
-  top: 70px !important;
-}
-</style>
-
 <script>
 import CacheViewer from "@/components/CacheViewer.vue";
 import { logCacheStatus } from "@/utils/cacheViewer";
@@ -228,3 +188,41 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+/* Global Reset for Single Page Application */
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* Prevents outer window scrolling */
+}
+
+#app {
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: left;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  color: var(--ui-text-primary);
+  background: var(--ui-bg-base);
+}
+
+.copyright {
+  padding: 0 !important;
+  color: var(--ui-text-muted);
+  font-size: 12px;
+  font-weight: 400;
+  margin-top: auto;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.el-message {
+  top: 70px !important;
+}
+</style>

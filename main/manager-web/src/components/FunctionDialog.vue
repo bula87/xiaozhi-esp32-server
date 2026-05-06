@@ -175,6 +175,7 @@ import i18n from '@/i18n';
 import featureManager from '@/utils/featureManager';
 
 export default {
+  name: 'FunctionDialog',
   i18n,
 
   props: {

@@ -1,20 +1,18 @@
 <template>
-  <div class="welcome">
-    <HeaderBar />
-
+  <div class="page-container">
     <div class="operation-bar">
-      <h2 class="page-title">{{ $t("paramManagement.pageTitle") }}</h2>
+      <h2 class="page-title">{{ $t('paramManagement.pageTitle') }}</h2>
       <div class="right-operations">
         <el-input
-          :placeholder="$t('paramManagement.searchPlaceholder')"
           v-model="searchCode"
+          :placeholder="$t('paramManagement.searchPlaceholder')"
           class="search-input"
-          @keyup.enter.native="handleSearch"
           clearable
+          @keyup.enter.native="handleSearch"
         />
-        <el-button class="btn-search" @click="handleSearch">{{
-          $t("paramManagement.search")
-        }}</el-button>
+        <el-button class="btn-search" @click="handleSearch">
+          {{ $t("common.search") }}
+        </el-button>
       </div>
     </div>
 
@@ -27,25 +25,31 @@
               :data="paramsList"
               class="transparent-table"
               v-loading="loading"
-              element-loading-text="Loading"
+              height="100%"
+              :element-loading-text="$t('common.loading')"
               element-loading-spinner="el-icon-loading"
-              element-loading-background="rgba(255, 255, 255, 0.7)"
+              element-loading-background="rgba(11, 15, 25, 0.8)"
               :header-cell-class-name="headerCellClassName"
             >
-              <el-table-column
-                :label="$t('modelConfig.select')"
-                align="center"
-                width="120"
-              >
+              <el-table-column align="center" width="80">
+                <template slot="header">
+                  <span class="selection-header-text">{{ $t('modelConfig.select') }}</span>
+                </template>
                 <template slot-scope="scope">
                   <el-checkbox v-model="scope.row.selected"></el-checkbox>
                 </template>
               </el-table-column>
+
               <el-table-column
                 :label="$t('paramManagement.paramCode')"
                 prop="paramCode"
                 align="center"
-              ></el-table-column>
+              >
+                <template slot-scope="scope">
+                  <span class="param-code-text">{{ scope.row.paramCode }}</span>
+                </template>
+              </el-table-column>
+
               <el-table-column
                 :label="$t('paramManagement.paramValue')"
                 prop="paramValue"
@@ -53,103 +57,74 @@
                 show-overflow-tooltip
               >
                 <template slot-scope="scope">
-                  <div v-if="isSensitiveParam(scope.row.paramCode)">
-                    <span v-if="!scope.row.showValue">
+                  <div v-if="isSensitiveParam(scope.row.paramCode)" class="sensitive-value-container">
+                    <span class="param-value-text" v-if="!scope.row.showValue">
                       {{ maskSensitiveValue(scope.row.paramValue) }}
                     </span>
-                    <span v-else>{{ scope.row.paramValue }}</span>
+                    <span class="param-value-text" v-else>{{ scope.row.paramValue }}</span>
+                    
                     <el-button
                       size="mini"
                       type="text"
+                      class="toggle-visibility-btn"
                       @click="toggleSensitiveValue(scope.row)"
                     >
-                      {{
-                        scope.row.showValue
-                          ? $t("paramManagement.hide")
-                          : $t("paramManagement.view")
-                      }}
+                      <i :class="scope.row.showValue ? 'el-icon-turn-off' : 'el-icon-open'"></i>
+                      {{ scope.row.showValue ? $t("paramManagement.hide") : $t("paramManagement.view") }}
                     </el-button>
                   </div>
-                  <span v-else>{{ scope.row.paramValue }}</span>
+                  <span v-else class="param-value-text">{{ scope.row.paramValue }}</span>
                 </template>
               </el-table-column>
+
               <el-table-column
                 :label="$t('paramManagement.remark')"
                 prop="remark"
                 align="center"
               ></el-table-column>
+
               <el-table-column
                 :label="$t('paramManagement.operation')"
                 align="center"
+                width="180"
               >
                 <template slot-scope="scope">
-                  <el-button
-                    size="mini"
-                    type="text"
-                    @click="editParam(scope.row)"
-                    >{{ $t("paramManagement.edit") }}</el-button
-                  >
-                  <el-button
-                    size="mini"
-                    type="text"
-                    @click="deleteParam(scope.row)"
-                    >{{ $t("paramManagement.delete") }}</el-button
-                  >
+                  <el-button size="mini" type="text" @click="editParam(scope.row)">
+                    {{ $t("paramManagement.edit") }}
+                  </el-button>
+                  <el-button size="mini" type="text" class="delete-btn" @click="deleteParam(scope.row)">
+                    {{ $t("paramManagement.delete") }}
+                  </el-button>
                 </template>
               </el-table-column>
             </el-table>
 
             <div class="table_bottom">
               <div class="ctrl_btn">
-                <el-button
-                  size="mini"
-                  type="primary"
-                  class="select-all-btn"
-                  @click="handleSelectAll"
-                >
-                  {{
-                    isAllSelected
-                      ? $t("paramManagement.deselectAll")
-                      : $t("paramManagement.selectAll")
-                  }}
+                <el-button size="mini" type="primary" class="select-all-btn" @click="handleSelectAll">
+                  {{ isAllSelected ? $t("paramManagement.deselectAll") : $t("paramManagement.selectAll") }}
                 </el-button>
-                <el-button size="mini" type="success" @click="showAddDialog">{{
-                  $t("paramManagement.add")
-                }}</el-button>
-                <el-button
-                  size="mini"
-                  type="danger"
-                  icon="el-icon-delete"
-                  @click="deleteSelectedParams"
-                  >{{ $t("paramManagement.delete") }}</el-button
-                >
+                <el-button size="mini" type="success" @click="showAddDialog">
+                  {{ $t("paramManagement.add") }}
+                </el-button>
+                <el-button size="mini" type="danger" :disabled="!hasSelected" @click="deleteSelectedParams">
+                  {{ $t("paramManagement.delete") }}
+                </el-button>
               </div>
+
               <div class="custom-pagination">
-                <el-select
-                  v-model="pageSize"
-                  @change="handlePageSizeChange"
-                  class="page-size-select"
-                >
+                <el-select v-model="pageSize" @change="handlePageSizeChange" class="page-size-select aurora-select">
                   <el-option
                     v-for="item in pageSizeOptions"
                     :key="item"
                     :label="`${item}${$t('paramManagement.itemsPerPage')}`"
                     :value="item"
-                  >
-                  </el-option>
+                  ></el-option>
                 </el-select>
-                <button
-                  class="pagination-btn"
-                  :disabled="currentPage === 1"
-                  @click="goFirst"
-                >
+                <button class="pagination-btn" :disabled="currentPage === 1" @click="goFirst">
                   {{ $t("paramManagement.firstPage") }}
                 </button>
-                <button
-                  class="pagination-btn"
-                  :disabled="currentPage === 1"
-                  @click="goPrev"
-                >
+                <button class="pagination-btn" :disabled="currentPage === 1" @click="goPrev">
                   {{ $t("paramManagement.prevPage") }}
                 </button>
                 <button
@@ -161,16 +136,10 @@
                 >
                   {{ page }}
                 </button>
-                <button
-                  class="pagination-btn"
-                  :disabled="currentPage === pageCount"
-                  @click="goNext"
-                >
+                <button class="pagination-btn" :disabled="currentPage === pageCount" @click="goNext">
                   {{ $t("paramManagement.nextPage") }}
                 </button>
-                <span class="total-text">{{
-                  $t("paramManagement.totalRecords", { total })
-                }}</span>
+                <span class="total-text">{{ $t("paramManagement.totalRecords", { total }) }}</span>
               </div>
             </div>
           </el-card>
@@ -178,7 +147,6 @@
       </div>
     </div>
 
-    <!-- Add/Edit Parameter Dialog Box -->
     <param-dialog
       ref="paramDialog"
       :title="dialogTitle"
@@ -187,19 +155,21 @@
       @submit="handleSubmit"
       @cancel="dialogVisible = false"
     />
-    <el-footer>
+    
+    <div class="footer-container">
       <version-footer />
-    </el-footer>
+    </div>
   </div>
 </template>
 
 <script>
 import Api from "@/apis/api";
-import HeaderBar from "@/components/HeaderBar.vue";
 import ParamDialog from "@/components/ParamDialog.vue";
 import VersionFooter from "@/components/VersionFooter.vue";
+
 export default {
-  components: { HeaderBar, ParamDialog, VersionFooter },
+  name: "ParamsManagement",
+  components: { ParamDialog, VersionFooter },
   data() {
     return {
       searchCode: "",
@@ -210,7 +180,7 @@ export default {
       pageSizeOptions: [10, 20, 50, 100],
       total: 0,
       dialogVisible: false,
-      dialogTitle: "Add Parameter",
+      dialogTitle: "",
       isAllSelected: false,
       sensitive_keys: [
         "api_key",
@@ -236,8 +206,13 @@ export default {
   created() {
     this.fetchParams();
   },
-
+  mounted() {
+    this.dialogTitle = this.$t("paramManagement.addParam");
+  },
   computed: {
+    hasSelected() {
+      return this.paramsList.some(row => row.selected);
+    },
     pageCount() {
       return Math.ceil(this.total / this.pageSize);
     },
@@ -265,31 +240,27 @@ export default {
     },
     fetchParams() {
       this.loading = true;
-      Api.admin.getParamsList(
-        {
-          page: this.currentPage,
-          limit: this.pageSize,
-          paramCode: this.searchCode,
-        },
-        ({ data }) => {
-          this.loading = false;
-          if (data.code === 0) {
-            this.paramsList = data.data.list.map((item) => ({
-              ...item,
-              valueType: item.valueType || "string",
-              selected: false,
-              showValue: false,
-            }));
-            this.total = data.data.total;
-          } else {
-            this.$message.error({
-              message:
-                data.msg || this.$t("paramManagement.getParamsListFailed"),
-              showClose: true,
-            });
-          }
-        },
-      );
+      Api.admin.getParamsList({
+        page: this.currentPage,
+        limit: this.pageSize,
+        paramCode: this.searchCode,
+      }, ({ data }) => {
+        this.loading = false;
+        if (data.code === 0) {
+          this.paramsList = data.data.list.map((item) => ({
+            ...item,
+            valueType: item.valueType || "string",
+            selected: false,
+            showValue: false,
+          }));
+          this.total = data.data.total;
+        } else {
+          this.$message.error({
+            message: data.msg || this.$t("paramManagement.getParamsListFailed"),
+            showClose: true,
+          });
+        }
+      });
     },
     handleSearch() {
       this.currentPage = 1;
@@ -297,567 +268,98 @@ export default {
     },
     handleSelectAll() {
       this.isAllSelected = !this.isAllSelected;
-      this.paramsList.forEach((row) => {
-        row.selected = this.isAllSelected;
-      });
+      this.paramsList.forEach((row) => (row.selected = this.isAllSelected));
     },
     showAddDialog() {
       this.dialogTitle = this.$t("paramManagement.addParam");
-      this.paramForm = {
-        id: null,
-        paramCode: "",
-        paramValue: "",
-        valueType: "string", // Default value
-        remark: "",
-      };
+      this.paramForm = { id: null, paramCode: "", paramValue: "", valueType: "string", remark: "" };
       this.dialogVisible = true;
     },
     editParam(row) {
       this.dialogTitle = this.$t("paramManagement.editParam");
-      this.paramForm = {
-        id: row.id,
-        paramCode: row.paramCode,
-        paramValue: row.paramValue,
-        valueType: row.valueType || "string", // Ensure there is a value
-        remark: row.remark,
-      };
+      this.paramForm = { id: row.id, paramCode: row.paramCode, paramValue: row.paramValue, valueType: row.valueType || "string", remark: row.remark };
       this.dialogVisible = true;
     },
     handleSubmit(form) {
-      if (form.id) {
-        // Update parameter
-        Api.admin.updateParam(
-          form,
-          ({ data }) => {
-            this.dialogVisible = false;
-            this.fetchParams();
-            this.$message.success({
-              message: this.$t("paramManagement.updateSuccess"),
-              showClose: true,
-            });
-          },
-          ({ data }) => {
-            this.$message.error({
-              message: data.msg || this.$t("paramManagement.updateFailed"),
-              showClose: true,
-            });
-            // Call the resetSaving method of ParamDialog to reset the saving status
-            if (
-              this.$refs.paramDialog &&
-              typeof this.$refs.paramDialog.resetSaving === "function"
-            ) {
-              this.$refs.paramDialog.resetSaving();
-            }
-          },
-        );
-      } else {
-        // Add parameter
-        Api.admin.addParam(form, ({ data }) => {
-          if (data.code === 0) {
-            this.dialogVisible = false;
-            this.fetchParams();
-            this.$message.success({
-              message: this.$t("paramManagement.addSuccess"),
-              showClose: true,
-            });
-          } else {
-            this.$message.error({
-              message: data.msg || this.$t("paramManagement.addFailed"),
-              showClose: true,
-            });
-            // Call the resetSaving method of ParamDialog to reset the saving state
-            if (
-              this.$refs.paramDialog &&
-              typeof this.$refs.paramDialog.resetSaving === "function"
-            ) {
-              this.$refs.paramDialog.resetSaving();
-            }
-          }
-        });
-      }
+      const apiMethod = form.id ? Api.admin.updateParam : Api.admin.addParam;
+      apiMethod(form, ({ data }) => {
+        if (data.code === 0) {
+          this.dialogVisible = false;
+          this.fetchParams();
+          this.$message.success({
+            message: form.id ? this.$t("paramManagement.updateSuccess") : this.$t("paramManagement.addSuccess"),
+            showClose: true,
+          });
+        } else {
+          this.$message.error({ message: data.msg || (form.id ? this.$t("paramManagement.updateFailed") : this.$t("paramManagement.addFailed")), showClose: true });
+          if (this.$refs.paramDialog?.resetSaving) this.$refs.paramDialog.resetSaving();
+        }
+      }, ({ data }) => {
+        this.$message.error({ message: data.msg || this.$t("paramManagement.updateFailed"), showClose: true });
+        if (this.$refs.paramDialog?.resetSaving) this.$refs.paramDialog.resetSaving();
+      });
     },
     deleteSelectedParams() {
       const selectedParams = this.paramsList.filter((row) => row.selected);
-      if (selectedParams.length === 0) {
-        this.$message.warning({
-          message: this.$t("paramManagement.selectParamsFirst"),
-          showClose: true,
-        });
-        return;
-      }
+      if (selectedParams.length === 0) return this.$message.warning(this.$t("paramManagement.selectParamsFirst"));
       this.deleteParams(selectedParams);
     },
     deleteParam(row) {
-      if (!row.id) {
-        this.$message.warning({
-          message: this.$t("paramManagement.selectParamsFirst"),
-          showClose: true,
-        });
-        return;
-      }
+      if (!row.id) return this.$message.warning(this.$t("paramManagement.selectParamsFirst"));
       this.deleteParams([row]);
     },
     deleteParams(params) {
-      const paramCount = params.length;
-      const paramIds = params.map((param) => param.id).filter((id) => id);
-      if (paramIds.length === 0) {
-        this.$message.error({
-          message: this.$t("paramManagement.invalidParamId"),
-          showClose: true,
+      const paramIds = params.map((p) => p.id).filter(id => id);
+      if (paramIds.length === 0) return this.$message.error(this.$t("paramManagement.invalidParamId"));
+      
+      this.$confirm(this.$t("paramManagement.confirmBatchDelete", { paramCount: params.length }), this.$t("message.warning"), {
+        type: "warning",
+      }).then(() => {
+        Api.admin.deleteParam(paramIds, ({ data }) => {
+          if (data.code === 0) {
+            this.fetchParams();
+            this.$message.success(this.$t("paramManagement.batchDeleteSuccess", { paramCount: params.length }));
+          } else {
+            this.$message.error(data.msg || this.$t("paramManagement.deleteFailed"));
+          }
         });
-        return;
-      }
-      this.$confirm(
-        this.$t("paramManagement.confirmBatchDelete", { paramCount }),
-        this.$t("message.warning"),
-        {
-          confirmButtonText: this.$t("button.ok"),
-          cancelButtonText: this.$t("button.cancel"),
-          type: "warning",
-        },
-      )
-        .then(() => {
-          Api.admin.deleteParam(paramIds, ({ data }) => {
-            if (data.code === 0) {
-              this.fetchParams();
-              this.$message.success({
-                message: this.$t("paramManagement.batchDeleteSuccess", {
-                  paramCount,
-                }),
-                showClose: true,
-              });
-            } else {
-              this.$message.error({
-                message: data.msg || this.$t("paramManagement.deleteFailed"),
-                showClose: true,
-              });
-            }
-          });
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: this.$t("paramManagement.operationCancelled"),
-            duration: 1000,
-          });
-        });
+      }).catch(() => {});
     },
     goToPage(page) {
-      if (page !== this.currentPage) {
-        this.currentPage = page;
-        this.fetchParams();
-      }
+      if (page !== this.currentPage) { this.currentPage = page; this.fetchParams(); }
     },
     goFirst() {
-      if (this.currentPage !== 1) {
-        this.currentPage = 1;
-        this.fetchParams();
-      }
+      if (this.currentPage !== 1) { this.currentPage = 1; this.fetchParams(); }
     },
     goPrev() {
-      if (this.currentPage > 1) {
-        this.currentPage--;
-        this.fetchParams();
-      }
+      if (this.currentPage > 1) { this.currentPage--; this.fetchParams(); }
     },
     goNext() {
-      if (this.currentPage < this.pageCount) {
-        this.currentPage++;
-        this.fetchParams();
-      }
+      if (this.currentPage < this.pageCount) { this.currentPage++; this.fetchParams(); }
     },
     isSensitiveParam(paramCode) {
-      return this.sensitive_keys.some((key) =>
-        paramCode.toLowerCase().includes(key),
-      );
+      return this.sensitive_keys.some((key) => paramCode.toLowerCase().includes(key));
     },
     maskSensitiveValue(value) {
-      if (value.length <= 4) {
-        return "****";
-      }
+      if (!value) return "";
+      if (value.length <= 4) return "****";
       return value.substring(0, 2) + "****" + value.substring(value.length - 2);
     },
     toggleSensitiveValue(row) {
       row.showValue = !row.showValue;
     },
-    headerCellClassName() {
-      return "header-cell";
+    headerCellClassName({ columnIndex }) {
+      return columnIndex === 0 ? "custom-selection-header" : "";
     },
   },
 };
 </script>
-
 <style lang="scss" scoped>
-.welcome {
-  min-width: 900px;
-  min-height: 506px;
-  height: 100vh;
-  display: flex;
-  position: relative;
-  flex-direction: column;
-  background-size: cover;
-  background: linear-gradient(to bottom right, #dce8ff, #e4eeff, #e6cbfd) center;
-  -webkit-background-size: cover;
-  -o-background-size: cover;
-  overflow: hidden;
-}
+@import "../styles/aurora-theme.scss";
 
-.main-wrapper {
-  // Top 63px Bottom 35px Query 72px
-  height: calc(100vh - 63px - 35px - 72px);
-  margin: 0 22px;
-  border-radius: 15px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
-  position: relative;
-  background: rgba(237, 242, 255, 0.5);
-  display: flex;
-  flex-direction: column;
-}
-.operation-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px 24px;
-}
-
-.page-title {
-  font-size: 24px;
-  margin: 0;
-}
-
-.right-operations {
-  display: flex;
-  gap: 10px;
-  margin-left: auto;
-}
-
-.search-input {
-  width: 240px;
-}
-
-.btn-search {
-  background: linear-gradient(135deg, #6b8cff, #a966ff);
-  border: none;
-  color: white;
-}
-
-.content-panel {
-  flex: 1;
-  display: flex;
-  overflow: hidden;
-  height: 100%;
-  border-radius: 15px;
-  background: transparent;
-  border: 1px solid #fff;
-}
-
-.content-area {
-  flex: 1;
-  height: 100%;
-  min-width: 600px;
-  overflow: auto;
-  background-color: white;
-  display: flex;
-  flex-direction: column;
-}
-
-.params-card {
-  background: white;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  border: none;
-  box-shadow: none;
-  overflow: hidden;
-
-  ::v-deep .el-card__body {
-    padding: 15px;
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    overflow: hidden;
-  }
-}
-
-.table_bottom {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 10px;
-  /* padding-bottom: 10px; */
-}
-
-.ctrl_btn {
-  display: flex;
-  gap: 8px;
-  padding-left: 26px;
-
-  .el-button {
-    min-width: 72px;
-    height: 32px;
-    padding: 7px 12px 7px 10px;
-    font-size: 12px;
-    border-radius: 4px;
-    line-height: 1;
-    font-weight: 500;
-    border: none;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-
-    &:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-    }
-  }
-
-  .el-button--primary {
-    background: #5f70f3;
-    color: white;
-  }
-
-  .el-button--danger {
-    background: #fd5b63;
-    color: white;
-  }
-}
-
-.custom-pagination {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-
-  .el-select {
-    margin-right: 8px;
-  }
-
-  .pagination-btn:first-child,
-  .pagination-btn:nth-child(2),
-  .pagination-btn:nth-last-child(2),
-  .pagination-btn:nth-child(3) {
-    min-width: 60px;
-    height: 32px;
-    padding: 0 12px;
-    border-radius: 4px;
-    border: 1px solid #e4e7ed;
-    background: #dee7ff;
-    color: #606266;
-    font-size: 14px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-
-    &:hover {
-      background: #d7dce6;
-    }
-
-    &:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-  }
-
-  .pagination-btn:not(:first-child):not(:nth-child(3)):not(:nth-child(2)):not(
-      :nth-last-child(2)
-    ) {
-    min-width: 28px;
-    height: 32px;
-    padding: 0;
-    border-radius: 4px;
-    border: 1px solid transparent;
-    background: transparent;
-    color: #606266;
-    font-size: 14px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-
-    &:hover {
-      background: rgba(245, 247, 250, 0.3);
-    }
-  }
-
-  .pagination-btn.active {
-    background: #5f70f3 !important;
-    color: #ffffff !important;
-    border-color: #5f70f3 !important;
-
-    &:hover {
-      background: #6d7cf5 !important;
-    }
-  }
-
-  .total-text {
-    color: #909399;
-    font-size: 14px;
-    margin-left: 10px;
-  }
-}
-
-:deep(.transparent-table) {
-  background: white;
-  flex: 1;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-
-  .el-table__body-wrapper {
-    flex: 1;
-    overflow-y: auto;
-    max-height: none !important;
-  }
-
-  .el-table__header-wrapper {
-    flex-shrink: 0;
-  }
-
-  .el-table__header th {
-    background: white !important;
-    color: black;
-  }
-
-  &::before {
-    display: none;
-  }
-
-  .el-table__body tr {
-    background-color: white;
-
-    td {
-      border-top: 1px solid rgba(0, 0, 0, 0.04);
-      border-bottom: 1px solid rgba(0, 0, 0, 0.04);
-    }
-  }
-}
-
-:deep(.el-checkbox__inner) {
-  background-color: #ffffff !important;
-  border-color: #cccccc !important;
-}
-
-:deep(.el-checkbox__inner:hover) {
-  border-color: #cccccc !important;
-}
-
-:deep(.el-checkbox__input.is-checked .el-checkbox__inner) {
-  background-color: #5f70f3 !important;
-  border-color: #5f70f3 !important;
-}
-
-@media (min-width: 1144px) {
-  .table_bottom {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 40px;
-  }
-
-  :deep(.transparent-table) {
-    .el-table__body tr {
-      td {
-        padding-top: 16px;
-        padding-bottom: 16px;
-      }
-
-      & + tr {
-        margin-top: 10px;
-      }
-    }
-  }
-}
-
-:deep(.el-table .el-button--text) {
-  color: #7079aa;
-}
-
-:deep(.el-table .el-button--text:hover) {
-  color: #5a64b5;
-}
-
-.el-button--success {
-  background: #5bc98c;
-  color: white;
-}
-
-:deep(.el-table .cell) {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.page-size-select {
-  width: 100px;
-  margin-right: 10px;
-
-  :deep(.el-input__inner) {
-    height: 32px;
-    line-height: 32px;
-    border-radius: 4px;
-    border: 1px solid #e4e7ed;
-    background: #dee7ff;
-    color: #606266;
-    font-size: 14px;
-  }
-
-  :deep(.el-input__suffix) {
-    right: 6px;
-    width: 15px;
-    height: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    top: 6px;
-    border-radius: 4px;
-  }
-
-  :deep(.el-input__suffix-inner) {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-  }
-
-  :deep(.el-icon-arrow-up:before) {
-    content: "";
-    display: inline-block;
-    border-left: 6px solid transparent;
-    border-right: 6px solid transparent;
-    border-top: 9px solid #606266;
-    position: relative;
-    transform: rotate(0deg);
-    transition: transform 0.3s;
-  }
-}
-
-:deep(.el-table) {
-  .el-table__body-wrapper {
-    transition: height 0.3s ease;
-  }
-}
-
-.el-table {
-  /* --table-max-height: calc(100vh - 40vh); */
-  max-height: var(--table-max-height);
-
-  .el-table__body-wrapper {
-    max-height: calc(var(--table-max-height) - 40px);
-  }
-}
-
-:deep(.el-loading-mask) {
-  background-color: rgba(255, 255, 255, 0.6) !important;
-  backdrop-filter: blur(2px);
-}
-
-:deep(.el-loading-spinner .circular) {
-  width: 28px;
-  height: 28px;
-}
-
-:deep(.el-loading-spinner .path) {
-  stroke: #6b8cff;
-}
-
-:deep(.el-loading-text) {
-  color: #6b8cff !important;
-  font-size: 14px;
-  margin-top: 8px;
-}
+/* --- Unique styles for ParamsManagement --- */
+.param-code-text { color: $accent-cyan; font-weight: bold; }
+.param-value-text { color: $accent-purple; }
+.sensitive-value-container { display: flex; align-items: center; justify-content: center; gap: 8px; }
+.toggle-visibility-btn { color: $text-muted !important; &:hover { color: $accent-cyan !important; } }
 </style>

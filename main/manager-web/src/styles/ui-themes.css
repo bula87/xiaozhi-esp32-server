@@ -1,0 +1,202 @@
+/**
+ * Theme tokens — switched via `html[data-ui-theme="…"]`.
+ * To add a theme: register in `src/themes/registry.js` and duplicate a block below.
+ */
+
+html[data-ui-theme="dark"] {
+  --ui-bg-base: #0b0f19;
+  --ui-bg-panel: #131824;
+  --ui-bg-panel-hover: #1a2130;
+  --ui-border: #1e293b;
+  --ui-border-glow: rgba(0, 240, 255, 0.3);
+  --ui-text-primary: #e2e8f0;
+  --ui-text-secondary: #94a3b8;
+  --ui-text-muted: #64748b;
+  --ui-accent-cyan: #00f0ff;
+  --ui-accent-green: #10b981;
+  --ui-accent-purple: #8b5cf6;
+  --ui-shadow-lg: 0 10px 24px rgba(0, 0, 0, 0.35);
+  --ui-gradient-panel: linear-gradient(
+    135deg,
+    rgba(19, 24, 36, 1) 0%,
+    rgba(26, 33, 48, 1) 100%
+  );
+  --ui-gradient-primary: linear-gradient(135deg, #00f0ff 0%, #10b981 100%);
+  --ui-focus-border: rgba(0, 240, 255, 0.55);
+  --ui-focus-shadow: 0 0 0 1px rgba(0, 240, 255, 0.2);
+  --ui-table-header-bg: rgba(19, 24, 36, 0.95);
+  --ui-table-row-border: rgba(30, 41, 59, 0.8);
+  --ui-table-row-hover: rgba(0, 240, 255, 0.06);
+  --ui-loading-mask-bg: rgba(11, 15, 25, 0.72);
+  --ui-pagination-active-bg: rgba(0, 240, 255, 0.2);
+  --ui-pagination-active-border: #00f0ff;
+  --ui-btn-primary-text: #0b0f19;
+  --ui-btn-primary-bg: linear-gradient(135deg, #007a85, #00c2d4);
+  --ui-success-btn-bg: rgba(16, 185, 129, 0.25);
+  --ui-success-btn-border: rgba(16, 185, 129, 0.45);
+  --ui-danger-btn-bg: rgba(239, 68, 68, 0.2);
+  --ui-danger-btn-border: rgba(239, 68, 68, 0.45);
+  --ui-danger-text: #f87171;
+  --ui-checkbox-checked-bg: rgba(0, 240, 255, 0.25);
+  --ui-topbar-bg: rgba(11, 15, 25, 0.85);
+  --ui-shell-grid-line: rgba(148, 163, 184, 0.04);
+  --ui-shell-radial: rgba(139, 92, 246, 0.12);
+  --ui-nav-active-bg: rgba(0, 240, 255, 0.08);
+  --ui-nav-active-border: rgba(0, 240, 255, 0.35);
+  --ui-sidebar-bg: #131824;
+  --ui-logo-bg: #131824;
+  --ui-logo-frame: #00f0ff;
+  --ui-logo-a: #8b5cf6;
+  --ui-logo-dot: #10b981;
+  --ui-hero-gradient: linear-gradient(
+    120deg,
+    rgba(139, 92, 246, 0.15),
+    rgba(0, 240, 255, 0.08)
+  );
+  --ui-skeleton-shimmer: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0),
+    rgba(0, 240, 255, 0.2),
+    rgba(255, 255, 255, 0)
+  );
+  --ui-accent-glow: 0 0 10px rgba(0, 240, 255, 0.55);
+  --ui-nav-active-text: #f8fafc;
+  --ui-model-nav-overlay: linear-gradient(
+    180deg,
+    rgba(19, 24, 36, 0.96) 0%,
+    rgba(11, 15, 25, 0.98) 100%
+  );
+  --ui-model-nav-pill-bg: rgba(26, 33, 48, 0.55);
+  --ui-model-nav-pill-hover-border: rgba(148, 163, 184, 0.25);
+}
+
+html[data-ui-theme="light"] {
+  --ui-bg-base: #eef1f6;
+  --ui-bg-panel: #ffffff;
+  --ui-bg-panel-hover: #f1f5f9;
+  --ui-border: #e2e8f0;
+  --ui-border-glow: rgba(13, 148, 136, 0.22);
+  --ui-text-primary: #0f172a;
+  --ui-text-secondary: #475569;
+  --ui-text-muted: #64748b;
+  --ui-accent-cyan: #0d9488;
+  --ui-accent-green: #059669;
+  --ui-accent-purple: #6366f1;
+  --ui-shadow-lg: 0 12px 32px rgba(15, 23, 42, 0.08);
+  --ui-gradient-panel: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  --ui-gradient-primary: linear-gradient(135deg, #0d9488 0%, #059669 100%);
+  --ui-focus-border: rgba(13, 148, 136, 0.65);
+  --ui-focus-shadow: 0 0 0 3px rgba(13, 148, 136, 0.16);
+  --ui-table-header-bg: #ffffff;
+  --ui-table-row-border: rgba(148, 163, 184, 0.4);
+  --ui-table-row-hover: rgba(13, 148, 136, 0.08);
+  --ui-loading-mask-bg: rgba(255, 255, 255, 0.78);
+  --ui-pagination-active-bg: rgba(13, 148, 136, 0.15);
+  --ui-pagination-active-border: #0d9488;
+  --ui-btn-primary-text: #ffffff;
+  --ui-btn-primary-bg: linear-gradient(135deg, #0f766e, #14b8a6);
+  --ui-success-btn-bg: rgba(5, 150, 105, 0.12);
+  --ui-success-btn-border: rgba(5, 150, 105, 0.35);
+  --ui-danger-btn-bg: rgba(239, 68, 68, 0.1);
+  --ui-danger-btn-border: rgba(239, 68, 68, 0.35);
+  --ui-danger-text: #dc2626;
+  --ui-checkbox-checked-bg: rgba(13, 148, 136, 0.22);
+  --ui-topbar-bg: rgba(255, 255, 255, 0.92);
+  --ui-shell-grid-line: rgba(148, 163, 184, 0.14);
+  --ui-shell-radial: rgba(13, 148, 136, 0.07);
+  --ui-nav-active-bg: rgba(13, 148, 136, 0.12);
+  --ui-nav-active-border: rgba(13, 148, 136, 0.42);
+  --ui-sidebar-bg: #e8edf5;
+  --ui-logo-bg: #f8fafc;
+  --ui-logo-frame: #0d9488;
+  --ui-logo-a: #6366f1;
+  --ui-logo-dot: #059669;
+  --ui-hero-gradient: linear-gradient(
+    120deg,
+    rgba(99, 102, 241, 0.12),
+    rgba(13, 148, 136, 0.1)
+  );
+  --ui-skeleton-shimmer: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0),
+    rgba(13, 148, 136, 0.18),
+    rgba(255, 255, 255, 0)
+  );
+  --ui-accent-glow: 0 0 8px rgba(13, 148, 136, 0.45);
+  --ui-nav-active-text: #0f766e;
+  --ui-model-nav-overlay: linear-gradient(
+    180deg,
+    rgba(248, 250, 252, 0.94) 0%,
+    rgba(241, 245, 249, 0.97) 100%
+  );
+  --ui-model-nav-pill-bg: rgba(255, 255, 255, 0.92);
+  --ui-model-nav-pill-hover-border: rgba(100, 116, 139, 0.35);
+}
+
+/* Before `initUiTheme()` runs, default to dark tokens */
+html:not([data-ui-theme]) {
+  --ui-bg-base: #0b0f19;
+  --ui-bg-panel: #131824;
+  --ui-bg-panel-hover: #1a2130;
+  --ui-border: #1e293b;
+  --ui-border-glow: rgba(0, 240, 255, 0.3);
+  --ui-text-primary: #e2e8f0;
+  --ui-text-secondary: #94a3b8;
+  --ui-text-muted: #64748b;
+  --ui-accent-cyan: #00f0ff;
+  --ui-accent-green: #10b981;
+  --ui-accent-purple: #8b5cf6;
+  --ui-shadow-lg: 0 10px 24px rgba(0, 0, 0, 0.35);
+  --ui-gradient-panel: linear-gradient(
+    135deg,
+    rgba(19, 24, 36, 1) 0%,
+    rgba(26, 33, 48, 1) 100%
+  );
+  --ui-gradient-primary: linear-gradient(135deg, #00f0ff 0%, #10b981 100%);
+  --ui-focus-border: rgba(0, 240, 255, 0.55);
+  --ui-focus-shadow: 0 0 0 1px rgba(0, 240, 255, 0.2);
+  --ui-table-header-bg: rgba(19, 24, 36, 0.95);
+  --ui-table-row-border: rgba(30, 41, 59, 0.8);
+  --ui-table-row-hover: rgba(0, 240, 255, 0.06);
+  --ui-loading-mask-bg: rgba(11, 15, 25, 0.72);
+  --ui-pagination-active-bg: rgba(0, 240, 255, 0.2);
+  --ui-pagination-active-border: #00f0ff;
+  --ui-btn-primary-text: #0b0f19;
+  --ui-btn-primary-bg: linear-gradient(135deg, #007a85, #00c2d4);
+  --ui-success-btn-bg: rgba(16, 185, 129, 0.25);
+  --ui-success-btn-border: rgba(16, 185, 129, 0.45);
+  --ui-danger-btn-bg: rgba(239, 68, 68, 0.2);
+  --ui-danger-btn-border: rgba(239, 68, 68, 0.45);
+  --ui-danger-text: #f87171;
+  --ui-checkbox-checked-bg: rgba(0, 240, 255, 0.25);
+  --ui-topbar-bg: rgba(11, 15, 25, 0.85);
+  --ui-shell-grid-line: rgba(148, 163, 184, 0.04);
+  --ui-shell-radial: rgba(139, 92, 246, 0.12);
+  --ui-nav-active-bg: rgba(0, 240, 255, 0.08);
+  --ui-nav-active-border: rgba(0, 240, 255, 0.35);
+  --ui-sidebar-bg: #131824;
+  --ui-logo-bg: #131824;
+  --ui-logo-frame: #00f0ff;
+  --ui-logo-a: #8b5cf6;
+  --ui-logo-dot: #10b981;
+  --ui-hero-gradient: linear-gradient(
+    120deg,
+    rgba(139, 92, 246, 0.15),
+    rgba(0, 240, 255, 0.08)
+  );
+  --ui-skeleton-shimmer: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0),
+    rgba(0, 240, 255, 0.2),
+    rgba(255, 255, 255, 0)
+  );
+  --ui-accent-glow: 0 0 10px rgba(0, 240, 255, 0.55);
+  --ui-nav-active-text: #f8fafc;
+  --ui-model-nav-overlay: linear-gradient(
+    180deg,
+    rgba(19, 24, 36, 0.96) 0%,
+    rgba(11, 15, 25, 0.98) 100%
+  );
+  --ui-model-nav-pill-bg: rgba(26, 33, 48, 0.55);
+  --ui-model-nav-pill-hover-border: rgba(148, 163, 184, 0.25);
+}

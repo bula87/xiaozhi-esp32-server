@@ -3,6 +3,7 @@ import store from '../store/index';
 import Constant from '../utils/constant';
 import { goToPage, isNotNull, showDanger, showWarning } from '../utils/index';
 import i18n from '../i18n/index';
+import { isDebugSkipLoginEnabled } from '@/utils/debug';
 
 const fly = new Fly()
 // Set timeout
@@ -122,7 +123,9 @@ function httpHandlerError(info, failCallback, networkFailCallback) {
             return networkError
         } else if (info.data.code === 401) {
             store.commit('clearAuth');
-            goToPage(Constant.PAGE.LOGIN, true);
+            if (!isDebugSkipLoginEnabled) {
+                goToPage(Constant.PAGE.LOGIN, true);
+            }
             return true
         } else {
             // Directly use the internationalized message returned by the backend

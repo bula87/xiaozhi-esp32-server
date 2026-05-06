@@ -1,238 +1,131 @@
 <template>
-  <div class="welcome">
-    <HeaderBar />
-
+  <div class="page-container">
     <div class="operation-bar">
       <h2 class="page-title">{{ $t("dictManagement.pageTitle") }}</h2>
-      <div class="action-group">
-        <div class="search-group">
-          <el-input
-            :placeholder="$t('dictManagement.searchPlaceholder')"
-            v-model="search"
-            class="search-input"
-            clearable
-            @keyup.enter.native="handleSearch"
-            style="width: 240px"
+      <div class="right-operations">
+        <el-select
+          v-model="selectedDictTypeId"
+          class="dict-type-select aurora-select"
+          :placeholder="$t('dictManagement.dictTypeName')"
+          @change="handleDictTypeChange"
+        >
+          <el-option
+            v-for="item in dictTypeList"
+            :key="item.id"
+            :label="item.dictName"
+            :value="item.id"
           />
-          <el-button class="btn-search" @click="handleSearch">
-            {{ $t("dictManagement.search") }}
-          </el-button>
-        </div>
+        </el-select>
+        <el-input
+          v-model="search"
+          :placeholder="$t('dictManagement.searchPlaceholder')"
+          class="search-input"
+          clearable
+          @keyup.enter.native="handleSearch"
+        />
+        <el-button class="btn-search" @click="handleSearch">
+          {{ $t("dictManagement.search") }}
+        </el-button>
       </div>
     </div>
 
-    <!-- Main content -->
     <div class="main-wrapper">
       <div class="content-panel">
-        <!-- Left dictionary type list -->
-        <div class="dict-type-panel">
-          <div class="dict-type-header">
-            <el-button
-              type="success"
-              size="mini"
-              @click="showAddDictTypeDialog"
-              >{{ $t("dictManagement.addDictType") }}</el-button
-            >
-            <el-button
-              type="danger"
-              size="mini"
-              @click="batchDeleteDictType"
-              :disabled="selectedDictTypes.length === 0"
-            >
-              {{ $t("dictManagement.batchDeleteDictType") }}
-            </el-button>
-          </div>
-          <el-table
-            ref="dictTypeTable"
-            :data="dictTypeList"
-            style="width: 100%"
-            v-loading="dictTypeLoading"
-            element-loading-text="Loading..."
-            element-loading-spinner="el-icon-loading"
-            element-loading-background="rgba(255, 255, 255, 0.7)"
-            @row-click="handleDictTypeRowClick"
-            @selection-change="handleDictTypeSelectionChange"
-            :row-class-name="tableRowClassName"
-            class="dict-type-table"
-            :header-cell-class-name="headerCellClassName"
-          >
-            <el-table-column
-              type="selection"
-              width="70"
-              align="center"
-              :cell-class-name="selectionCellClassName"
-            ></el-table-column>
-            <el-table-column
-              :label="$t('dictManagement.dictTypeName')"
-              prop="dictName"
-              align="center"
-            ></el-table-column>
-            <el-table-column
-              :label="$t('dictManagement.operation')"
-              width="100"
-              align="center"
-            >
-              <template slot-scope="scope">
-                <el-button
-                  type="text"
-                  size="mini"
-                  @click.stop="editDictType(scope.row)"
-                  >{{ $t("dictManagement.edit") }}</el-button
-                >
-              </template>
-            </el-table-column>
-          </el-table>
-        </div>
-
-        <!-- Right side dictionary data list -->
         <div class="content-area">
           <el-card class="dict-data-card" shadow="never">
             <el-table
               ref="dictDataTable"
               :data="dictDataList"
-              style="width: 100%"
               v-loading="dictDataLoading"
-              element-loading-text="Loading data..."
-              element-loading-spinner="el-icon-loading"
-              element-loading-background="rgba(255, 255, 255, 0.7)"
               class="transparent-table"
-              header-row-class-name="table-header"
+              height="100%"
+              :element-loading-text="$t('common.loading')"
+              element-loading-spinner="el-icon-loading"
+              element-loading-background="rgba(11, 15, 25, 0.8)"
+              :header-cell-class-name="headerCellClassName"
             >
-              <el-table-column
-                :label="$t('modelConfig.select')"
-                align="center"
-                width="70"
-              >
+              <el-table-column align="center" width="80">
+                <template slot="header">
+                  <span class="selection-header-text">{{ $t('modelConfig.select') }}</span>
+                </template>
                 <template slot-scope="scope">
                   <el-checkbox v-model="scope.row.selected"></el-checkbox>
                 </template>
               </el-table-column>
+
               <el-table-column
                 :label="$t('dictManagement.dictLabel')"
                 prop="dictLabel"
                 align="center"
-              ></el-table-column>
+              />
+              
               <el-table-column
                 :label="$t('dictManagement.dictValue')"
                 prop="dictValue"
                 align="center"
-              ></el-table-column>
+              >
+                <template slot-scope="scope">
+                  <span class="value-text">{{ scope.row.dictValue }}</span>
+                </template>
+              </el-table-column>
+
               <el-table-column
                 :label="$t('dictManagement.sort')"
                 prop="sort"
                 align="center"
-              ></el-table-column>
+                width="100"
+              />
+
               <el-table-column
                 :label="$t('dictManagement.operation')"
                 align="center"
-                width="180px"
+                width="180"
               >
                 <template slot-scope="scope">
-                  <el-button
-                    type="text"
-                    size="mini"
-                    @click="editDictData(scope.row)"
-                    class="edit-btn"
-                  >
+                  <el-button type="text" size="mini" @click="editDictData(scope.row)">
                     {{ $t("dictManagement.edit") }}
                   </el-button>
-                  <el-button
-                    type="text"
-                    size="mini"
-                    @click="deleteDictData(scope.row)"
-                    class="delete-btn"
-                  >
+                  <el-button type="text" size="mini" class="delete-btn" @click="deleteDictData(scope.row)">
                     {{ $t("dictManagement.delete") }}
                   </el-button>
                 </template>
               </el-table-column>
             </el-table>
-            <div class="table-footer">
-              <div class="batch-actions">
-                <el-button
-                  size="mini"
-                  type="primary"
-                  @click="selectAllDictData"
-                >
-                  {{
-                    isAllDictDataSelected
-                      ? $t("dictManagement.deselectAll")
-                      : $t("dictManagement.selectAll")
-                  }}
+
+            <div class="table_bottom">
+              <div class="ctrl_btn">
+                <el-button type="primary" size="mini" @click="selectAllDictData">
+                  {{ isAllDictDataSelected ? $t("dictManagement.deselectAll") : $t("dictManagement.selectAll") }}
                 </el-button>
-                <el-button
-                  type="success"
-                  size="mini"
-                  @click="showAddDictDataDialog"
-                  class="add-btn"
-                >
+                <el-button type="primary" plain size="mini" class="outline-btn" @click="showAddDictTypeDialog">
+                  {{ $t("dictManagement.addDictType") }}
+                </el-button>
+                <el-button type="success" size="mini" @click="showAddDictDataDialog">
                   {{ $t("dictManagement.addDictData") }}
                 </el-button>
-                <el-button
-                  size="mini"
-                  type="danger"
-                  icon="el-icon-delete"
-                  @click="batchDeleteDictData"
-                >
+                <el-button type="danger" size="mini" :disabled="!hasSelected" @click="batchDeleteDictData">
                   {{ $t("dictManagement.batchDeleteDictData") }}
                 </el-button>
               </div>
-              <div class="custom-pagination">
-                <el-select
-                  v-model="pageSize"
-                  @change="handlePageSizeChange"
-                  class="page-size-select"
-                >
-                  <el-option
-                    v-for="item in pageSizeOptions"
-                    :key="item"
-                    :label="$t('dictManagement.itemsPerPage', { items: item })"
-                    :value="item"
-                  >
-                  </el-option>
-                </el-select>
 
-                <button
-                  class="pagination-btn"
-                  :disabled="currentPage === 1"
-                  @click="goFirst"
-                >
-                  {{ $t("dictManagement.firstPage") }}
-                </button>
-                <button
-                  class="pagination-btn"
-                  :disabled="currentPage === 1"
-                  @click="goPrev"
-                >
-                  {{ $t("dictManagement.prevPage") }}
-                </button>
-                <button
-                  v-for="page in visiblePages"
-                  :key="page"
-                  class="pagination-btn"
-                  :class="{ active: page === currentPage }"
-                  @click="goToPage(page)"
-                >
-                  {{ page }}
-                </button>
-                <button
-                  class="pagination-btn"
-                  :disabled="currentPage === pageCount"
-                  @click="goNext"
-                >
-                  {{ $t("dictManagement.nextPage") }}
-                </button>
+              <div class="custom-pagination">
+                <el-pagination
+                  background
+                  layout="total, sizes, prev, pager, next"
+                  :current-page.sync="currentPage"
+                  :page-size.sync="pageSize"
+                  :total="total"
+                  :page-sizes="pageSizeOptions"
+                  @size-change="handlePageSizeChange"
+                  @current-change="handlePageChange"
+                />
               </div>
-              <span class="total-text">{{
-                $t("dictManagement.totalRecords", { total })
-              }}</span>
             </div>
           </el-card>
         </div>
       </div>
     </div>
 
-    <!-- Use dictionary type editing dialog component -->
     <DictTypeDialog
       :visible.sync="dictTypeDialogVisible"
       :title="dictTypeDialogTitle"
@@ -240,7 +133,6 @@
       @save="saveDictType"
     />
 
-    <!-- Use dictionary data editing dialog component -->
     <DictDataDialog
       :visible.sync="dictDataDialogVisible"
       :title="dictDataDialogTitle"
@@ -248,9 +140,10 @@
       :dictTypeId="selectedDictType?.id"
       @save="saveDictData"
     />
-    <el-footer style="flex-shrink: unset">
+
+    <div class="footer-container">
       <version-footer />
-    </el-footer>
+    </div>
   </div>
 </template>
 
@@ -258,104 +151,112 @@
 import dictApi from "@/apis/module/dict";
 import DictDataDialog from "@/components/DictDataDialog.vue";
 import DictTypeDialog from "@/components/DictTypeDialog.vue";
-import HeaderBar from "@/components/HeaderBar.vue";
 import VersionFooter from "@/components/VersionFooter.vue";
+
 export default {
   name: "DictManagement",
-  components: {
-    HeaderBar,
-    DictTypeDialog,
-    DictDataDialog,
-    VersionFooter,
-  },
+  components: { DictTypeDialog, DictDataDialog, VersionFooter },
   data() {
     return {
-      // Dictionary Type related
       dictTypeList: [],
       dictTypeLoading: false,
       selectedDictType: null,
-      selectedDictTypes: [], // Restore multiple selection array
+      selectedDictTypeId: null,
+      selectedDictTypes: [],
       dictTypeDialogVisible: false,
-      dictTypeDialogTitle: "Add Dictionary Type",
-      dictTypeForm: {
-        id: null,
-        dictName: "",
-        dictType: "",
-      },
+      dictTypeDialogTitle: "",
+      dictTypeForm: { id: null, dictName: "", dictType: "" },
 
-      // dictionary data related
       dictDataList: [],
       dictDataLoading: false,
       isAllDictDataSelected: false,
       dictDataDialogVisible: false,
-      dictDataDialogTitle: "Add Dictionary Data",
-      dictDataForm: {
-        id: null,
-        dictTypeId: null,
-        dictLabel: "",
-        dictValue: "",
-        sort: 0,
-      },
+      dictDataDialogTitle: "",
+      dictDataForm: { id: null, dictTypeId: null, dictLabel: "", dictValue: "", sort: 0 },
       search: "",
-      // Add pagination related data
       pageSizeOptions: [10, 20, 50, 100],
       currentPage: 1,
       pageSize: 10,
       total: 0,
     };
   },
+  computed: {
+    hasSelected() {
+      return this.dictDataList.some(row => row.selected);
+    }
+  },
   created() {
     this.loadDictTypeList();
   },
   methods: {
-    // Dictionary type related methods
     loadDictTypeList() {
       this.dictTypeLoading = true;
-      dictApi.getDictTypeList(
-        {
-          page: 1,
-          limit: 100,
-          dictName: this.search,
-        },
-        ({ data }) => {
-          if (data.code === 0) {
-            this.dictTypeList = data.data.list;
-            if (this.dictTypeList.length > 0) {
-              this.selectedDictType = this.dictTypeList[0];
-              this.loadDictDataList(this.dictTypeList[0].id);
-              this.$nextTick(() => {
-                this.$refs.dictTypeTable.setCurrentRow(this.dictTypeList[0]);
-              });
-            }
+      dictApi.getDictTypeList({ page: 1, limit: 100 }, ({ data }) => {
+        if (data.code === 0) {
+          this.dictTypeList = data.data.list;
+          if (this.dictTypeList.length > 0) {
+            const preferred = this.dictTypeList.find(i => i.id === this.selectedDictTypeId) || this.dictTypeList[0];
+            this.selectedDictType = preferred;
+            this.selectedDictTypeId = preferred.id;
+            this.loadDictDataList(preferred.id);
           }
-          this.dictTypeLoading = false;
-        },
-      );
+        }
+        this.dictTypeLoading = false;
+      });
     },
-    handleDictTypeRowClick(row) {
-      this.selectedDictType = row;
-      this.loadDictDataList(row.id);
-      this.$refs.dictTypeTable.setCurrentRow(row);
+    handleDictTypeChange(id) {
+      this.selectedDictType = this.dictTypeList.find(i => i.id === id);
+      this.currentPage = 1;
+      this.loadDictDataList(id);
     },
-    handleDictTypeSelectionChange(val) {
-      this.selectedDictTypes = val;
+    loadDictDataList(dictTypeId) {
+      if (!dictTypeId) return;
+      this.dictDataLoading = true;
+      dictApi.getDictDataList({
+        dictTypeId,
+        page: this.currentPage,
+        limit: this.pageSize,
+        dictLabel: this.search,
+      }, ({ data }) => {
+        if (data.code === 0) {
+          this.dictDataList = data.data.list.map(i => ({ ...i, selected: false }));
+          this.total = data.data.total;
+        }
+        this.dictDataLoading = false;
+      });
     },
-    tableRowClassName({ row }) {
-      return row === this.selectedDictType ? "current-row" : "";
+    handlePageChange(page) {
+      this.currentPage = page;
+      this.loadDictDataList(this.selectedDictTypeId);
+    },
+    handlePageSizeChange(val) {
+      this.pageSize = val;
+      this.currentPage = 1;
+      this.loadDictDataList(this.selectedDictTypeId);
+    },
+    handleSearch() {
+      this.currentPage = 1;
+      this.loadDictDataList(this.selectedDictTypeId);
+    },
+    selectAllDictData() {
+      this.isAllDictDataSelected = !this.isAllDictDataSelected;
+      this.dictDataList.forEach(row => (row.selected = this.isAllDictDataSelected));
     },
     showAddDictTypeDialog() {
       this.dictTypeDialogTitle = this.$t("dictManagement.addDictType");
-      this.dictTypeForm = {
-        id: null,
-        dictName: "",
-        dictType: "",
-      };
+      this.dictTypeForm = { id: null, dictName: "", dictType: "" };
       this.dictTypeDialogVisible = true;
     },
-    editDictType(row) {
-      this.dictTypeDialogTitle = this.$t("dictManagement.editDictType");
-      this.dictTypeForm = { ...row };
-      this.dictTypeDialogVisible = true;
+    showAddDictDataDialog() {
+      if (!this.selectedDictType) return;
+      this.dictDataDialogTitle = this.$t("dictManagement.addDictData");
+      this.dictDataForm = { id: null, dictTypeId: this.selectedDictType.id, dictLabel: "", dictValue: "", sort: 0 };
+      this.dictDataDialogVisible = true;
+    },
+    editDictData(row) {
+      this.dictDataDialogTitle = this.$t("dictManagement.editDictData");
+      this.dictDataForm = { ...row };
+      this.dictDataDialogVisible = true;
     },
     saveDictType(formData) {
       const api = formData.id ? dictApi.updateDictType : dictApi.addDictType;
@@ -367,720 +268,36 @@ export default {
         }
       });
     },
-    batchDeleteDictType() {
-      if (this.selectedDictTypes.length === 0) {
-        this.$message.warning(this.$t("dictManagement.selectDictTypeToDelete"));
-        return;
-      }
-
-      this.$confirm(
-        this.$t("dictManagement.confirmDeleteDictType"),
-        this.$t("dictManagement.confirm"),
-        {
-          confirmButtonText: this.$t("dictManagement.confirm"),
-          cancelButtonText: this.$t("dictManagement.cancel"),
-          type: "warning",
-        },
-      ).then(() => {
-        const ids = this.selectedDictTypes.map((item) => item.id);
-        dictApi.deleteDictType(ids, ({ data }) => {
-          if (data.code === 0) {
-            this.$message.success(this.$t("dictManagement.deleteSuccess"));
-            this.loadDictTypeList();
-          }
-        });
-      });
-    },
-
-    // Dictionary data related methods
-    loadDictDataList(dictTypeId) {
-      if (!dictTypeId) return;
-      this.dictDataLoading = true;
-      dictApi.getDictDataList(
-        {
-          dictTypeId,
-          page: this.currentPage,
-          limit: this.pageSize,
-          dictLabel: this.search,
-          dictValue: "",
-        },
-        ({ data }) => {
-          if (data.code === 0) {
-            this.dictDataList = data.data.list.map((item) => ({
-              ...item,
-              selected: false,
-            }));
-            this.total = data.data.total;
-          } else {
-            this.$message.error(
-              data.msg || this.$t("dictManagement.getDictDataFailed"),
-            );
-          }
-          this.dictDataLoading = false;
-        },
-      );
-    },
-    selectAllDictData() {
-      this.isAllDictDataSelected = !this.isAllDictDataSelected;
-      this.dictDataList.forEach((row) => {
-        row.selected = this.isAllDictDataSelected;
-      });
-    },
-    showAddDictDataDialog() {
-      if (!this.selectedDictType) {
-        this.$message.warning(this.$t("dictManagement.selectDictTypeFirst"));
-        return;
-      }
-      this.dictDataDialogTitle = this.$t("dictManagement.addDictData");
-      this.dictDataForm = {
-        id: null,
-        dictTypeId: this.selectedDictType.id,
-        dictLabel: "",
-        dictValue: "",
-        sort: 0,
-      };
-      this.dictDataDialogVisible = true;
-    },
-    editDictData(row) {
-      this.dictDataDialogTitle = this.$t("dictManagement.editDictData");
-      this.dictDataForm = { ...row };
-      this.dictDataDialogVisible = true;
-    },
     saveDictData(formData) {
       const api = formData.id ? dictApi.updateDictData : dictApi.addDictData;
       api(formData, ({ data }) => {
         if (data.code === 0) {
           this.$message.success(this.$t("dictManagement.saveSuccess"));
           this.dictDataDialogVisible = false;
-          this.loadDictDataList(formData.dictTypeId);
+          this.loadDictDataList(this.selectedDictTypeId);
         }
       });
     },
     deleteDictData(row) {
-      this.$confirm(
-        this.$t("dictManagement.confirmDeleteDictData"),
-        this.$t("dictManagement.confirm"),
-        {
-          confirmButtonText: this.$t("dictManagement.confirm"),
-          cancelButtonText: this.$t("dictManagement.cancel"),
-          type: "warning",
-        },
-      ).then(() => {
-        dictApi.deleteDictData([row.id], ({ data }) => {
-          if (data.code === 0) {
-            this.$message.success(this.$t("dictManagement.deleteSuccess"));
-            this.loadDictDataList(row.dictTypeId);
-          }
-        });
+      this.$confirm(this.$t("dictManagement.confirmDeleteDictData"), "Warning", { type: "warning" }).then(() => {
+        dictApi.deleteDictData([row.id], () => this.loadDictDataList(this.selectedDictTypeId));
       });
     },
     batchDeleteDictData() {
-      const selectedRows = this.dictDataList.filter((row) => row.selected);
-      if (selectedRows.length === 0) {
-        this.$message.warning(this.$t("dictManagement.selectDictDataToDelete"));
-        return;
-      }
-
-      this.$confirm(
-        this.$t("dictManagement.confirmBatchDeleteDictData", {
-          count: selectedRows.length,
-        }),
-        this.$t("dictManagement.confirm"),
-        {
-          confirmButtonText: this.$t("dictManagement.confirm"),
-          cancelButtonText: this.$t("dictManagement.cancel"),
-          type: "warning",
-        },
-      ).then(() => {
-        const ids = selectedRows.map((item) => item.id);
-        dictApi.deleteDictData(ids, ({ data }) => {
-          if (data.code === 0) {
-            this.$message.success(this.$t("dictManagement.deleteSuccess"));
-            this.loadDictDataList(this.selectedDictType.id);
-          }
-        });
+      const selected = this.dictDataList.filter(r => r.selected);
+      this.$confirm(this.$t("dictManagement.confirmBatchDeleteDictData", { count: selected.length }), "Warning", { type: "warning" }).then(() => {
+        dictApi.deleteDictData(selected.map(i => i.id), () => this.loadDictDataList(this.selectedDictTypeId));
       });
     },
-    handleSearch() {
-      if (!this.selectedDictType) {
-        this.$message.warning("Please select the dictionary type first");
-        return;
-      }
-      this.currentPage = 1;
-      this.loadDictDataList(this.selectedDictType.id);
-    },
-    // Add pagination related methods
-    handlePageSizeChange(val) {
-      this.pageSize = val;
-      this.currentPage = 1;
-      this.loadDictDataList(this.selectedDictType?.id);
-    },
-
-    // Update selection list header translation text
-    updateSelectionHeaderText() {
-      const thElement = document.querySelector(
-        `.el-table__header th:nth-child(1) .cell`,
-      );
-      if (thElement) {
-        thElement.setAttribute("data-content", this.$t("modelConfig.select"));
-      }
-    },
-    goFirst() {
-      this.currentPage = 1;
-      this.loadDictDataList(this.selectedDictType?.id);
-    },
-    goPrev() {
-      if (this.currentPage > 1) {
-        this.currentPage--;
-        this.loadDictDataList(this.selectedDictType?.id);
-      }
-    },
-    goNext() {
-      if (this.currentPage < this.pageCount) {
-        this.currentPage++;
-        this.loadDictDataList(this.selectedDictType?.id);
-      }
-    },
-    goToPage(page) {
-      this.currentPage = page;
-      this.loadDictDataList(this.selectedDictType?.id);
-    },
-    // Table header cell style class name, used for selecting columns
     headerCellClassName({ columnIndex }) {
-      if (columnIndex === 0) {
-        return "custom-selection-header";
-      }
-      return "";
-    },
-    // Cell style class name, used for setting the translation text of the selection list header
-    selectionCellClassName({ row, column, rowIndex, columnIndex }) {
-      // Set data-content only for header rows
-      if (rowIndex === undefined) {
-        setTimeout(() => {
-          this.updateSelectionHeaderText();
-        }, 0);
-      }
-      return "";
-    },
-  },
-
-  mounted() {
-    // Ensure the header translation text is correctly displayed after the component is mounted
-    setTimeout(() => {
-      this.updateSelectionHeaderText();
-    }, 100);
-  },
-
-  updated() {
-    // Re-set the header translation text after the component is updated
-    this.updateSelectionHeaderText();
-  },
-
-  computed: {
-    pageCount() {
-      return Math.ceil(this.total / this.pageSize);
-    },
-    visiblePages() {
-      const pages = [];
-      const maxVisible = 3;
-      let start = Math.max(1, this.currentPage - 1);
-      let end = Math.min(this.pageCount, start + maxVisible - 1);
-
-      if (end - start + 1 < maxVisible) {
-        start = Math.max(1, end - maxVisible + 1);
-      }
-
-      for (let i = start; i <= end; i++) {
-        pages.push(i);
-      }
-      return pages;
-    },
-  },
+      return columnIndex === 0 ? "custom-selection-header" : "";
+    }
+  }
 };
 </script>
-
 <style lang="scss" scoped>
-.welcome {
-  min-width: 900px;
-  min-height: 506px;
-  height: 100vh;
-  display: flex;
-  position: relative;
-  flex-direction: column;
-  background-size: cover;
-  background: linear-gradient(to bottom right, #dce8ff, #e4eeff, #e6cbfd) center;
-  -webkit-background-size: cover;
-  -o-background-size: cover;
-  overflow: hidden;
-}
+@import "../styles/aurora-theme.scss";
 
-.main-wrapper {
-  /* top 63px bottom 35px query 72px */
-  height: calc(100vh - 63px - 35px - 72px);
-  margin: 0 22px;
-  border-radius: 15px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
-  position: relative;
-  background: rgba(237, 242, 255, 0.5);
-  display: flex;
-  flex-direction: column;
-}
-.operation-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px 24px;
-}
-
-.page-title {
-  font-size: 24px;
-  margin: 0;
-}
-
-.action-group {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.search-group {
-  display: flex;
-  gap: 10px;
-}
-
-.search-input {
-  width: 240px;
-}
-
-.btn-search {
-  background: linear-gradient(135deg, #6b8cff, #a966ff);
-  border: none;
-  color: white;
-}
-
-.btn-search:hover {
-  opacity: 0.9;
-  transform: translateY(-1px);
-}
-
-:deep(.search-input .el-input__inner) {
-  border-radius: 4px;
-  border: 1px solid #dcdfe6;
-  background-color: white;
-  transition: border-color 0.2s;
-}
-
-:deep(.search-input .el-input__inner:focus) {
-  border-color: #6b8cff;
-  outline: none;
-}
-
-.content-panel {
-  flex: 1;
-  display: flex;
-  overflow: hidden;
-  height: 100%;
-  border-radius: 15px;
-  background: transparent;
-  border: 1px solid #fff;
-}
-
-.dict-type-panel {
-  width: 300px;
-  background: white;
-  border-right: 1px solid #ebeef5;
-  display: flex;
-  flex-direction: column;
-}
-
-.dict-type-header {
-  padding: 16px;
-  border-bottom: 1px solid #ebeef5;
-  display: flex;
-  gap: 8px;
-}
-
-.dict-type-table {
-  flex: 1;
-  overflow-y: auto;
-}
-
-.content-area {
-  flex: 1;
-  padding: 24px 24px 0;
-  height: 100%;
-  min-width: 600px;
-  overflow: hidden;
-  background-color: white;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
-}
-
-.dict-data-card {
-  background: white;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  border: none;
-  box-shadow: none;
-  overflow: hidden;
-}
-
-:deep(.transparent-table) {
-  background: white;
-  flex: 1;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-
-  .el-table__body-wrapper {
-    flex: 1;
-    overflow-y: auto;
-    max-height: none !important;
-  }
-
-  .el-table__header-wrapper {
-    flex-shrink: 0;
-  }
-
-  .el-table__header th {
-    background: white !important;
-    color: black;
-    font-weight: 600;
-    height: 40px;
-    padding: 8px 0;
-    font-size: 14px;
-    border-bottom: 1px solid #e4e7ed;
-  }
-
-  .el-table__body tr {
-    background-color: white;
-
-    td {
-      border-top: 1px solid rgba(0, 0, 0, 0.04);
-      border-bottom: 1px solid rgba(0, 0, 0, 0.04);
-      padding: 8px 0;
-      height: 40px;
-      color: #606266;
-      font-size: 14px;
-    }
-  }
-
-  .el-table__row:hover > td {
-    background-color: #f5f7fa !important;
-  }
-
-  &::before {
-    display: none;
-  }
-}
-
-.table-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  flex-shrink: 0;
-  min-height: 60px;
-  background: white;
-  margin-top: 10px;
-}
-
-.batch-actions {
-  display: flex;
-  gap: 8px;
-  padding-left: 26px;
-
-  .el-button {
-    min-width: 72px;
-    height: 32px;
-    padding: 7px 12px 7px 10px;
-    font-size: 12px;
-    border-radius: 4px;
-    line-height: 1;
-    font-weight: 500;
-    border: none;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-
-    &:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-    }
-  }
-
-  .el-button--primary {
-    background: #5f70f3;
-    color: white;
-  }
-
-  .el-button--success {
-    background: #5bc98c;
-    color: white;
-  }
-
-  .el-button--danger {
-    background: #fd5b63;
-    color: white;
-  }
-}
-
-.custom-pagination {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-
-  .el-select {
-    margin-right: 8px;
-  }
-
-  .pagination-btn:first-child,
-  .pagination-btn:nth-child(2),
-  .pagination-btn:nth-child(3),
-  .pagination-btn:nth-last-child(2) {
-    min-width: 60px;
-    height: 32px;
-    padding: 0 12px;
-    border-radius: 4px;
-    border: 1px solid #e4e7ed;
-    background: #dee7ff;
-    color: #606266;
-    font-size: 14px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-
-    &:hover {
-      background: #d7dce6;
-    }
-
-    &:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-  }
-
-  .pagination-btn:not(:first-child):not(:nth-child(2)):not(:nth-child(3)):not(
-      :last-child(2)
-    ) {
-    min-width: 28px;
-    height: 32px;
-    padding: 0;
-    border-radius: 4px;
-    border: 1px solid transparent;
-    background: transparent;
-    color: #606266;
-    font-size: 14px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-
-    &:hover {
-      background: rgba(245, 247, 250, 0.3);
-    }
-  }
-
-  .pagination-btn.active {
-    background: #5f70f3 !important;
-    color: #ffffff !important;
-    border-color: #5f70f3 !important;
-
-    &:hover {
-      background: #6d7cf5 !important;
-    }
-  }
-
-  .total-text {
-    color: #909399;
-    font-size: 14px;
-    margin-left: 10px;
-  }
-}
-
-.page-size-select {
-  width: 100px;
-  margin-right: 10px;
-
-  :deep(.el-input__inner) {
-    height: 32px;
-    line-height: 32px;
-    border-radius: 4px;
-    border: 1px solid #e4e7ed;
-    background: #dee7ff;
-    color: #606266;
-    font-size: 14px;
-  }
-
-  :deep(.el-input__suffix) {
-    right: 6px;
-    width: 15px;
-    height: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    top: 6px;
-    border-radius: 4px;
-  }
-
-  :deep(.el-input__suffix-inner) {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-  }
-
-  :deep(.el-icon-arrow-up:before) {
-    content: "";
-    display: inline-block;
-    border-left: 6px solid transparent;
-    border-right: 6px solid transparent;
-    border-top: 9px solid #606266;
-    position: relative;
-    transform: rotate(0deg);
-    transition: transform 0.3s;
-  }
-}
-
-.edit-btn,
-.delete-btn {
-  margin: 0 8px;
-  color: #7079aa !important;
-  font-size: 12px;
-  padding: 7px 12px;
-  height: 32px;
-  line-height: 1;
-  border-radius: 4px;
-  transition: all 0.3s ease;
-
-  &:hover {
-    color: #5a64b5 !important;
-    transform: translateY(-1px);
-  }
-}
-
-:deep(.dict-type-header .el-button) {
-  min-width: 72px;
-  height: 32px;
-  padding: 7px 12px 7px 10px;
-  font-size: 12px;
-  border-radius: 4px;
-  line-height: 1;
-  font-weight: 500;
-  border: none;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-
-  &:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-  }
-
-  &.el-button--success {
-    background: #5bc98c;
-    color: white;
-  }
-
-  &.el-button--danger {
-    background: #fd5b63;
-    color: white;
-  }
-}
-
-:deep(.el-table .cell) {
-  padding-left: 10px;
-  padding-right: 10px;
-}
-
-:deep(.el-loading-mask) {
-  background-color: rgba(255, 255, 255, 0.6) !important;
-  backdrop-filter: blur(2px);
-}
-
-:deep(.el-loading-spinner .circular) {
-  width: 28px;
-  height: 28px;
-}
-
-:deep(.el-loading-spinner .path) {
-  stroke: #6b8cff;
-}
-
-:deep(.el-loading-text) {
-  color: #6b8cff !important;
-  font-size: 14px;
-  margin-top: 8px;
-}
-
-:deep(.dict-type-table .el-table__row) {
-  cursor: pointer;
-}
-
-:deep(.dict-type-table .el-table__row.current-row) {
-  background-color: #5778ff !important;
-  color: white;
-}
-
-:deep(.dict-type-table .el-table__row.current-row .el-button--text) {
-  color: white !important;
-}
-
-:deep(.dict-type-table .el-table__row:hover) {
-  background-color: #f5f7fa;
-}
-
-:deep(.dict-type-table .el-table__row.current-row:hover) {
-  background-color: #5778ff !important;
-}
-
-:deep(.dict-type-table .el-table__row td) {
-  background-color: transparent !important;
-}
-
-::v-deep .el-table .custom-selection-header .cell .el-checkbox__inner {
-  display: none !important;
-}
-
-::v-deep .el-table .custom-selection-header .cell::before {
-  content: attr(data-content);
-  display: block;
-  text-align: center;
-  line-height: 32px;
-  color: black;
-  margin-top: 0;
-  height: 32px;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 100%;
-}
-
-.custom-selection-header .cell {
-  position: relative;
-}
-
-:deep(.el-table thead) {
-  color: #000000;
-}
-
-:deep(.el-card__body) {
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  overflow: hidden;
-}
-
-:deep(.el-checkbox__inner) {
-  background-color: #ffffff !important;
-  border-color: #cccccc !important;
-}
-
-:deep(.el-checkbox__inner:hover) {
-  border-color: #cccccc !important;
-}
-
-:deep(.el-checkbox__input.is-checked .el-checkbox__inner) {
-  background-color: #5f70f3 !important;
-  border-color: #5f70f3 !important;
-}
+/* --- Unique styles for DictManagement --- */
+.dict-code-text { color: $accent-cyan; font-weight: bold; }
 </style>

@@ -71,6 +71,7 @@
 
 <script>
 export default {
+  name: 'ReplacementWordDialog',
   props: {
     title: {
       type: String,

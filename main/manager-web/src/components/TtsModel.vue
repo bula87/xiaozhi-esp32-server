@@ -17,9 +17,10 @@
           class="data-table"
           header-row-class-name="table-header"
           :fit="true"
-          :element-loading-text="$t('voicePrint.loading')"
+          :element-loading-text="$t('common.loading')"
           element-loading-spinner="el-icon-loading"
           element-loading-background="rgba(0, 0, 0, 0.8)"
+          :header-cell-class-name="headerCellClassName" >
         >
           <el-table-column
             :label="$t('ttsModel.select')"
@@ -219,6 +220,7 @@ import Api from "@/apis/api";
 import AudioPlayer from "./AudioPlayer.vue";
 
 export default {
+  name: 'TtsModel',
   components: { AudioPlayer },
   props: {
     visible: {

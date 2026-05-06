@@ -28,6 +28,32 @@ export default {
   'header.logout': '退出登錄',
   'header.searchPlaceholder': '名稱、標籤或mac搜索',
 
+  // Aurora 側欄
+  'sidebar.smartManagement': '智能體管理',
+  'sidebar.dashboard': '儀表板',
+  'sidebar.roleConfig': '角色配置',
+  'sidebar.deviceManagement': '設備管理',
+  'sidebar.voiceClone': '音色克隆',
+  'sidebar.knowledgeBase': '知識庫',
+  'sidebar.administration': '管理',
+  'sidebar.paramManagement': '參數管理',
+  'sidebar.userManagement': '用戶管理',
+  'sidebar.providerManagement': '服務商管理',
+  'sidebar.otaManagement': 'OTA管理',
+  'sidebar.featureManagement': '功能管理',
+  'sidebar.models': '模型',
+  'sidebar.settings': '設定',
+
+  'dashboard.agents': '智能體',
+  'dashboard.users': '用戶',
+  'dashboard.models': '模型條目',
+  'dashboard.params': '參數',
+
+  'settingsHub.title': '設定',
+  'settingsHub.language': '語言',
+  'settingsHub.appearance': '外觀',
+  'settingsHub.account': '帳戶',
+
   // McpToolCallDialog组件文本
   'mcpToolCall.title': '工具調用',
   'mcpToolCall.execute': '執行',
@@ -705,6 +731,12 @@ export default {
   'common.sensitive': '敏感',
   'common.loading': '載入中',
 
+  // 介面主題
+  'theme.appearance': '主題',
+  'theme.dark': '賽博深色',
+  'theme.light': '控制台淺色',
+  'theme.applied': '主題已更新',
+
   // 語言切換
   'language.zhCN': '中文简体',
   'language.zhTW': '中文繁體',
@@ -905,6 +937,8 @@ export default {
   // 模型配置頁面文本
   'modelConfig.searchPlaceholder': '請輸入模型名稱查詢',
   'modelConfig.search': '搜索',
+  'modelConfig.overview': '模型總覽',
+  'modelConfig.overviewLead': '以下為各類別目前預設模型，點擊一列進入對應配置。',
   'modelConfig.vad': '語言活動檢測',
   'modelConfig.asr': '語音識別',
   'modelConfig.llm': '大語言模型',
